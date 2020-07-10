@@ -7,9 +7,9 @@
 int main()
 {
 
-	//std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
-	//downloadRenderedFormula(latex,"latex_formula.gif","gif");
-	//system("pause");
+	std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
+	std::cout<<downloadRenderedFormula(latex,"gif");
+	system("pause");
 
 	auto s = imageBase64UrlEncode("img.png");
 	s = "image=" + s;
