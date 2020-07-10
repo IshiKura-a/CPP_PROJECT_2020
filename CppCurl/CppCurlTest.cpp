@@ -1,7 +1,8 @@
 #include "CppCurl.h"
-#include "Encoder.h"
 #include <iostream>
 #include <fstream>
+
+#pragma comment(lib,"CppCurl.lib")
 
 int main()
 {
