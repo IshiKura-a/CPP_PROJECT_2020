@@ -145,7 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppCurl.cpp" />
-    <ClCompile Include="CppCurlInterface.cpp" />
+    <ClCompile Include="CppCurlTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppCurl.h" />

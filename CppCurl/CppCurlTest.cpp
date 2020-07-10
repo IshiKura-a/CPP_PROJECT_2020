@@ -6,7 +6,9 @@ char base64_img[] = "image=iVBORw0KGgoAAAANSUhEUgAAAfoAAACACAYAAADj26taAAAfAUlEQ
 
 int main()
 {
-	std::string token = "24.2ab38b35c29d7c52e3ae47ce5c63b328.2592000.1596796408.282335-21194210";
-	std::cout << formulaRecognition(base64_img, token) << std::endl;
+	//std::string token = "24.2ab38b35c29d7c52e3ae47ce5c63b328.2592000.1596796408.282335-21194210";
+	//std::cout << formulaRecognition(base64_img, token) << std::endl;
+	std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
+	downloadRenderedFormula(latex,"latex_formula.gif","gif");
 	system("pause");
 }
