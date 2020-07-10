@@ -24,26 +24,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\GUI\main.cpp">
+    <ClCompile Include="GUI\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\GUI\mainwindow.cpp">
+    <ClCompile Include="GUI\mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="..\..\..\GUI\mainwindow.h">
+    <None Include="GUI\GUI.pro">
+      <Filter>Form Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="GUI\mainwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="..\..\..\GUI\mainwindow.ui">
+    <QtUic Include="GUI\mainwindow.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\GUI\GUI.pro">
-      <Filter>Form Files</Filter>
-    </None>
   </ItemGroup>
 </Project>

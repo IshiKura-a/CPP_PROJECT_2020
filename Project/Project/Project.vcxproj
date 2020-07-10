@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\GUI\main.cpp" />
-    <ClCompile Include="..\..\..\GUI\mainwindow.cpp" />
+    <None Include="GUI\GUI.pro" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="..\..\..\GUI\mainwindow.h" />
+    <ClCompile Include="GUI\main.cpp" />
+    <ClCompile Include="GUI\mainwindow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="..\..\..\GUI\mainwindow.ui" />
+    <QtMoc Include="GUI\mainwindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\GUI\GUI.pro" />
+    <QtUic Include="GUI\mainwindow.ui" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6AFED67F-5623-41E9-A750-14AC0239E01C}</ProjectGuid>
@@ -61,12 +61,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;network</QtModules>
+    <QtModules>core;gui;widgets;network;svg</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>msvc2019_64</QtInstall>
-    <QtModules>core;gui;widgets;network</QtModules>
+    <QtModules>core;gui;widgets;network;svg</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
