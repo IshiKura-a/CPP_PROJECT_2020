@@ -1,0 +1,8 @@
+﻿  Reading Qt configuration (D:\Qt\5.15.0\msvc2019_64\bin\qmake.exe)
+  uic GUI\mainwindow.ui
+  moc GUI\mainwindow.h
+  Using triplet "x64-windows" from "D:\Mydata\HOMEwork\Grade3_1\C++_Project\vcpkg-master\installed\x64-windows\"
+  main.cpp
+  mainwindow.cpp
+  moc_mainwindow.cpp
+  Project.vcxproj -> D:\Mydata\HOMEwork\Grade3_1\C++_Project\CPP_PROJECT_2020\Project\x64\Debug\Project.exe
