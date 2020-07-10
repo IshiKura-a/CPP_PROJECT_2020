@@ -14,6 +14,8 @@ CppCurl模块将提供包装好的http请求方法
 
 请将CppCurl.dll放置在将要调用该库的应用程序的相同目录下，将CppCurl.lib添加到其他工程的依赖项，并注意包含CppCurl.h
 
+例如在本例中，./CppCurl/下的CppCurl.lib需要手动放置（此处我已提前放置了编译好的lib）。
+
 ## 测试方法
 
 sln下的CppCurl工程提供了一个简单的测试程序CppCurlTest。
