@@ -21,9 +21,15 @@
     <ClCompile Include="CppCurlTest.cpp">
       <Filter>头文件</Filter>
     </ClCompile>
+    <ClCompile Include="Encoder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppCurl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Encoder.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

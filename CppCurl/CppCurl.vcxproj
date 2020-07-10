@@ -146,9 +146,11 @@
   <ItemGroup>
     <ClCompile Include="CppCurl.cpp" />
     <ClCompile Include="CppCurlTest.cpp" />
+    <ClCompile Include="Encoder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppCurl.h" />
+    <ClInclude Include="Encoder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
