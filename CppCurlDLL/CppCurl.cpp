@@ -10,6 +10,8 @@ const static std::string latex_rendering_request_url = "https://latex.codecogs.c
 
 static std::string formula_result;
 
+static std::string render_result;
+
 // 用全局函数的写法比较糟糕
 // 有时间就修改一下，把ptr内容写到stream上
 static size_t callbackFormulaRec(void* ptr, size_t size, size_t nmemb, void* stream)
@@ -22,6 +24,12 @@ static size_t callbackFormulaRec(void* ptr, size_t size, size_t nmemb, void* str
 static size_t callbackFormulaRender(void* ptr, size_t size, size_t nmemb, void* stream)
 {
 	fwrite(ptr, size, nmemb, static_cast<FILE*>(stream));
+	return size * nmemb;
+}
+
+static size_t callbackFormulaRenderStr(void* ptr, size_t size, size_t nmemb, void* stream)
+{
+	render_result = std::string((char*)ptr, size * nmemb);
 	return size * nmemb;
 }
 
@@ -118,6 +126,41 @@ CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const 
 		throw std::runtime_error("curl_easy_init() failed.");
 	}
 }
+
+CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string, const std::string& format)
+{
+	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
+	CURL* curl = NULL;
+	CURLcode result_code;
+
+	curl = curl_easy_init();
+
+	if (curl) {
+
+		// 打印调试信息
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+		// URL地址，需要char*
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		// 设置写函数
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRenderStr);
+
+		result_code = curl_easy_perform(curl);
+		if (result_code != CURLE_OK)
+		{
+			std::string errmsg = "curl_easy_perform() failed.";
+			errmsg = errmsg + curl_easy_strerror(result_code);
+			curl_easy_cleanup(curl);
+			throw std::runtime_error(errmsg);
+		}
+		curl_easy_cleanup(curl);
+		return render_result;
+	}
+	else
+	{
+		throw std::runtime_error("curl_easy_init() failed.");
+	}
+}
+
 
 
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";

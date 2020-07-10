@@ -20,6 +20,13 @@ CPPCURL_API std::string formulaRecognition(const std::string& encoded_image, con
 CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format);
 
 // @param:
+// latex_string: 需要渲染的latex string. 注意删除所有空白字符.
+// format: 下载图片的格式. 支持gif, svg, png.
+// @return:
+// 下载的二进制文件
+CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string,const std::string& format);
+
+// @param:
 // file_path: 图像路径
 // @return:
 // 图像经过base64编码, urlencode后的string
