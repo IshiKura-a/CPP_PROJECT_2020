@@ -1,4 +1,4 @@
-#include "CppCurl.h"
+#include "../CppCurlDLL/CppCurl.h"
 #include <iostream>
 #include <fstream>
 
