@@ -1,4 +1,4 @@
-#include "CppCurl.h"
+#include "../CppCurlDLL/CppCurl.h"
 #include <iostream>
 #include <fstream>
 
@@ -7,10 +7,22 @@
 int main()
 {
 
-	//std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
-	//downloadRenderedFormula(latex,"latex_formula.gif","gif");
-	//system("pause");
+	std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
 
+	// get image in buffer
+	
+	std::string formula_str = downloadRenderedFormula(latex,"png");
+	std::ofstream ofs("formula_str.png",std::ios::binary);
+	for(int i=0;i<formula_str.size();++i)
+	ofs<<formula_str[i];
+	ofs.close();
+	
+	// get image as file
+	
+	downloadRenderedFormula(latex,"formula.png","png");
+
+	// test recognition API
+	
 	auto s = imageBase64UrlEncode("img.png");
 	s = "image=" + s;
 	std::string token = "7A4F0C7C6D1AA836183C6245AF5A546D\
