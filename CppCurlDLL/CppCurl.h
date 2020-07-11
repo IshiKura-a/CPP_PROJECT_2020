@@ -23,7 +23,8 @@ CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const 
 // latex_string: 需要渲染的latex string. 注意删除所有空白字符.
 // format: 下载图片的格式. 支持gif, svg, png.
 // @return:
-// 下载的二进制文件
+// 下载的二进制文件. string是用来转移data的工具, 实际存储的是二进制data, *绝对*不要当作string使用.
+// 需要使用该数据时请使用.c_str()获得data pointer.
 CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string,const std::string& format);
 
 // @param:

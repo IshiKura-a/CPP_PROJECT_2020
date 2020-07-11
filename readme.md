@@ -10,7 +10,7 @@ CppCurl模块将提供包装好的http请求方法。接口中包含公式识别
 
 2. 将CppCurlDll设置为启动项目。修改工程->属性->VC++目录，将libcurl的包含目录和库目录修改至自己的配置。libcurl的库目录中需要存在libcurl.lib。
 
-3. 开始编译。此处注意**编译时选择x86或x64务必要和你的libcurl.lib相匹配**。
+3. 开始编译。注意**编译时选择x86或x64务必要和你的libcurl.lib相匹配**。
     * 如果你是64位的libcurl.lib，此时应该能正常通过编译并生成CppCurl.dll，CppCurl.lib。
     * 如果你是32位的libcurl.lib，你需要将生成配置改为x86并手动修改一些工程属性。配置属性->常规->目标文件名改为CppCurl，C/C++->预处理器->预处理器定义中将CPPCURLDLL_EXPORTS改为CPPCURL_EXPORTS。
     * 如果你没有可以编译libcurl的环境，./libcurl_prebuilt/下提供了一份我编译好的64位的libcurl.dll和libcurl.lib。注意你仍然需要libcurl的头文件。
@@ -29,7 +29,10 @@ CppCurl模块将提供包装好的http请求方法。接口中包含公式识别
 
 4. 开始编译CppCurlTest。
 
-5. 如果编译正常，您将会获得以文本方式在控制台输出的二进制图片文件，以及一份由百度API返回的包含latex代码的json string。
+5. 如果编译正常，测试的结果应当是:
+    * 工程目录下产生将渲染结果直接保存为文件的formula.png。
+    * 工程目录下产生将渲染结果先存储为二进制数据，再手动存储为文件的formula_str.png。
+    * 控制台打印一份由百度API返回的包含latex代码的json string。
 
 ## 当前进度
 
