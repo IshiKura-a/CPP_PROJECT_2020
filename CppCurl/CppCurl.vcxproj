@@ -147,9 +147,6 @@
   <ItemGroup>
     <ClCompile Include="CppCurlTest.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CppCurl.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
