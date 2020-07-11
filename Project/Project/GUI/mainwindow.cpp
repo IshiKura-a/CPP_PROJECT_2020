@@ -9,8 +9,8 @@
 #include <QLabel>
 
 
-const QString urlBase = "https://latex.codecogs.com/png.download?";
-const QString latexFormulaAddr = "./latex_formula.png";
+const QString urlBase = "https://latex.codecogs.com/svg.download?";
+const QString latexFormulaAddr = "./latex_formula.svg";
 QString latexFormula = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
 
 MainWindow::MainWindow(QWidget *parent)
@@ -101,23 +101,31 @@ void MainWindow::displayPic4Url(QNetworkReply *reply)
 {
 
     if(reply->error() == QNetworkReply::NoError)
-        {
-            qDebug() << "Downloading...";
-            QByteArray data_bytes = reply->readAll();
-            QPixmap cur_pictrue;
-            cur_pictrue.loadFromData(data_bytes);
-            cur_pictrue.save(latexFormulaAddr);
-        }
-        reply->deleteLater();
+    {
+        qDebug() << "Downloading...";
+        QByteArray data_bytes = reply->readAll();
+        QFile file(latexFormulaAddr);
+        file.open(QIODevice::ReadWrite);
+        file.write(data_bytes);
+    }
+    reply->deleteLater();
 
-        QPixmap img = QPixmap(latexFormulaAddr);
+    QSvgRenderer* svg = new QSvgRenderer(latexFormulaAddr);
+    qDebug() << svg->defaultSize();
 
-        int width = img.width() * 2;
-        if(width >= 400) width = 400;
-        int height = img.height()*2;
-        if(height >= 285) height = 285;
-        latex_Label->setPixmap(img.scaled(width,height,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-        latex_Label->setAlignment(Qt::AlignCenter);
+    int width = svg->defaultSize().width() * 2;
+    if(width >= 400) width = 400;
+    int height = svg->defaultSize().height()*2;
+    if(height >= 285) height = 285;
+
+    QPixmap* img =new QPixmap(width,height);
+    img->fill(Qt::white);
+    QPainter painter(img);
+    svg->render(&painter);
+
+
+    latex_Label->setPixmap(*img);
+    latex_Label->setAlignment(Qt::AlignCenter);
 
 }
 void MainWindow::initBody()
