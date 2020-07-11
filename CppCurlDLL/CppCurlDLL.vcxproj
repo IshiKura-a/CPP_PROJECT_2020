@@ -160,6 +160,7 @@
     <ClInclude Include="CppCurl.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TokenDecode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CppCurl.cpp" />
