@@ -1,10 +1,10 @@
-# CppCurl branch(Deprecated)
+# CppCurl branch
 
 ## 描述
 
-CppCurl模块将提供包装好的http请求方法。接口中包含公式识别和Latex公式渲染请求的API。其中token已经被加密。具体内容请参考CppCurl.h。
+CppCurl模块将提供包装好的http请求方法。接口中包含发送公式识别请求和Latex公式渲染请求的API。其中token已经被加密。具体内容请参考CppCurl.h。
 
-本模块正在进行重构。当前代码仅建议用于模块功能测试。
+本模块已完成重构，将全局函数用静态类包装，并使用工厂方法隐藏了内部实现使用的函数。重构后头文件将不会暴露该库的内部结构。
 
 ## 编译方法
 
@@ -32,8 +32,10 @@ CppCurl模块将提供包装好的http请求方法。接口中包含公式识别
 4. 开始编译CppCurlTest。
 
 5. 如果编译正常，测试的结果应当是:
+    * exe的同目录下产生直接写入的渲染结果formula.png。
+    * exe的同目录下产生先写入buffer，再写成文件的渲染结果formula_buffer.png。这两份图片应是完全一致的。
     * 控制台分别打印由百度API和mathpix API返回的包含latex代码的json string。
 
 ## 当前进度
 
-重构中
+已完成
