@@ -1,9 +1,1 @@
-*.mdb
-*.ldb
-*.suo
-*.config
 
-Debug/
-Release/
-obj/
-.vs/
