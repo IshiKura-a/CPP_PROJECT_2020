@@ -2,7 +2,7 @@
 
 ## 描述
 
-CppCurl模块将提供包装好的http请求方法。接口中包含公式识别和Latex公式渲染请求的API。具体内容请参考CppCurl.h。
+CppCurl模块将提供包装好的http请求方法。接口中包含公式识别和Latex公式渲染请求的API。其中token已经被加密。具体内容请参考CppCurl.h。
 
 本模块正在进行重构。当前代码仅建议用于模块功能测试。
 
