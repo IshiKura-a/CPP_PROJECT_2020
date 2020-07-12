@@ -27,6 +27,9 @@
     <ClInclude Include="TokenDecode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HTTPRequestManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -36,6 +39,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CppCurl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HTTPRequestManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
