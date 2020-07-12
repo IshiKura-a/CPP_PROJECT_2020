@@ -2,7 +2,8 @@
 #include "HTTPRequestManager.h"
 #include "TokenDecode.h"
 #include <curl/curl.h>
-#include <rapidjson/rapidjson.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/prettywriter.h>
 #include <cassert>
 #pragma comment(lib,"libcurl.lib")
 #pragma comment(lib,"TokenDecode.lib")
@@ -10,50 +11,59 @@
 
 const std::string HTTPRequestManager::baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
 
-const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix.com/v3/text";
+const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix.com/v3/latex";
 
 const std::string HTTPRequestManager::latex_rendering_request_url = "https://latex.codecogs.com/";
 
 
 std::string base64Encode(const char* bytes_to_encode, unsigned int in_len);
 
-std::string base64EncodeDataUrlScheme(const char* bytes_to_encode, unsigned int in_len, const std::string& image_format);
-
 std::string urlEncode(const std::string& bytes_to_encode);
 
-// 用全局函数的写法比较糟糕
-// 有时间就修改一下，把ptr内容写到stream上
-static size_t callbackFormulaRec(void* ptr, size_t size, size_t nmemb, void* stream)
-{
-	// 获取到的body存放在ptr中，先将其转换为string格式
-	formula_result = std::string((char*)ptr, size * nmemb);
-	return size * nmemb;
-}
 
-static size_t callbackFormulaRender(void* ptr, size_t size, size_t nmemb, void* stream)
+std::string HTTPRequestManager::formula_result;
+
+
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::render_result;
+
+const std::string HTTPRequestManager::access_token = "7A4F0C7C6D1AA836183C6245AF5A546D\
+CA62994D2AD6DF01083A5170573825F8\
+869CE35BD9C4A5770C63CCD9A59CBE5B\
+D63F06E28A2AA8D4251B7222F3DC52BE\
+CACE6DD82CDB6F51353347977A16371B";
+
+size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 {
 	fwrite(ptr, size, nmemb, static_cast<FILE*>(stream));
 	return size * nmemb;
 }
 
-static size_t callbackFormulaRenderStr(void* ptr, size_t size, size_t nmemb, void* stream)
+size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	render_result = std::string((char*)ptr, size * nmemb);
+	HTTPRequestManager::formula_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
-// 返回公式识别的结果字符串
-// 如果curl的初始化过程中产生错误，抛出runtime_error
-// 百度的服务器端产生的错误不会抛出异常，但返回的json string有错误信息
-std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image, const std::string& access_token)
+size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
+	HTTPRequestManager::render_result = std::vector<HTTPRequestManager::Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	return size * nmemb;
+}
+
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
+{
+
+	// 返回公式识别的结果字符串
+	// 如果curl的初始化过程中产生错误，抛出runtime_error
+	// 百度的服务器端产生的错误不会抛出异常，但返回的json string有错误信息
+
 	CURL* curl = NULL;
 	curl_slist* headerlist = NULL;
 	CURLcode result_code;
 
 
-	std::string encoded_image = base64Encode(raw_image.data(), raw_image.size());
-	encoded_image = urlEncode(encoded_image);
+	std::string encoded_image = imageBase64UrlEncode(raw_image);
+
 	encoded_image = "image=" + encoded_image;
 
 	curl = curl_easy_init();
@@ -75,7 +85,7 @@ std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>&
 		// 绑定header
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
 		// 设置写函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRec);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFormulaResult);
 		// 设置本次操作为POST
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
 		// 设置本次操作使用header
@@ -101,16 +111,26 @@ std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>&
 	}
 }
 
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_path)
+{
+	return formulaRecognitionBaidu(openImage(file_path));
+}
+
+
 std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
 {
+
+	// 返回公式识别的结果字符串
+	// 如果curl的初始化过程中产生错误，抛出runtime_error
+	// mathpix的服务器端产生的错误不会抛出异常，但返回的json string有错误信息
+
 	CURL* curl = NULL;
 	std::string url = mathpix_request_url;
 	curl_slist* headerlist = NULL;
 	CURLcode result_code;
 
-	std::string encoded_image = base64EncodeDataUrlScheme(raw_image.data(), raw_image.size(),image_format);
+	std::string encoded_image = imageBase64DataUrlScheme(raw_image, image_format);
 
-	encoded_image = "src=" + encoded_image;
 
 	curl = curl_easy_init();
 
@@ -121,16 +141,35 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte
 		headerlist = curl_slist_append(headerlist, "app_id:tmp_key");
 		headerlist = curl_slist_append(headerlist, "app_key:ey4fCTFxcjJ3kqbEaH7j23b926HBAux3a98");
 
+		rapidjson::StringBuffer buffer;
+		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+		writer.StartObject();
+
+		writer.Key("src");
+		writer.String(encoded_image.c_str(), encoded_image.size());
+
+		writer.Key("formats");
+		writer.StartArray();
+		//writer.String("latex_normal");
+		//writer.String("latex_styled");
+		writer.String("latex_simplified");
+		writer.EndArray();
+
+		writer.EndObject();
+
+		std::string json_content = buffer.GetString();
+
 		// 打印调试信息
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 		// URL地址
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		// 设置POST内容，内容指针encoded_image为char*，注意字符串中要带上表单名称image=
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, encoded_image.c_str());
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_content.c_str());
 		// 绑定header
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
 		// 设置写函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRec);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFormulaResult
+		);
 		// 设置本次操作为POST
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
 		// 设置本次操作使用header
@@ -156,8 +195,16 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte
 	}
 }
 
+std::string HTTPRequestManager::formulaRecognitionMathpix(const std::string& file_path)
+{
+	auto data = openImage(file_path);
+	auto format = file_path.substr(file_path.find_last_of('.') + 1);
+	if (format == "jpg") format = "jpeg";
+	return formulaRecognitionMathpix(data, format);
+}
 
-CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format)
+
+void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format)
 {
 	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
 	CURL* curl = NULL;
@@ -175,7 +222,7 @@ CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const 
 		// URL地址，需要char*
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		// 设置写函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRender);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFile);
 		// 设置写函数写入的指针
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
@@ -196,7 +243,7 @@ CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const 
 	}
 }
 
-CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string, const std::string& format)
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
 	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
 	CURL* curl = NULL;
@@ -211,7 +258,7 @@ CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string,
 		// URL地址，需要char*
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		// 设置写函数
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRenderStr);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteRenderResult);
 
 		result_code = curl_easy_perform(curl);
 		if (result_code != CURLE_OK)
@@ -231,6 +278,8 @@ CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string,
 }
 
 
+
+// helper function
 
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -288,12 +337,6 @@ std::string base64Encode(const char* bytes_to_encode, unsigned int in_len)
 
 	}
 	return ret;
-}
-
-// image_format: bmp, jpeg, gif, svg+xml, png
-std::string base64EncodeDataUrlScheme(const char* bytes_to_encode, unsigned int in_len, const std::string& image_format)
-{
-	return "data:image/"+image_format+";base64,"+base64Encode(bytes_to_encode,in_len);
 }
 
 std::string base64Decode(const std::string& encoded_string)
@@ -396,8 +439,7 @@ std::string urlDecode(const std::string& encoded_string)
 	return strTemp;
 }
 
-// 普通指针注意, 不要在代码中使用这个函数
-[[nodiscard]] char* readImage(const std::string& file_path, int* f_size)
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::openImage(const std::string& file_path)
 {
 	FILE* fp = NULL;
 	fopen_s(&fp, file_path.c_str(), "rb");
@@ -407,23 +449,58 @@ std::string urlDecode(const std::string& encoded_string)
 
 	fseek(fp, 0, SEEK_END);
 	int size = ftell(fp);
-	*f_size = size;
 	rewind(fp);
 
-	char* buffer = new char[size]();
-	int s = fread(buffer, 1, size, fp);
+	auto retVal = std::vector<Byte>(size);
+
+	fread(retVal.data(), 1, size, fp);
 
 	fclose(fp);
-	return buffer;
+	return retVal;
+}
+
+void HTTPRequestManager::saveImage(const std::vector<Byte>& data, const std::string& file_path)
+{
+	FILE* fp = NULL;
+	fopen_s(&fp, file_path.c_str(), "wb");
+
+	if (!fp)
+		throw std::runtime_error("Cannot open image file " + file_path);
+
+	fwrite(data.data(), sizeof(Byte), data.size(), fp);
 }
 
 
-std::string imageBase64UrlEncode(const std::string& file_path)
+
+std::string HTTPRequestManager::imageBase64UrlEncode(const std::string& file_path)
 {
-	int size;
-	char* p = readImage(file_path, &size);
-	std::string str = base64Encode(p, size);
-	str = urlEncode(str);
-	delete[]p;
-	return str;
+	auto raw_image = openImage(file_path);
+	std::string encoded_image = base64Encode(raw_image.data(), raw_image.size());
+	encoded_image = urlEncode(encoded_image);
+	return encoded_image;
+}
+
+std::string HTTPRequestManager::imageBase64UrlEncode(const std::vector<Byte>& raw_image)
+{
+	std::string encoded_image = base64Encode(raw_image.data(), raw_image.size());
+	encoded_image = urlEncode(encoded_image);
+	return encoded_image;
+}
+
+
+// image_format: bmp, jpeg, gif, svg+xml, png
+std::string HTTPRequestManager::imageBase64DataUrlScheme(const std::string& file_path)
+{
+	auto raw_image = openImage(file_path);
+	std::string image_format = file_path.substr(file_path.find_last_of('.') + 1);
+	if (image_format == "jpg") image_format = "jpeg";
+	if (image_format == "svg") image_format = "svg+xml";
+	return "data:image/" + image_format + ";base64," + base64Encode(raw_image.data(), raw_image.size());
+}
+
+// image_format: bmp, jpeg, gif, svg+xml, png
+std::string HTTPRequestManager::imageBase64DataUrlScheme(const std::vector<Byte>& raw_image, const std::string& image_format)
+{
+	std::string encoded_image = base64Encode(raw_image.data(), raw_image.size());
+	return "data:image/" + image_format + ";base64," + base64Encode(raw_image.data(), raw_image.size());
 }

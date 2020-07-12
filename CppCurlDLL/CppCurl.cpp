@@ -2,7 +2,7 @@
 #include "CppCurl.h"
 #include "HTTPRequestManager.h"
 
-[[nodiscard]] CPPCURL_API IHTTPRequestManager* getHTTPRequestManager()
+std::shared_ptr<IHTTPRequestManager> getHTTPRequestManager()
 {
-	return new HTTPRequestManager();
+	return std::make_shared<HTTPRequestManager>();
 }
