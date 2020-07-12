@@ -9,7 +9,6 @@ class Tree
 {
 public:
 	Node* root;
-public:
 	Tree()
 	{
 		root = new Node;
@@ -17,7 +16,7 @@ public:
 	double result(Node* b)
 	{
 		double res1 = 0, res2 = 0;
-		if (b->getissingleeye() == 0)
+		if (b->getisUnary() == 0)
 		{
 			switch (b->getop())
 			{
@@ -39,7 +38,7 @@ public:
 			case '/':
 				res1 = result(b->getleft());
 				res2 = result(b->getright());
-				if (res2 == 0)
+				if (res2 == 0)  
 				{
 
 				}
@@ -48,33 +47,33 @@ public:
 			default:return b->getval();
 			}
 		}
-		else if (b->getissingleeye() == 1)
+		else if (b->getisUnary() == 1) 
 		{
 			switch (b->getop())
 			{
 				case 'r':
-					res1 = result(b->getleft());
-					b->setval(sqrt(res1));
+					res1 = result(b->getleft());  //递归计算
+					b->setval(sqrt(res1)); 
 				case 'u':
 					res1 = result(b->getleft());
-					b->setval(res1 * res1);
+					b->setval(res1 * res1);   //u代表平方
 			}
 		}
-		else if (b->getissingleeye() > 1)
+		else if (b->getisUnary() > 1)
 		{
-			int n = b->getissingleeye();
+			int n = b->getisUnary();
 			switch (b->getop())
 			{
 			case 'c':
 				for (int i = 0; i < n; i++)
 				{
-					res1 += result(b->getleft());
+					res1 += result(b->getleft());  //多次相加?
 				}
 				b->setval(sqrt(res1));
 			case 'n':
 				for (int i = 0; i < n; i++)
 				{
-					res1 *= result(b->getleft());
+					res1 *= result(b->getleft());  //累乘?
 				}
 				b->setval(res1 * res1);
 			}

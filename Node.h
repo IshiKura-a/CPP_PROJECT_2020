@@ -9,7 +9,7 @@ private:
 	char op;
 	double val;
 	Node *left, *right;
-	int isUnary; //
+	int isUnary; //判断是否为单目运算符
 
 public:
 	Node()
@@ -19,7 +19,7 @@ public:
 		left = NULL;
 		right = NULL;
 		isUnary = 0;
-	}
+	}//构造函数
 	double getval()
 	{
 		return val;
