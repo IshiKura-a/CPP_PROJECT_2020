@@ -9,7 +9,8 @@ private:
 	char op;
 	double val;
 	Node *left, *right;
-	int isUnary; //判断是否为单目运算符
+	int issingleeye;
+	bool isn;
 
 public:
 	Node()
@@ -18,8 +19,9 @@ public:
 		val = 0;
 		left = NULL;
 		right = NULL;
-		isUnary = 0;
-	}//构造函数
+		issingleeye = 0;
+		isn = 0;
+	}
 	double getval()
 	{
 		return val;
@@ -57,6 +59,14 @@ public:
 		delete left;
 		delete right;
 	}
+	bool getisn()
+	{
+		return isn;
+	}
+	void setisn(bool n)
+	{
+		isn = n;
+	}
 	bool isleaf()
 	{
 		if (left == NULL && right == NULL)
@@ -64,13 +74,13 @@ public:
 		else
 			return 0;
 	}
-	void setisUnary(int num)
+	void setissingleeye(int num)
 	{
-		isUnary = num;
+		issingleeye = num;
 	}
-	int getisUnary()
+	int getissingleeye()
 	{
-		return isUnary;
+		return issingleeye;
 	}
 	
 };

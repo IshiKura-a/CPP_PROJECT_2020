@@ -6,13 +6,14 @@
 int main()
 {
 	Tree* t=new Tree;
-	t->root->setop('+');
+	t->root->setop('c');
+	t->root->setissingleeye(10);
 	Node* left=new Node, *right=new Node;
 	left->setval(1);
-	right->setval(1);
+	right->setisn(1);
 	t->root->setleft(left);
 	t->root->setright(right);
-	printf("%lf", t->result(t->root));
+	printf("%lf", t->result(t->root,-1));
 		return 0;
 }
 
