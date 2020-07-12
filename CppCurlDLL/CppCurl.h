@@ -32,3 +32,9 @@ CPPCURL_API std::string downloadRenderedFormula(const std::string& latex_string,
 // @return:
 // 图像经过base64编码, urlencode后的string
 CPPCURL_API std::string imageBase64UrlEncode(const std::string& file_path);
+
+
+CPPCURL_API std::string imageBase64(const std::string& file_path, const std::string& image_format);
+
+
+CPPCURL_API std::string formulaRecognitionMathpix(const std::string& encoded_image);

@@ -2,6 +2,8 @@
 #include "CppCurl.h"
 #include "TokenDecode.h"
 #include <curl/curl.h>
+#include <rapidjson/prettywriter.h>
+#include <rapidjson/stringbuffer.h>
 #include <cassert>
 #pragma comment(lib,"libcurl.lib")
 #pragma comment(lib,"TokenDecode.lib")
@@ -9,6 +11,8 @@
 const static std::string baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
 
 const static std::string latex_rendering_request_url = "https://latex.codecogs.com/";
+
+const static std::string mathpix_request_url = "https://api.mathpix.com/v3/latex";
 
 static std::string formula_result;
 
@@ -121,7 +125,7 @@ CPPCURL_API void downloadRenderedFormula(const std::string& latex_string, const 
 		}
 		fclose(fp);
 		curl_easy_cleanup(curl);
-		}
+	}
 	else
 	{
 		throw std::runtime_error("curl_easy_init() failed.");
@@ -352,4 +356,84 @@ std::string imageBase64UrlEncode(const std::string& file_path)
 	str = urlEncode(str);
 	delete[]p;
 	return str;
+}
+
+std::string imageBase64(const std::string& file_path, const std::string& image_format)
+{
+	int size;
+	char* p = readImage(file_path, &size);
+	std::string str = base64Encode(p, size);
+	str = "data:image/" + image_format + ";base64," + str;
+	delete[]p;
+	return str;
+}
+
+// support png and jpg
+std::string formulaRecognitionMathpix(const std::string& encoded_image)
+{
+	CURL* curl = NULL;
+	std::string url = mathpix_request_url;
+	curl_slist* headerlist = NULL;
+	CURLcode result_code;
+
+	curl = curl_easy_init();
+
+	if (curl) {
+
+		// header设置
+		headerlist = curl_slist_append(headerlist, "Content-Type:application/json");
+		headerlist = curl_slist_append(headerlist, "app_id:tmp_key");
+		headerlist = curl_slist_append(headerlist, "app_key:ey4fCTFxcjJ3kqbEaH7j23b926HBAux3a98");
+
+		rapidjson::StringBuffer buffer;
+		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+		writer.StartObject();
+		
+		writer.Key("src");
+		writer.String(encoded_image.c_str(),encoded_image.size());
+
+		writer.Key("formats");
+		writer.StartArray();
+		writer.String("latex_normal");
+		writer.String("latex_styled");
+		writer.String("latex_simplified");
+		writer.EndArray();
+		
+		writer.EndObject();
+
+		std::string json_content = buffer.GetString();
+		
+		// 打印调试信息
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+		// URL地址
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		// 设置POST内容，内容指针encoded_image为char*，注意字符串中要带上表单名称image=
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_content.c_str());
+		// 绑定header
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
+		// 设置写函数
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackFormulaRec);
+		// 设置本次操作为POST
+		curl_easy_setopt(curl, CURLOPT_POST, 1);
+		// 设置本次操作使用header
+		curl_easy_setopt(curl, CURLOPT_HEADER, 1);
+		// 设置callback函数的第四个参数为data_ptr
+		//curl_easy_setopt(curl,CURLOPT_WRITEDATA,data_ptr);
+
+		result_code = curl_easy_perform(curl);
+		if (result_code != CURLE_OK)
+		{
+			std::string errmsg = "curl_easy_perform() failed.";
+			errmsg = errmsg + curl_easy_strerror(result_code);
+			curl_easy_cleanup(curl);
+			throw std::runtime_error(errmsg);
+		}
+
+		curl_easy_cleanup(curl);
+		return formula_result;
+	}
+	else
+	{
+		throw std::runtime_error("curl_easy_init() failed.");
+	}
 }
