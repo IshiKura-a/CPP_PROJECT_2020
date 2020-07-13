@@ -1,15 +1,133 @@
-#pragma once
+#ifndef VIEW_H
+#define VIEW_H
 
-// view到view model的绑定:
-// view中的方法要绑定到view model的WorkFunction。
-// view要使用view model的数据信息。
-// view中对data的改变要相应修改view model。
+#include <QMainWindow>
+#include <QLabel>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QPlainTextEdit>
+#include <QTextDocument>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
+#include <QMouseEvent>
+#include <QTimer>
+#include <QSvgRenderer>
+#include <QPainter>
+#include <QFile>
+#include <QEvent>
+#include <QMessageBox>
+#include <QDialog>
+// #include "viewmodel.h"
 
-// view model到view的绑定:
-// view model的update view事件要绑定view。
+QT_BEGIN_NAMESPACE
+namespace Ui { class View; }
+QT_END_NAMESPACE
 
-class View
+class ViewModel;
+
+class View : public QMainWindow
 {
-	// 摸了
-};
+    Q_OBJECT
+private:
+    // 瀹氫箟绫诲悕
+    using EventFunction = std::function<void()>;
+    using CallbackFunction = std::function<void()>;
+    using WorkFunction = std::function<void()>;
+    template<typename T>
+    using ptr = std::shared_ptr<T>;
 
+public:
+    explicit View(QWidget *parent = nullptr);
+    ~View();
+    // 鍒濆鍖栧竷灞�
+    void initQLayout();
+    void initMenu();
+    void initBody();
+public:
+    // 缁戝畾
+/*    void bindViewModel(ptr<ViewModel> iViewModel)
+    {
+        // 缁戝畾鍛戒护
+        this->setRenderLatexString(iViewModel->getRenderLatexString());
+        this->setDisplayLatexFormula(iViewModel->getGetFormulaResult());
+        this->setLoadImg4Dir(iViewModel->getLoadImg4Dir());
+        this->setChangeLatexFormula(iViewModel->getChangeLatexFormula());
+        this->setDisplayHelpDocument(iViewModel->getDisplayHelpDocument());
+
+        // 缁戝畾鏁版嵁
+        this->setLatexFormula(iViewModel->getLatexString());
+        // 缁戝畾閫氱煡
+        this->setLatexStringViewUpdateNotifier(iViewModel->getLatexStringViewUpdateNotifier());
+    }*/
+    // 鍛戒护
+    void setLoadImg4Dir(WorkFunction command)
+    {
+        loadImg4Dir = command;
+    }
+    void setRenderLatexString(WorkFunction command)
+    {
+        renderLatexString = command;
+    }
+    void setDisplayLatexFormula(WorkFunction command)
+    {
+        displayLatexFormula = command;
+    }
+    void setChangeLatexFormula(WorkFunction command)
+    {
+        changeLatexFormula = command;
+    }
+    void setDisplayHelpDocument(WorkFunction command)
+    {
+        displayHelpDocument = command;
+    }
+
+    // 鎺т欢璁剧疆
+    void setImgLabel(ptr<QLabel> iLabel);
+    void setLatexLabel(ptr<QLabel> iLabel);
+    void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
+    void setLatexFormula(ptr<std::string> iString);
+    // 鐢眜i鎻愪緵
+//    void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
+//    void setTitleMenuBar(ptr<QMenuBar> iMenuBar);
+
+    auto getImgLabel();
+    auto getLatexLabel();
+    auto getLatexEditor();
+    auto getLatexFormula();
+    auto getGridLayoutBody();
+    auto getTitleMenuBar();
+
+    // 閫氱煡
+    void setLatexStringViewUpdateNotifier(EventFunction notifier)
+    {
+        latexStringViewUpdateNotifier = notifier;
+    }
+    auto getLatexStringViewUpdateNotifier()
+    {
+        return latexStringViewUpdateNotifier;
+    }
+
+private slots:
+    void onChangeLatexFormula();
+
+private:
+    Ui::View *ui;
+
+    ptr<QGridLayout> gridLayout_Body;
+
+    ptr<QMenuBar> title_MenuBar;
+    ptr<QLabel> img_Label;
+    ptr<QLabel> latex_Label;
+    ptr<QPlainTextEdit> latex_Editor;
+    ptr<std::string> latex_Formula;
+
+    WorkFunction displayLatexFormula;
+    WorkFunction renderLatexString;
+    WorkFunction loadImg4Dir;
+    WorkFunction changeLatexFormula;
+    WorkFunction displayHelpDocument;
+
+    EventFunction latexStringViewUpdateNotifier;
+};
+#endif // VIEW_H
