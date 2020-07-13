@@ -68,6 +68,8 @@ public:
 	// ¸üÐÂmodelµÄresult
 	void calculateFormula();
 
+	
+
 
 	// data getter and setter
 
