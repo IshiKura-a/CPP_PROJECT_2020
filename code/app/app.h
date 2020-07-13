@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../view/view.h"
 #include "../viewmodel/viewmodel.h"
 #include "../model/model.h"

@@ -16,20 +16,20 @@ private:
 	std::shared_ptr<Model> model;
 
 	// TODO:
-	// ÏÂÁĞÊı¾İÀàĞÍĞèÒª¸Ä³É¶ÔÓ¦µÄQtÀà
+	// ä¸‹åˆ—æ•°æ®ç±»å‹éœ€è¦æ”¹æˆå¯¹åº”çš„Qtç±»
 	// ********************************
-	// ÓÃÓÚ½âÎöºÍäÖÈ¾Í¼Æ¬µÄlatex string
+	// ç”¨äºè§£æå’Œæ¸²æŸ“å›¾ç‰‡çš„latex string
 	ptr<std::string> latexString;
-	// äÖÈ¾ºóÍ¼Æ¬µÄ¶ş½øÖÆÊı¾İ
+	// æ¸²æŸ“åå›¾ç‰‡çš„äºŒè¿›åˆ¶æ•°æ®
 	ptr<std::vector<Byte>> imageData;
-	// ¹«Ê½ÖĞµÄ±äÁ¿-Öµ×é
+	// å…¬å¼ä¸­çš„å˜é‡-å€¼ç»„
 	ptr<std::vector<VariableValuePair>> variableValuePairs;
-	// ¹«Ê½¼ÆËã½á¹û
+	// å…¬å¼è®¡ç®—ç»“æœ
 	ptr<std::string> result;
 	// ********************************
 
 	// notifier
-	// µ±view modelÖĞµÄÊı¾İ·¢Éú±ä»¯Ê±£¬Í¨Öªview
+	// å½“view modelä¸­çš„æ•°æ®å‘ç”Ÿå˜åŒ–æ—¶ï¼Œé€šçŸ¥view
 
 	EventFunction latexStringViewUpdateNotifier;
 	EventFunction imageDataViewUpdateNotifier;
@@ -38,11 +38,11 @@ private:
 
 	// function
 
-	// ÓÃÓÚviewµÄ¶¯Ì¬°ó¶¨
+	// ç”¨äºviewçš„åŠ¨æ€ç»‘å®š
 
 	// TODO:
-	// ¿¼ÂÇµ½viewµÄ·½·¨¿ÉÄÜ´øÓĞ²ÎÊı, WorkFunctionÒ²Ğí²¢²»ÊÊÓÃ
-	// Ò²ĞíÓ¦¸Ã»»³Éstd::any
+	// è€ƒè™‘åˆ°viewçš„æ–¹æ³•å¯èƒ½å¸¦æœ‰å‚æ•°, WorkFunctionä¹Ÿè®¸å¹¶ä¸é€‚ç”¨
+	// ä¹Ÿè®¸åº”è¯¥æ¢æˆstd::any
 	
 	WorkFunction getFormulaResult;
 	WorkFunction renderLatexString;
@@ -76,8 +76,8 @@ public:
 	}
 
 	// data getter and setter
-	// ½ûÖ¹Ö±½ÓÊ¹ÓÃgetter·µ»ØµÄÖ¸ÕëĞŞ¸ÄÊı¾İ£¨ÕâÑù²¶×½²»µ½data changedÊÂ¼ş£©
-	// setter½«´¥·¢data changedÊÂ¼ş, ½«viewµÄĞŞ¸ÄÍ¬²½µ½model
+	// ç¦æ­¢ç›´æ¥ä½¿ç”¨getterè¿”å›çš„æŒ‡é’ˆä¿®æ”¹æ•°æ®ï¼ˆè¿™æ ·æ•æ‰ä¸åˆ°data changedäº‹ä»¶ï¼‰
+	// setterå°†è§¦å‘data changedäº‹ä»¶, å°†viewçš„ä¿®æ”¹åŒæ­¥åˆ°model
 
 	std::shared_ptr<const std::string> getLatexString() const
 	{
@@ -92,7 +92,7 @@ public:
 	{
 		return imageData;
 	}
-	// image data²»ÄÜ±»viewÉèÖÃ
+	// image dataä¸èƒ½è¢«viewè®¾ç½®
 	//void setImageData(const std::vector<Byte>& data)
 	//{
 	//	imageData = std::make_shared<std::vector<Byte>>(data);
@@ -110,7 +110,7 @@ public:
 	{
 		return result;
 	}
-	// result²»ÄÜ±»viewÉèÖÃ
+	// resultä¸èƒ½è¢«viewè®¾ç½®
 	//void setResult(const std::string res)
 	//{
 	//	result = std::make_shared<std::string>(res);
@@ -118,7 +118,7 @@ public:
 
 	// binding
 
-	// °ó¶¨Ò»¸ömodelÊµÀı£¬ÔÚmodel´¥·¢data changedÊÂ¼şÊ±µ÷ÓÃ´Ëview modelµÄnotifiedº¯Êı
+	// ç»‘å®šä¸€ä¸ªmodelå®ä¾‹ï¼Œåœ¨modelè§¦å‘data changedäº‹ä»¶æ—¶è°ƒç”¨æ­¤view modelçš„notifiedå‡½æ•°
 	void bindModel(std::shared_ptr<Model> model)
 	{
 		this->model = model;
@@ -158,47 +158,47 @@ public:
 
 
 	// event callback
-	// ÕâĞ©»Øµ÷º¯Êı¿ÉÒÔ²ÉÓÃÓëÊÂ¼şº¯ÊıÀàËÆµÄ·½·¨À´´ï³É¶¯Ì¬°ó¶¨
-	// ²»¹ıÎÒÒ»Ê±Ã»Ïë³öÕâÀï¶¯Ì¬°ó¶¨µÄÒâÒå£¬ËùÒÔ¾ÍĞ´³É¾²Ì¬µÄº¯ÊıÁË
+	// è¿™äº›å›è°ƒå‡½æ•°å¯ä»¥é‡‡ç”¨ä¸äº‹ä»¶å‡½æ•°ç±»ä¼¼çš„æ–¹æ³•æ¥è¾¾æˆåŠ¨æ€ç»‘å®š
+	// ä¸è¿‡æˆ‘ä¸€æ—¶æ²¡æƒ³å‡ºè¿™é‡ŒåŠ¨æ€ç»‘å®šçš„æ„ä¹‰ï¼Œæ‰€ä»¥å°±å†™æˆé™æ€çš„å‡½æ•°äº†
 
-	// model->view model->view·½Ïò
-	// ²»ĞèÒªĞŞ¸ÄmodelµÄÊı¾İ£¬ĞèÒª´¥·¢view update
+	// model->view model->viewæ–¹å‘
+	// ä¸éœ€è¦ä¿®æ”¹modelçš„æ•°æ®ï¼Œéœ€è¦è§¦å‘view update
 
 	void latexStringChangedNotified()
 	{
 		// TODO:
-		// ¸üĞÂview modelÖĞµÄdata
-		// ´Ë´¦Ó¦µ±¸üĞÂview modelÖĞµÄlatex string
-		// ½«modelÊ¹ÓÃµÄÊı¾İ½á¹¹×ª³ÉviewÊ¹ÓÃµÄÊı¾İ½á¹¹
-		// ÀıÈçlatex string¾ÍÓ¦ string->QString
+		// æ›´æ–°view modelä¸­çš„data
+		// æ­¤å¤„åº”å½“æ›´æ–°view modelä¸­çš„latex string
+		// å°†modelä½¿ç”¨çš„æ•°æ®ç»“æ„è½¬æˆviewä½¿ç”¨çš„æ•°æ®ç»“æ„
+		// ä¾‹å¦‚latex stringå°±åº” string->QString
 
 		auto latex_string = model->getLatexString();
 		latexString = std::make_shared<std::string>(*latex_string);
 
-		// ´¥·¢viewµÄ¸üĞÂÊÂ¼ş
+		// è§¦å‘viewçš„æ›´æ–°äº‹ä»¶
 		latexStringViewUpdateNotify();
 	}
 
 	void imageDataChangedNotified()
 	{
 		// TODO:
-		// ¸üĞÂviewmodelÖĞµÄdata
-		// ´Ë´¦Ó¦µ±¸üĞÂviewmodelÖĞµÄimage data
+		// æ›´æ–°viewmodelä¸­çš„data
+		// æ­¤å¤„åº”å½“æ›´æ–°viewmodelä¸­çš„image data
 		// somefunction()
 
 		auto image_data = model->getImageData();
 		imageData = std::make_shared<std::vector<Byte>>(*image_data);
 
-		// ´¥·¢viewµÄ¸üĞÂÊÂ¼ş
+		// è§¦å‘viewçš„æ›´æ–°äº‹ä»¶
 		imageDataViewUpdateNotifier();
 	}
 
-	// ³õÊ¼»¯Ê±»áÓÃµ½
+	// åˆå§‹åŒ–æ—¶ä¼šç”¨åˆ°
 	void variableValuePairsChangedNotified()
 	{
 		// TODO:
-		// ¸üĞÂviewmodelÖĞµÄdata
-		// ´Ë´¦Ó¦µ±¸üĞÂviewmodelÖĞµÄvariable value pairs
+		// æ›´æ–°viewmodelä¸­çš„data
+		// æ­¤å¤„åº”å½“æ›´æ–°viewmodelä¸­çš„variable value pairs
 		// somefunction()
 		
 		auto variable_value_pairs = model->getVariableValuePairs();
@@ -210,19 +210,19 @@ public:
 	void resultChangedNotified()
 	{
 		// TODO:
-		// ¸üĞÂviewmodelÖĞµÄdata
-		// ´Ë´¦Ó¦µ±¸üĞÂviewmodelÖĞµÄresult
+		// æ›´æ–°viewmodelä¸­çš„data
+		// æ­¤å¤„åº”å½“æ›´æ–°viewmodelä¸­çš„result
 		// somefunction()
 
 		auto res = model->getResult();
 		result = std::make_shared<std::string>(*res);
 
-		// ´¥·¢viewµÄ¸üĞÂÊÂ¼ş
+		// è§¦å‘viewçš„æ›´æ–°äº‹ä»¶
 		resultViewUpdateNotifier();
 	}
 
-	// view->view model->model·½Ïò
-	// ĞèÒªĞŞ¸ÄmodelµÄÊı¾İ£¬²»ĞèÒª´¥·¢view update
+	// view->view model->modelæ–¹å‘
+	// éœ€è¦ä¿®æ”¹modelçš„æ•°æ®ï¼Œä¸éœ€è¦è§¦å‘view update
 
 	void latexStringChangeApplyToModel() const
 	{

@@ -15,17 +15,17 @@ private:
 	using ptr = std::shared_ptr<T>;
 	using EventFunction = std::function<void()>;
 
-	// ÓÃÓÚ½âÎöºÍäÖÈ¾Í¼Æ¬µÄlatex string
+	// ç”¨äºè§£æå’Œæ¸²æŸ“å›¾ç‰‡çš„latex string
 	ptr<std::string> latexString;
-	// äÖÈ¾ºóÍ¼Æ¬µÄ¶ş½øÖÆÊı¾İ
+	// æ¸²æŸ“åå›¾ç‰‡çš„äºŒè¿›åˆ¶æ•°æ®
 	ptr<std::vector<Byte>> imageData;
-	// ¹«Ê½ÖĞµÄ±äÁ¿-Öµ×é
+	// å…¬å¼ä¸­çš„å˜é‡-å€¼ç»„
 	ptr<std::vector<VariableValuePair>> variableValuePairs;
-	// ¹«Ê½¼ÆËã½á¹û
+	// å…¬å¼è®¡ç®—ç»“æœ
 	ptr<std::string> result;
 	
 	// notifier
-	// µ±modelÖĞµÄÊı¾İ·¢Éú±ä»¯Ê±£¬Í¨Öªview model
+	// å½“modelä¸­çš„æ•°æ®å‘ç”Ÿå˜åŒ–æ—¶ï¼Œé€šçŸ¥view model
 
 	EventFunction latexStringChangedNotifier;
 	EventFunction imageDataChangedNotifier;
@@ -46,26 +46,26 @@ public:
 
 	
 	// function
-	// Èç¹ûĞŞ¸ÄÁËmodelÖĞµÄÊı¾İ, ĞèÒªµ÷ÓÃ¶ÔÓ¦µÄnotifyº¯Êı»òÊ¹ÓÃsetter
+	// å¦‚æœä¿®æ”¹äº†modelä¸­çš„æ•°æ®, éœ€è¦è°ƒç”¨å¯¹åº”çš„notifyå‡½æ•°æˆ–ä½¿ç”¨setter
 
-	// ´ò¿ªÍ¼Æ¬ÎÄ¼ş, ²¢¸üĞÂmodelµÄimageData
+	// æ‰“å¼€å›¾ç‰‡æ–‡ä»¶, å¹¶æ›´æ–°modelçš„imageData
 	// @param:
-	// file_path: ĞèÒª¶ÁÈ¡µÄÍ¼Æ¬Â·¾¶
+	// file_path: éœ€è¦è¯»å–çš„å›¾ç‰‡è·¯å¾„
 	void openImage(std::string file_path);
 
-	// äÖÈ¾modelÖĞµÄlatexString, ²¢¸üĞÂmodelµÄimageData
+	// æ¸²æŸ“modelä¸­çš„latexString, å¹¶æ›´æ–°modelçš„imageData
 	void renderLatexFormula();
 
-	// »ñÈ¡°ïÖúĞÅÏ¢
+	// è·å–å¸®åŠ©ä¿¡æ¯
 	// @return:
-	// °ïÖúĞÅÏ¢µÄstring
+	// å¸®åŠ©ä¿¡æ¯çš„string
 	std::string getHelpManual();
 
-	// Ê¹ÓÃmodelÖĞµÄlatexString, ½«¹«Ê½½âÎö³É±í´ïÊ½Ê÷
+	// ä½¿ç”¨modelä¸­çš„latexString, å°†å…¬å¼è§£ææˆè¡¨è¾¾å¼æ ‘
 	void parseFormula();
 
-	// Ê¹ÓÃmodelÖĞµÄvariableValuePairs, ¼ÆËã±í´ïÊ½Ê÷½á¹û
-	// ¸üĞÂmodelµÄresult
+	// ä½¿ç”¨modelä¸­çš„variableValuePairs, è®¡ç®—è¡¨è¾¾å¼æ ‘ç»“æœ
+	// æ›´æ–°modelçš„result
 	void calculateFormula();
 
 	
@@ -73,10 +73,10 @@ public:
 
 	// data getter and setter
 
-	//Ò»Ğ©reminder:
-	// ½ûÖ¹Ö±½ÓÊ¹ÓÃgetter·µ»ØµÄÖ¸ÕëĞŞ¸ÄÊı¾İ£¨ÕâÑù²¶×½²»µ½data changedÊÂ¼ş£©
-	// set without notifyÓÃÓÚview modelÔÚmodel²ãÓ¦ÓÃviewµÄĞŞ¸Ä
-	// ÊÇ·ñĞèÒª¸ü¾«Ï¸µÄÊı¾İĞŞ¸Ä¹¦ÄÜ, ÀıÈçvariableValuePairs.push_back
+	//ä¸€äº›reminder:
+	// ç¦æ­¢ç›´æ¥ä½¿ç”¨getterè¿”å›çš„æŒ‡é’ˆä¿®æ”¹æ•°æ®ï¼ˆè¿™æ ·æ•æ‰ä¸åˆ°data changedäº‹ä»¶ï¼‰
+	// set without notifyç”¨äºview modelåœ¨modelå±‚åº”ç”¨viewçš„ä¿®æ”¹
+	// æ˜¯å¦éœ€è¦æ›´ç²¾ç»†çš„æ•°æ®ä¿®æ”¹åŠŸèƒ½, ä¾‹å¦‚variableValuePairs.push_back
 
 	std::shared_ptr<const std::string> getLatexString() const
 	{
@@ -105,9 +105,9 @@ public:
 	
 private:
 
-	// view modelÓÃµ½setterÊ±, Ó¦µ±ÊÇ½«viewµÄ¸Ä±äÓ¦ÓÃÓÚmodel
-	// Òò´Ëview modelÊ¹ÓÃµÄsetter²»»á²úÉúnotification
-	// ÕâĞ©Ë½ÓĞµÄ·½·¨»á²úÉúnotification, ÓÃÓÚmodel×Ô¼º¶ÔÊı¾İµÄĞŞ¸Ä
+	// view modelç”¨åˆ°setteræ—¶, åº”å½“æ˜¯å°†viewçš„æ”¹å˜åº”ç”¨äºmodel
+	// å› æ­¤view modelä½¿ç”¨çš„setterä¸ä¼šäº§ç”Ÿnotification
+	// è¿™äº›ç§æœ‰çš„æ–¹æ³•ä¼šäº§ç”Ÿnotification, ç”¨äºmodelè‡ªå·±å¯¹æ•°æ®çš„ä¿®æ”¹
 	
 	void setLatexString(const std::string& str)
 	{
@@ -131,7 +131,7 @@ private:
 	}
 public:
 
-	// Ö÷¶¯Í¬²½MVVMÊı¾İ, ÓÃÓÚ³õÊ¼»¯
+	// ä¸»åŠ¨åŒæ­¥MVVMæ•°æ®, ç”¨äºåˆå§‹åŒ–
 	void notifyAll() const
 	{
 		latexStringChangedNotify();
@@ -150,7 +150,7 @@ public:
 	{
 		imageDataChangedNotifier = notifier;
 	}
-	// ³õÊ¼»¯Ê±ÓÃµ½
+	// åˆå§‹åŒ–æ—¶ç”¨åˆ°
 	void setVariableValuePairsChangedNotifier(EventFunction notifier)
 	{
 		variableValuePairsChangedNotifier = notifier;
