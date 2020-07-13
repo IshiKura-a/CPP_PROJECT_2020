@@ -1,10 +1,12 @@
 #pragma once
 #include "model.h"
+// #include "view.h"
 
 
 #include <iostream>
 
 class Model;
+class View;
 
 class ViewModel
 {
@@ -15,7 +17,7 @@ private:
 	using ptr = std::shared_ptr<T>;
 	using EventFunction = std::function<void()>;
 	using CallbackFunction = std::function<void()>;
-	using WorkFunction = std::function<void>();
+    using WorkFunction = std::function<void()>;
 
 
 	std::shared_ptr<Model> model;
@@ -37,14 +39,34 @@ private:
 	// function
 
 	// 动态绑定model的功能函数
-	WorkFunction getFormulaResult;
-	WorkFunction renderLatexString;
-	
+    WorkFunction getFormulaResult;
+    WorkFunction renderLatexString;
+    WorkFunction loadImg4Dir;
+    WorkFunction changeLatexFormula;
+    WorkFunction displayHelpDocument;
 public:
 
 	// function
-
-	
+    auto getRenderLatexString()
+    {
+        return renderLatexString;
+    }
+    auto getGetFormulaResult()
+    {
+        return getFormulaResult;
+    }
+    auto getLoadImg4Dir()
+    {
+        return loadImg4Dir;
+    }
+    auto getChangeLatexFormula()
+    {
+        return changeLatexFormula;
+    }
+    auto getDisplayHelpDocument()
+    {
+        return displayHelpDocument;
+    }
 	
 	// binding
 
@@ -57,8 +79,16 @@ public:
 		);
 	}
 
-	// data getter and setter
+/*    void bindView(ptr<View> view)
+    {
+        this->setLatexStringViewUpdateNotifier(view->getLatexStringViewUpdateNotifier());
+    }*/
 
+	// data getter and setter
+    auto getLatexString()
+    {
+        return latexString;
+    }
 
 	// event getter and setter
 
