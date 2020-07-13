@@ -1,17 +1,10 @@
 #pragma once
 #include "../model/model.h"
-// #include "view.h"
-
-
-#include <iostream>
-
-class Model;
-class View;
 
 class ViewModel
 {
 private:
-	using Byte = unsigned char;
+	using Byte = char;
 	using VariableValuePair = std::pair<std::string, double_t>;
 	template <typename T>
 	using ptr = std::shared_ptr<T>;
@@ -33,12 +26,22 @@ private:
 	// 公式计算结果
 	ptr<std::string> result;
 	// ********************************
-
+	
+	// notifier
+	// 当view model中的数据发生变化时，通知view
+	
 	EventFunction latexStringViewUpdateNotifier;
+	EventFunction imageDataViewUpdateNotifier;
+	//EventFunction variableValuePairsViewUpdateNotifier;
+	EventFunction resultViewUpdateNotifier;
 
 	// function
+	
+	// 用于view的动态绑定
 
-	// 动态绑定model的功能函数
+	// 考虑到view的方法可能带有参数, WorkFunction也许并不适用
+	// 也许应该换成std::any
+	// 
     WorkFunction getFormulaResult;
     WorkFunction renderLatexString;
     WorkFunction loadImg4Dir;
@@ -46,7 +49,9 @@ private:
     WorkFunction displayHelpDocument;
     WorkFunction changeLatexDisplay;
 public:
-	// function
+	
+	// function getter
+	
     auto getRenderLatexString()
     {
         return renderLatexString;
@@ -75,31 +80,31 @@ public:
 	{
 		this->model = model;
 		this->model->setLatexStringChangedNotifier(
-			[&]() {this->latexStringChangedNotified(); }
+			[this]() {this->latexStringChangedNotified(); }
 		);
-		this->setLatexString(model->getLatexString());
+    	this->model->setImageDataChangedNotifier(
+			[this](){this->imageDataChangedNotified();}
+		);
+    	this->model->setResultChangedNotifier(
+			[this](){this->resultChangedNotified();}
+		);
 	}
 
 
-	// data getter and setter
-    auto getLatexString()
-    {
-        return latexString;
-    }
-	void setLatexString(ptr<std::string> iString)
-	{
-		latexString = iString;
-	}
-	// event getter and setter
+	// event setter
 
 	void setLatexStringViewUpdateNotifier(EventFunction notifier)
 	{
 		latexStringViewUpdateNotifier = notifier;
 	}
-	auto getLatexStringViewUpdateNotifier() const
-	{
-		return latexStringViewUpdateNotifier;
-	}
+	void setImageDataViewUpdateNotifier(EventFunction notifier)
+    {
+	    imageDataViewUpdateNotifier = notifier;
+    }
+	void setResultViewUpdateNotifier(EventFunction notifier)
+    {
+	    resultViewUpdateNotifier = notifier;
+    }
 	
 
 	// event callback
@@ -108,22 +113,56 @@ public:
 	
 	void latexStringChangedNotified()
 	{
-		std::cout << "View model received model saying latex string has changed!\n";
-
 		// 更新viewmodel中的data
 		// 此处应当更新viewmodel中的latex string
-		// somefunction()
+		// 将model使用的数据结构转成view使用的数据结构
+		// 例如latex string就应 string->QString
+		
+		latexString = model->getLatexString();
 
 		// 触发view的更新事件
 		latexStringViewUpdateNotify();
 	}
 
+	void imageDataChangedNotified()
+    {
+	    // 更新viewmodel中的data
+		// 此处应当更新viewmodel中的image data
+		// somefunction()
+
+    	imageData = model->getImageData();
+
+		// 触发view的更新事件
+		imageDataViewUpdateNotifier();
+    }
+
+	void resultChangedNotified()
+    {
+	    // 更新viewmodel中的data
+		// 此处应当更新viewmodel中的result
+		// somefunction()
+
+    	result = model->getResult();
+
+		// 触发view的更新事件
+		resultViewUpdateNotifier();
+    }
+
 	// event trigger
 
 	void latexStringViewUpdateNotify() const
 	{
-		std::cout << "View model says latex string has changed!\n";
 		latexStringViewUpdateNotifier();
 	}
+
+	void imageDataViewUpdateNotify() const
+    {
+	    imageDataViewUpdateNotifier();
+    }
+
+	void resultViewUpdateNotify() const
+    {
+	    resultViewUpdateNotifier();
+    }
 };
 

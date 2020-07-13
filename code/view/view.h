@@ -86,15 +86,22 @@ public:
     auto getTitleMenuBar();
     auto getTimer();
 
-    // 通知
-    void setLatexStringViewUpdateNotifier(EventFunction notifier)
-    {
-        latexStringViewUpdateNotifier = notifier;
-    }
-    auto getLatexStringViewUpdateNotifier()
-    {
-        return latexStringViewUpdateNotifier;
-    }
+    // event callback
+
+	void latexStringViewUpdateNotified()
+	{
+		// update view
+	}
+
+	void imageDataViewUpdateNotified()
+	{
+		// update view
+	}
+
+	void resultViewUpdateNotified()
+	{
+		// update view
+	}
 
 private slots:
     void onChangeLatexFormula();
@@ -112,6 +119,8 @@ private:
     ptr<QTimer> timer;
     ptr<std::string> latex_Formula;
 
+    // 用于动态绑定view model
+	
     WorkFunction displayLatexFormula;
     WorkFunction renderLatexString;
     WorkFunction loadImg4Dir;
@@ -119,7 +128,6 @@ private:
     WorkFunction displayHelpDocument;
     WorkFunction changeLatexDisplay;
 
-    EventFunction latexStringViewUpdateNotifier;
 
     // img_Label和latex_Label事件过滤器
     bool eventFilter(QObject *watched, QEvent *event);
