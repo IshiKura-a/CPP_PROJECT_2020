@@ -16,8 +16,9 @@ using WorkFunction = std::function<void(std::any)>;
 using WorkFunctionNoArg = std::function<void()>;
 template <typename T> using Getter = std::function<T()>;
 template <typename T> using Setter = std::function<void(const T&)>;
+//template <typename T> using SetterR = std::function<void(T&&)>;
 
-inline int32_t valueToInt(Value v)
+inline int32_t valueToInt(Value v) noexcept(false)
 {
 	if (v.index() == 0)
 		return std::get<0>(v);
@@ -25,7 +26,7 @@ inline int32_t valueToInt(Value v)
 		throw std::logic_error("Value is not int");
 }
 
-inline double_t valueToDouble(Value v)
+inline double_t valueToDouble(Value v) noexcept(false)
 {
 	if(v.index() == 1)
 		return std::get<1>(v);

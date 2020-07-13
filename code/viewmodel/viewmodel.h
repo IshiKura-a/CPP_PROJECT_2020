@@ -175,7 +175,7 @@ public:
 		imageDataUpdateViewNotify();
 	}
 
-	// 初始化时会用到
+	// model向上同步数据时会用到
 	void varValPairsChangedNotified()
 	{
 		// TODO:
