@@ -100,7 +100,7 @@ void MainWindow::latexDisplay()
 void MainWindow::displayPic4Url(QNetworkReply *reply)
 {
 
-    if(reply->error() == QNetworkReply::NoError)
+    if(reply->error() == QNetworkReply::NoError)  //打开svg文件
     {
         qDebug() << "Downloading...";
         QByteArray data_bytes = reply->readAll();
