@@ -1,4 +1,4 @@
-#include "view.h"
+﻿#include "view.h"
 #include "ui_view.h"
 
 View::View(QWidget *parent)
