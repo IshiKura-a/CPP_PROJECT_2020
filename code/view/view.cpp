@@ -127,11 +127,11 @@ void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
 {
     latex_Editor = iPlainTextEdit;
 }
-void View::setLatexFormula(std::string iString)
-{
-    latex_Formula->clear();
-    latex_Formula->append(iString.c_str());
-}
+//void View::setLatexFormula(std::string iString)
+//{
+    //latex_Formula->clear();
+    //latex_Formula->append(iString.c_str());
+//}
 void View::setLatexFormula(ptr<const std::string> iString)
 {
     latex_Formula = iString;
@@ -216,7 +216,7 @@ void View::onChangeLatexDisplay()
         if (latex_Formula && latex_Formula.get()->data() != (latex_Editor->document())->toPlainText())
         {
             qDebug() << "Text changed.";
-            setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
+            //setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
             if(displayLatexFormula)
             {
                 qDebug() << "Display latex formula";
@@ -235,6 +235,6 @@ void View::onChangeLatexDisplay()
     }
     else
     {
-        setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
+        //setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
     }
 }

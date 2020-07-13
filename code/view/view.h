@@ -1,5 +1,4 @@
-#ifndef VIEW_H
-#define VIEW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QLabel>
@@ -71,7 +70,7 @@ public:
     void setImgLabel(ptr<QLabel> iLabel);
     void setLatexLabel(ptr<QLabel> iLabel);
     void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
-    void setLatexFormula(std::string iString);
+    //void setLatexFormula(std::string iString);
     void setLatexFormula(ptr<const std::string> iString);
     void setTimer(ptr<QTimer> iTimer);
     // 由ui提供
@@ -146,4 +145,3 @@ private:
     // img_Label和latex_Label事件过滤器
     bool eventFilter(QObject *watched, QEvent *event);
 };
-#endif // VIEW_H

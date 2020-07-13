@@ -172,7 +172,8 @@ public:
 		// 将model使用的数据结构转成view使用的数据结构
 		// 例如latex string就应 string->QString
 
-		latexString = model->getLatexString();
+		auto latex_string = model->getLatexString();
+		latexString = std::make_shared<std::string>(*latex_string);
 
 		// 触发view的更新事件
 		latexStringViewUpdateNotify();
@@ -185,7 +186,8 @@ public:
 		// 此处应当更新viewmodel中的image data
 		// somefunction()
 
-		imageData = model->getImageData();
+		auto image_data = model->getImageData();
+		imageData = std::make_shared<std::vector<Byte>>(*image_data);
 
 		// 触发view的更新事件
 		imageDataViewUpdateNotifier();
@@ -198,7 +200,9 @@ public:
 		// 更新viewmodel中的data
 		// 此处应当更新viewmodel中的variable value pairs
 		// somefunction()
-		variableValuePairs = model->getVariableValuePairs();
+		
+		auto variable_value_pairs = model->getVariableValuePairs();
+		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(*variable_value_pairs);
 
 		variableValuePairsViewUpdateNotifier();
 	}
@@ -210,7 +214,8 @@ public:
 		// 此处应当更新viewmodel中的result
 		// somefunction()
 
-		result = model->getResult();
+		auto res = model->getResult();
+		result = std::make_shared<std::string>(*res);
 
 		// 触发view的更新事件
 		resultViewUpdateNotifier();
