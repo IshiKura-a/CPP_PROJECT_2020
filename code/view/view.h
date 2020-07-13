@@ -72,7 +72,7 @@ public:
     void setLatexLabel(ptr<QLabel> iLabel);
     void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
     void setLatexFormula(std::string iString);
-    void setLatexFormula(ptr<std::string> iString);
+    void setLatexFormula(ptr<const std::string> iString);
     void setTimer(ptr<QTimer> iTimer);
     // 由ui提供
 //    void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
@@ -90,16 +90,25 @@ public:
 
 	void latexStringViewUpdateNotified()
 	{
+		// TODO:
 		// update view
 	}
 
 	void imageDataViewUpdateNotified()
 	{
+		// TODO:
+		// update view
+	}
+
+	void variableValuePairsUpdateNotified()
+	{
+		// TODO:
 		// update view
 	}
 
 	void resultViewUpdateNotified()
 	{
+		// TODO:
 		// update view
 	}
 
@@ -117,7 +126,12 @@ private:
     ptr<QLabel> latex_Label;
     ptr<QPlainTextEdit> latex_Editor;
     ptr<QTimer> timer;
-    ptr<std::string> latex_Formula;
+
+    // view model数据
+	// TODO:
+	// 补充其他数据的指针
+	
+	ptr<const std::string> latex_Formula;
 
     // 用于动态绑定view model
 	

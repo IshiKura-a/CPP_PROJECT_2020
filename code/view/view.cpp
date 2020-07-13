@@ -132,7 +132,7 @@ void View::setLatexFormula(std::string iString)
     latex_Formula->clear();
     latex_Formula->append(iString.c_str());
 }
-void View::setLatexFormula(ptr<std::string> iString)
+void View::setLatexFormula(ptr<const std::string> iString)
 {
     latex_Formula = iString;
 }

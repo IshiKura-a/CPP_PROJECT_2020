@@ -46,7 +46,7 @@ public:
 
 	
 	// function
-	// 如果修改了model中的数据, 需要调用对应的notify函数
+	// 如果修改了model中的数据, 需要调用对应的notify函数或使用setter
 
 	// 打开图片文件, 并更新model的imageData
 	// @param:
@@ -72,48 +72,71 @@ public:
 	// data getter and setter
 
 	//一些reminder:
-	// 如果使用返回的指针修改了model的数据，是否捕捉不到data changed事件了？
+	// 禁止直接使用getter返回的指针修改数据（这样捕捉不到data changed事件）
+	// set without notify用于view model在model层应用view的修改
 	// 是否需要更精细的数据修改功能, 例如variableValuePairs.push_back
 
-	const auto& getLatexString() const
+	std::shared_ptr<const std::string> getLatexString() const
 	{
 		return latexString;
 	}
-	void setLatexString(const std::string& str)
+	void setLatexStringWithoutNotify(const std::string& str)
 	{
 		latexString = std::make_shared<std::string>(str);
 	}
-	const auto& getImageData() const
+	std::shared_ptr<const std::vector<Byte>> getImageData() const
 	{
 		return imageData;
 	}
-	// image data不能被view model设置
-private:
-	void setImageData(const std::vector<Byte>& data)
-	{
-		imageData = std::make_shared<std::vector<Byte>>(data);
-	}
-public:
-	const auto& getVariableValuePairs() const
+	std::shared_ptr<const std::vector<VariableValuePair>> getVariableValuePairs() const
 	{
 		return variableValuePairs;
 	}
-	void setVariableValueString(const std::vector<VariableValuePair>& pair)
+	void setVariableValuePairsWithoutNotify(const std::vector<VariableValuePair>& pair)
 	{
 		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(pair);
 	}
-	const auto& getResult() const
+	std::shared_ptr<const std::string> getResult() const
 	{
 		return result;
 	}
-	// result不能被view model设置
+	
 private:
+
+	// view model用到setter时, 应当是将view的改变应用于model
+	// 因此view model使用的setter不会产生notification
+	// 这些私有的方法会产生notification, 用于model自己对数据的修改
+	
+	void setLatexString(const std::string& str)
+	{
+		latexString = std::make_shared<std::string>(str);
+		latexStringChangedNotify();
+	}
+	void setImageData(const std::vector<Byte>& data)
+	{
+		imageData = std::make_shared<std::vector<Byte>>(data);
+		imageDataChangedNotify();
+	}
+	void setVariableValuePairs(const std::vector<VariableValuePair>& pair)
+	{
+		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(pair);
+		variableValuePairsChangedNotify();
+	}
 	void setResult(const std::string res)
 	{
 		result = std::make_shared<std::string>(res);
+		resultChangedNotify();
 	}
 public:
 
+	// 主动同步MVVM数据, 用于初始化
+	void notifyAll() const
+	{
+		latexStringChangedNotify();
+		imageDataChangedNotify();
+		resultChangedNotify();
+		variableValuePairsChangedNotify();
+	}
 	
 	// event setter
 	
@@ -125,9 +148,7 @@ public:
 	{
 		imageDataChangedNotifier = notifier;
 	}
-	// model大概不会主动修改variableValuePairs?
-	// 一般应该只会有view model修改?
-	// 暂时留着这个notifier, 但感觉用不上
+	// 初始化时用到
 	void setVariableValuePairsChangedNotifier(EventFunction notifier)
 	{
 		variableValuePairsChangedNotifier = notifier;
