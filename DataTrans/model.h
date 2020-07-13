@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-
-#include <iostream>
-
 class ViewModel;
 
 class Model
@@ -27,6 +24,9 @@ private:
 	// 公式计算结果
 	ptr<std::string> result;
 
+	// notifier
+	// 当model中的数据发生变化时，通知view model
+	
 	EventFunction latexStringChangedNotifier;
 	EventFunction imageDataChangedNotifier;
 	EventFunction variableValuePairsChangedNotifier;
@@ -37,13 +37,33 @@ public:
 
 
 	// function
+	// 如果修改了model中的数据, 需要调用对应的notify函数
 
-	void getFormulaResult();
+	// 打开图片文件, 并更新model的imageData
+	// @param:
+	// file_path: 需要读取的图片路径
+	void openImage(std::string file_path);
+
+	// 渲染model中的latexString, 并更新model的imageData
+	void renderLatexFormula();
+
+	// 获取帮助信息
+	// @return:
+	// 帮助信息的string
+	std::string getHelpManual();
+
+	// 使用model中的latexString, 将公式解析成表达式树
+	void parseFormula();
+
+	// 使用model中的variableValuePairs, 计算表达式树结果
+	// 更新model的result
+	void calculateFormula();
 
 	// data getter and setter
 
 	//一些reminder:
 	// 如果使用返回的指针修改了model的数据，是否捕捉不到data changed事件了？
+	// 是否需要更精细的数据修改功能, 例如variableValuePairs.push_back
 
 
 	const auto& getLatexString() const
@@ -58,10 +78,13 @@ public:
 	{
 		return imageData;
 	}
+	// image data不能被view model设置
+private:
 	void setImageData(const std::vector<Byte>& data)
 	{
 		imageData = std::make_shared<std::vector<Byte>>(data);
 	}
+public:
 	const auto& getVariableValuePairs() const
 	{
 		return variableValuePairs;
@@ -84,61 +107,44 @@ public:
 
 
 	
-	// event getter and setter
+	// event setter
 
 	void setLatexStringChangedNotifier(EventFunction notifier)
 	{
 		latexStringChangedNotifier = notifier;
 	}
-	auto getLatexStringChangedNotifier() const
-	{
-		return latexStringChangedNotifier;
-	}
 	void setImageDataChangedNotifier(EventFunction notifier)
 	{
 		imageDataChangedNotifier = notifier;
 	}
-	auto getImageDataChangedNotifier() const
-	{
-		return imageDataChangedNotifier;
-	}
+	// model大概不会主动修改variableValuePairs?
+	// 一般应该只会有view model修改?
+	// 暂时留着这个notifier, 但感觉用不上
 	void setVariableValuePairsChangedNotifier(EventFunction notifier)
 	{
 		variableValuePairsChangedNotifier = notifier;
 	}
-	auto getVariableValuePairsChangedNotifier() const
-	{
-		return variableValuePairsChangedNotifier;
-	}
 	void setResultChangedNotifier(EventFunction notifier)
 	{
 		resultChangedNotifier = notifier;
-	}
-	auto getResultChangedNotifier() const
-	{
-		return resultChangedNotifier;
 	}
 	
 	// event trigger
 
 	void latexStringChangedNotify() const
 	{
-		std::cout << "Model says latex string has changed!\n";
 		latexStringChangedNotifier();
 	}
 	void imageDataChangedNotify() const
 	{
-		std::cout << "Model says image data has changed!\n";
 		imageDataChangedNotifier();
 	}
 	void variableValuePairsChangedNotify() const
 	{
-		std::cout << "Model says variable-value pairs have changed!\n";
 		variableValuePairsChangedNotifier();
 	}
 	void resultChangedNotify() const
 	{
-		std::cout << "Model says result has changed!\n";
 		resultChangedNotifier();
 	}
 };

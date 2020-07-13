@@ -98,15 +98,23 @@ public:
     auto getGridLayoutBody();
     auto getTitleMenuBar();
 
-    // 通知
-    void setLatexStringViewUpdateNotifier(EventFunction notifier)
-    {
-        latexStringViewUpdateNotifier = notifier;
-    }
-    auto getLatexStringViewUpdateNotifier()
-    {
-        return latexStringViewUpdateNotifier;
-    }
+	
+	// event callback
+
+	void latexStringViewUpdateNotified()
+	{
+		// update view
+	}
+
+	void imageDataViewUpdateNotified()
+	{
+		// update view
+	}
+
+	void resultViewUpdateNotified()
+	{
+		// update view
+	}
 
 private slots:
     void onChangeLatexFormula();
@@ -122,12 +130,13 @@ private:
     ptr<QPlainTextEdit> latex_Editor;
     ptr<std::string> latex_Formula;
 
+	// 用于动态绑定view model
+	
     WorkFunction displayLatexFormula;
     WorkFunction renderLatexString;
     WorkFunction loadImg4Dir;
     WorkFunction changeLatexFormula;
     WorkFunction displayHelpDocument;
 
-    EventFunction latexStringViewUpdateNotifier;
 };
 #endif // VIEW_H
