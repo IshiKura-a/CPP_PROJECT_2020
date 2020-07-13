@@ -46,7 +46,7 @@ public:
 			[this]() {view->resultViewUpdateNotified(); }
 		);
 		viewModel->bindCallback_ResultUpdateView(
-			[this]() {view->variableValuePairsUpdateNotified(); }
+			[this]() {view->varValPairsUpdateNotified(); }
 		);
 
 		// 绑定数据

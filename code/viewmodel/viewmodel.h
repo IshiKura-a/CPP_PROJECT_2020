@@ -112,7 +112,7 @@ public:
 			[this]() {this->imageDataChangedNotified(); }
 		);
 		this->model->bindCallback_VarValPairsChanged(
-			[this]() {this->variableValuePairsChangedNotified(); }
+			[this]() {this->varValPairsChangedNotified(); }
 		);
 		this->model->bindCallback_ResultChanged(
 			[this]() {this->resultChangedNotified(); }
@@ -176,7 +176,7 @@ public:
 	}
 
 	// 初始化时会用到
-	void variableValuePairsChangedNotified()
+	void varValPairsChangedNotified()
 	{
 		// TODO:
 		// 更新view model中的data

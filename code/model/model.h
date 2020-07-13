@@ -62,7 +62,7 @@ public:
 	//一些reminder:
 	// 禁止直接使用getter返回的指针修改数据(这样捕捉不到data changed事件)
 	// set without notify用于view model在model层应用view的修改
-	// 是否需要更精细的数据修改功能?例如variableValuePairs.push_back
+	// 是否需要更精细的数据修改功能?例如varValPairs.push_back
 
 	[[nodiscard]] ptr<const std::string> getLatexString() const
 	{
@@ -116,7 +116,7 @@ private:
 	}
 public:
 
-	// 主动同步MVVM数据, 用于初始化
+	// 从model向view主动同步数据, 用于初始化
 	void notifyAll() const
 	{
 		latexStringChangedNotify();
@@ -135,7 +135,7 @@ public:
 	{
 		imageDataChanged = registerEvent(fun);
 	}
-	// 初始化时用到
+	// 主动同步时使用
 	void bindCallback_VarValPairsChanged(CallbackFunction fun)
 	{
 		varValuePairsChanged = registerEvent(fun);

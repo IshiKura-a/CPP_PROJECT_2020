@@ -118,7 +118,7 @@ public:
 		// update view
 	}
 
-	void variableValuePairsUpdateNotified()
+	void varValPairsUpdateNotified()
 	{
 		// TODO:
 		// update view
