@@ -1,51 +1,40 @@
 #pragma once
-#include <functional>
-#include <memory>
-#include <string>
-#include <vector>
+#include "../common/def.h"
+#include "../common/notifiable.h"
 
-class ViewModel;
-
-class Model
+class Model : public Notifiable
 {
 private:
-	using Byte = char;
-	using VariableValuePair = std::pair<std::string, double_t>;
-	template <typename T>
-	using ptr = std::shared_ptr<T>;
-	using EventFunction = std::function<void()>;
 
 	// 用于解析和渲染图片的latex string
 	ptr<std::string> latexString;
 	// 渲染后图片的二进制数据
 	ptr<std::vector<Byte>> imageData;
 	// 公式中的变量-值组
-	ptr<std::vector<VariableValuePair>> variableValuePairs;
+	ptr<std::vector<VarValPair>> varValPairs;
 	// 公式计算结果
 	ptr<std::string> result;
-	
-	// notifier
-	// 当model中的数据发生变化时，通知view model
 
-	EventFunction latexStringChangedNotifier;
-	EventFunction imageDataChangedNotifier;
-	EventFunction variableValuePairsChangedNotifier;
-	EventFunction resultChangedNotifier;
+	/******************** notifier ********************/
+	// 当model中的数据发生变化时, 通知view model
 
-	
+	EventId latexStringChanged = EventUnregistered;
+	EventId imageDataChanged = EventUnregistered;
+	EventId varValuePairsChanged = EventUnregistered;
+	EventId resultChanged = EventUnregistered;
+
 public:
 
-	
 	Model()
 	{
 		latexString = std::make_shared<std::string>();
 		imageData = std::make_shared<std::vector<Byte>>();
-		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>();
+		varValPairs = std::make_shared<std::vector<VarValPair>>();
 		result = std::make_shared<std::string>();
 	}
 
-	
-	// function
+
+	/******************** function ********************/
 	// 如果修改了model中的数据, 需要调用对应的notify函数或使用setter
 
 	// 打开图片文件, 并更新model的imageData
@@ -68,17 +57,14 @@ public:
 	// 更新model的result
 	void calculateFormula();
 
-	
 
-
-	// data getter and setter
-
+	/******************** data getter and setter ********************/
 	//一些reminder:
-	// 禁止直接使用getter返回的指针修改数据（这样捕捉不到data changed事件）
+	// 禁止直接使用getter返回的指针修改数据(这样捕捉不到data changed事件)
 	// set without notify用于view model在model层应用view的修改
-	// 是否需要更精细的数据修改功能, 例如variableValuePairs.push_back
+	// 是否需要更精细的数据修改功能?例如variableValuePairs.push_back
 
-	std::shared_ptr<const std::string> getLatexString() const
+	[[nodiscard]] ptr<const std::string> getLatexString() const
 	{
 		return latexString;
 	}
@@ -86,29 +72,28 @@ public:
 	{
 		latexString = std::make_shared<std::string>(str);
 	}
-	std::shared_ptr<const std::vector<Byte>> getImageData() const
+	[[nodiscard]] ptr<const std::vector<Byte>> getImageData() const
 	{
 		return imageData;
 	}
-	std::shared_ptr<const std::vector<VariableValuePair>> getVariableValuePairs() const
+	[[nodiscard]] ptr<const std::vector<VarValPair>> getVarValPairs() const
 	{
-		return variableValuePairs;
+		return varValPairs;
 	}
-	void setVariableValuePairsWithoutNotify(const std::vector<VariableValuePair>& pair)
+	void setVarValPairsWithoutNotify(const std::vector<VarValPair>& pair)
 	{
-		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(pair);
+		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
 	}
-	std::shared_ptr<const std::string> getResult() const
+	[[nodiscard]] ptr<const std::string> getResult() const
 	{
 		return result;
 	}
-	
+
 private:
 
-	// view model用到setter时, 应当是将view的改变应用于model
-	// 因此view model使用的setter不会产生notification
+	// view model用到setter时, 应当是将view的改变应用于model, 不会产生notification
 	// 这些私有的方法会产生notification, 用于model自己对数据的修改
-	
+
 	void setLatexString(const std::string& str)
 	{
 		latexString = std::make_shared<std::string>(str);
@@ -119,10 +104,10 @@ private:
 		imageData = std::make_shared<std::vector<Byte>>(data);
 		imageDataChangedNotify();
 	}
-	void setVariableValuePairs(const std::vector<VariableValuePair>& pair)
+	void setVarValPairs(const std::vector<VarValPair>& pair)
 	{
-		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(pair);
-		variableValuePairsChangedNotify();
+		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
+		varValPairsChangedNotify();
 	}
 	void setResult(const std::string res)
 	{
@@ -137,46 +122,46 @@ public:
 		latexStringChangedNotify();
 		imageDataChangedNotify();
 		resultChangedNotify();
-		variableValuePairsChangedNotify();
+		varValPairsChangedNotify();
 	}
-	
-	// event setter
-	
-	void setLatexStringChangedNotifier(EventFunction notifier)
+
+	/******************** callback function binding ********************/
+
+	void bindCallback_LatexStringChanged(CallbackFunction fun)
 	{
-		latexStringChangedNotifier = notifier;
+		latexStringChanged = registerEvent(fun);
 	}
-	void setImageDataChangedNotifier(EventFunction notifier)
+	void bindCallback_ImageDataChanged(CallbackFunction fun)
 	{
-		imageDataChangedNotifier = notifier;
+		imageDataChanged = registerEvent(fun);
 	}
 	// 初始化时用到
-	void setVariableValuePairsChangedNotifier(EventFunction notifier)
+	void bindCallback_VarValPairsChanged(CallbackFunction fun)
 	{
-		variableValuePairsChangedNotifier = notifier;
+		varValuePairsChanged = registerEvent(fun);
 	}
-	void setResultChangedNotifier(EventFunction notifier)
+	void bindCallback_ResultChanged(CallbackFunction fun)
 	{
-		resultChangedNotifier = notifier;
+		resultChanged = registerEvent(fun);
 	}
-	
-	// event trigger
-	
+
+	/******************** event trigger ********************/
+
 	void latexStringChangedNotify() const
 	{
-		latexStringChangedNotifier();
+		raiseEvent(latexStringChanged);
 	}
 	void imageDataChangedNotify() const
 	{
-		imageDataChangedNotifier();
+		raiseEvent(imageDataChanged);
 	}
-	void variableValuePairsChangedNotify() const
+	void varValPairsChangedNotify() const
 	{
-		variableValuePairsChangedNotifier();
+		raiseEvent(varValuePairsChanged);
 	}
 	void resultChangedNotify() const
 	{
-		resultChangedNotifier();
+		raiseEvent(resultChanged);
 	}
 };
 

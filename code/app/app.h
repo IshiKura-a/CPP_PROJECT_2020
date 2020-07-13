@@ -11,12 +11,6 @@
 class App
 {
 private:
-	using EventFunction = std::function<void()>;
-	using CallbackFunction = std::function<void()>;
-	using WorkFunction = std::function<void()>;
-	template<typename T>
-	using ptr = std::shared_ptr<T>;
-private:
 	ptr<View> view;
 	ptr<ViewModel> viewModel;
 	ptr<Model> model;
@@ -39,27 +33,33 @@ public:
 		view->setLatexLabel(std::make_shared<QLabel>());
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
 		view->setTimer(std::make_shared<QTimer>());
+		view->setLatexStringGetter(viewModel->getLatexString);
 
 		// view update notification动态绑定
-		viewModel->setLatexStringViewUpdateNotifier(
+		viewModel->bindCallback_LatexStringUpdateView(
 			[this]() {view->latexStringViewUpdateNotified(); }
 		);
-		viewModel->setImageDataViewUpdateNotifier(
+		viewModel->bindCallback_ImageDataUpdateView(
 			[this]() {view->imageDataViewUpdateNotified(); }
 		);
-		viewModel->setResultViewUpdateNotifier(
+		viewModel->bindCallback_VarValPairsUpdateView(
 			[this]() {view->resultViewUpdateNotified(); }
 		);
-		viewModel->setVariableValuePairsViewUpdateNotifier(
+		viewModel->bindCallback_ResultUpdateView(
 			[this]() {view->variableValuePairsUpdateNotified(); }
 		);
 
 		// 绑定数据
 		// TODO:
 		// 还没写完, 要把其他数据也绑定上去
-		view->setLatexFormula(viewModel->getLatexString());
+		view->setLatexStringGetter(viewModel->getLatexString);
+		view->setLatexStringSetter(viewModel->setLatexString);
 
 		// 同步数据
+		model->notifyAll();
+
+		// 试试, 如果显示成功就说明数据传输正常
+		view->setLatexString("quit");
 		model->notifyAll();
 	};
 	void run()

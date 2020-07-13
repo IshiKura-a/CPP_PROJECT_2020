@@ -46,6 +46,12 @@
     <Filter Include="Source Files\viewmodel">
       <UniqueIdentifier>{ff56769a-d913-47db-8114-e6f79ea51d1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\common">
+      <UniqueIdentifier>{35b2f2ce-5495-4a2c-a7b9-33d7fc1353b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{c98d239a-792e-44e7-9d05-f94eb60cce39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app\app.h">
@@ -59,6 +65,15 @@
     </ClInclude>
     <ClInclude Include="..\viewmodel\viewmodel.h">
       <Filter>Header Files\viewmodel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\common.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\def.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\notifiable.h">
+      <Filter>Header Files\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="..\main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\common.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\notifiable.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

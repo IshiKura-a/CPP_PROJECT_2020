@@ -1,19 +1,13 @@
 #pragma once
 #include "../model/model.h"
+#include "../common/def.h"
+#include "../common/notifiable.h"
 
-class ViewModel
+class ViewModel :public Notifiable
 {
 private:
-	using Byte = char;
-	using VariableValuePair = std::pair<std::string, double_t>;
-	template <typename T>
-	using ptr = std::shared_ptr<T>;
-	using EventFunction = std::function<void()>;
-	using CallbackFunction = std::function<void()>;
-	using WorkFunction = std::function<void()>;
 
-
-	std::shared_ptr<Model> model;
+	ptr<Model> model;
 
 	// TODO:
 	// 下列数据类型需要改成对应的Qt类
@@ -23,146 +17,134 @@ private:
 	// 渲染后图片的二进制数据
 	ptr<std::vector<Byte>> imageData;
 	// 公式中的变量-值组
-	ptr<std::vector<VariableValuePair>> variableValuePairs;
+	ptr<std::vector<VarValPair>> varValPairs;
 	// 公式计算结果
 	ptr<std::string> result;
 	// ********************************
 
-	// notifier
-	// 当view model中的数据发生变化时，通知view
+	/******************** notifier ********************/
+	// 当model中的数据发生变化时, 通知view model
 
-	EventFunction latexStringViewUpdateNotifier;
-	EventFunction imageDataViewUpdateNotifier;
-	EventFunction variableValuePairsViewUpdateNotifier;
-	EventFunction resultViewUpdateNotifier;
+	EventId latexStringUpdateView = EventUnregistered;
+	EventId imageDataUpdateView = EventUnregistered;
+	EventId varValPairsUpdateView = EventUnregistered;
+	EventId resultUpdateView = EventUnregistered;
 
-	// function
+	/******************** function pointer ********************/
 
 	// 用于view的动态绑定
+	// WorkFunction: 参数为std::any
+	// WorkFunctionNoArg: 参数为void
 
-	// TODO:
-	// 考虑到view的方法可能带有参数, WorkFunction也许并不适用
-	// 也许应该换成std::any
-	
-	WorkFunction getFormulaResult;
-	WorkFunction renderLatexString;
-	WorkFunction loadImg4Dir;
-	WorkFunction changeLatexFormula;
-	WorkFunction displayHelpDocument;
-	WorkFunction changeLatexDisplay;
+	WorkFunctionNoArg getFormulaResult;
+	WorkFunctionNoArg renderLatexString;
+	WorkFunctionNoArg loadImg4Dir;
+	WorkFunctionNoArg changeLatexFormula;
+	WorkFunctionNoArg displayHelpDocument;
+	WorkFunctionNoArg changeLatexDisplay;
+
 public:
 
-	// function getter
+	/******************** function getter ********************/
 
-	auto getRenderLatexString()
+	auto getRenderLatexString() const
 	{
 		return renderLatexString;
 	}
-	auto getGetFormulaResult()
+	auto getGetFormulaResult() const
 	{
 		return getFormulaResult;
 	}
-	auto getLoadImg4Dir()
+	auto getLoadImg4Dir() const
 	{
 		return loadImg4Dir;
 	}
-	auto getChangeLatexFormula()
+	auto getChangeLatexFormula() const
 	{
 		return changeLatexFormula;
 	}
-	auto getDisplayHelpDocument()
+	auto getDisplayHelpDocument() const
 	{
 		return displayHelpDocument;
 	}
 
-	// data getter and setter
-	// 禁止直接使用getter返回的指针修改数据（这样捕捉不到data changed事件）
-	// setter将触发data changed事件, 将view的修改同步到model
+	/******************** data getter and setter ********************/
+	// 禁止直接使用getter返回的指针修改数据(这样捕捉不到data changed事件)
+	// setter会将view的修改同步到model
+	// getter直接使用lambda函数, 便于view的绑定
 
-	std::shared_ptr<const std::string> getLatexString() const
-	{
-		return latexString;
-	}
-	void setLatexString(const std::string& str)
+	Getter<ptr<const std::string>> getLatexString = [this]()
+	{return latexString; };
+	Setter<std::string> setLatexString = [this](const std::string& str)
 	{
 		latexString = std::make_shared<std::string>(str);
-		latexStringChangeApplyToModel();
-	}
-	std::shared_ptr<const std::vector<Byte>> getImageData() const
-	{
-		return imageData;
-	}
+		this->latexStringChangeApplyToModel();
+	};
+	Getter<ptr<const std::vector<Byte>>> getImageData = [this]() {return imageData; };
 	// image data不能被view设置
 	//void setImageData(const std::vector<Byte>& data)
 	//{
 	//	imageData = std::make_shared<std::vector<Byte>>(data);
 	//}
-	std::shared_ptr<const std::vector<VariableValuePair>> getVariableValuePairs() const
+	Getter<ptr<const std::vector<VarValPair>>> getVarValPairs = [this]() {return varValPairs; };
+	Setter<std::vector<VarValPair>> setVarValPairs = [this](std::vector<VarValPair> pair)
 	{
-		return variableValuePairs;
-	}
-	void setVariableValueString(const std::vector<VariableValuePair>& pair)
-	{
-		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(pair);
-		variableValuePairsChangeApplyToModel();
-	}
-	std::shared_ptr<const std::string> getResult() const
-	{
-		return result;
-	}
+		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
+		this->varValPairsChangeApplyToModel();
+	};
+	Getter<ptr<const std::string>> getResult = [this]() {return result; };
 	// result不能被view设置
 	//void setResult(const std::string res)
 	//{
 	//	result = std::make_shared<std::string>(res);
 	//}
 
-	// binding
+	/******************** binding ********************/
 
 	// 绑定一个model实例，在model触发data changed事件时调用此view model的notified函数
-	void bindModel(std::shared_ptr<Model> model)
+	void bindModel(ptr<Model> model)
 	{
 		this->model = model;
-		this->model->setLatexStringChangedNotifier(
+		this->model->bindCallback_LatexStringChanged(
 			[this]() {this->latexStringChangedNotified(); }
 		);
-		this->model->setImageDataChangedNotifier(
+		this->model->bindCallback_ImageDataChanged(
 			[this]() {this->imageDataChangedNotified(); }
 		);
-		this->model->setVariableValuePairsChangedNotifier(
+		this->model->bindCallback_VarValPairsChanged(
 			[this]() {this->variableValuePairsChangedNotified(); }
 		);
-		this->model->setResultChangedNotifier(
+		this->model->bindCallback_ResultChanged(
 			[this]() {this->resultChangedNotified(); }
 		);
 	}
 
+	/******************** callback function binding ********************/
 
-	// event setter
-
-	void setLatexStringViewUpdateNotifier(EventFunction notifier)
+	void bindCallback_LatexStringUpdateView(CallbackFunction fun)
 	{
-		latexStringViewUpdateNotifier = notifier;
+		latexStringUpdateView = registerEvent(fun);
 	}
-	void setImageDataViewUpdateNotifier(EventFunction notifier)
+	void bindCallback_ImageDataUpdateView(CallbackFunction fun)
 	{
-		imageDataViewUpdateNotifier = notifier;
+		imageDataUpdateView = registerEvent(fun);
 	}
-	void setVariableValuePairsViewUpdateNotifier(EventFunction notifier)
+	void bindCallback_VarValPairsUpdateView(CallbackFunction fun)
 	{
-		variableValuePairsViewUpdateNotifier = notifier;
+		varValPairsUpdateView = registerEvent(fun);
 	}
-	void setResultViewUpdateNotifier(EventFunction notifier)
+	void bindCallback_ResultUpdateView(CallbackFunction fun)
 	{
-		resultViewUpdateNotifier = notifier;
+		resultUpdateView = registerEvent(fun);
 	}
 
 
-	// event callback
-	// 这些回调函数可以采用与事件函数类似的方法来达成动态绑定
+	/******************** callback function ********************/
+	// 这些回调函数可以和以上函数一样动态绑定
 	// 不过我一时没想出这里动态绑定的意义，所以就写成静态的函数了
 
 	// model->view model->view方向
-	// 不需要修改model的数据，需要触发view update
+	// 不需要修改model的数据，需要触发update view
 
 	void latexStringChangedNotified()
 	{
@@ -176,80 +158,85 @@ public:
 		latexString = std::make_shared<std::string>(*latex_string);
 
 		// 触发view的更新事件
-		latexStringViewUpdateNotify();
+		latexStringUpdateViewNotify();
 	}
 
 	void imageDataChangedNotified()
 	{
 		// TODO:
-		// 更新viewmodel中的data
-		// 此处应当更新viewmodel中的image data
+		// 更新view model中的data
+		// 此处应当更新view model中的image data
 		// somefunction()
 
 		auto image_data = model->getImageData();
 		imageData = std::make_shared<std::vector<Byte>>(*image_data);
 
 		// 触发view的更新事件
-		imageDataViewUpdateNotifier();
+		imageDataUpdateViewNotify();
 	}
 
 	// 初始化时会用到
 	void variableValuePairsChangedNotified()
 	{
 		// TODO:
-		// 更新viewmodel中的data
-		// 此处应当更新viewmodel中的variable value pairs
+		// 更新view model中的data
+		// 此处应当更新view model中的variable value pairs
 		// somefunction()
-		
-		auto variable_value_pairs = model->getVariableValuePairs();
-		variableValuePairs = std::make_shared<std::vector<VariableValuePair>>(*variable_value_pairs);
 
-		variableValuePairsViewUpdateNotifier();
+		auto variable_value_pairs = model->getVarValPairs();
+		varValPairs = std::make_shared<std::vector<VarValPair>>(*variable_value_pairs);
+
+		// 触发view的更新事件
+		varValPairsUpdateViewNotify();
 	}
 
 	void resultChangedNotified()
 	{
 		// TODO:
-		// 更新viewmodel中的data
-		// 此处应当更新viewmodel中的result
+		// 更新view model中的data
+		// 此处应当更新view model中的result
 		// somefunction()
 
 		auto res = model->getResult();
 		result = std::make_shared<std::string>(*res);
 
 		// 触发view的更新事件
-		resultViewUpdateNotifier();
+		resultUpdateViewNotify();
 	}
 
 	// view->view model->model方向
-	// 需要修改model的数据，不需要触发view update
+	// 需要修改model的数据，不需要触发update view
 
 	void latexStringChangeApplyToModel() const
 	{
 		model->setLatexStringWithoutNotify(*latexString);
 	}
 
-	void variableValuePairsChangeApplyToModel() const
+	void varValPairsChangeApplyToModel() const
 	{
-		model->setVariableValuePairsWithoutNotify(*variableValuePairs);
+		model->setVarValPairsWithoutNotify(*varValPairs);
 	}
 
-	// event trigger
+	/******************** event trigger ********************/
 
-	void latexStringViewUpdateNotify() const
+	void latexStringUpdateViewNotify() const
 	{
-		latexStringViewUpdateNotifier();
+		raiseEvent(latexStringUpdateView);
 	}
 
-	void imageDataViewUpdateNotify() const
+	void imageDataUpdateViewNotify() const
 	{
-		imageDataViewUpdateNotifier();
+		raiseEvent(imageDataUpdateView);
 	}
 
-	void resultViewUpdateNotify() const
+	void varValPairsUpdateViewNotify() const
 	{
-		resultViewUpdateNotifier();
+		raiseEvent(varValPairsUpdateView);
+	}
+
+	void resultUpdateViewNotify() const
+	{
+		raiseEvent(resultUpdateView);
 	}
 
 };
-

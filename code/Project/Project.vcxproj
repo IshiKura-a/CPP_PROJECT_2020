@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app\app.h" />
+    <ClInclude Include="..\common\common.h" />
+    <ClInclude Include="..\common\def.h" />
+    <ClInclude Include="..\common\notifiable.h" />
     <ClInclude Include="..\model\model.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
     <ClInclude Include="..\view\ui_view.h" />
@@ -19,6 +22,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\app\app.cpp" />
+    <ClCompile Include="..\common\common.cpp" />
+    <ClCompile Include="..\common\notifiable.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\model\model.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />
@@ -63,6 +68,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>

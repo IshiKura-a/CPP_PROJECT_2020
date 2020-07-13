@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+
+#include "../common/def.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -17,7 +20,6 @@
 #include <QEvent>
 #include <QMessageBox>
 #include <QDialog>
-// #include "viewmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class View; }
@@ -27,70 +29,87 @@ class ViewModel;
 
 class View : public QMainWindow
 {
-    Q_OBJECT
-private:
-    // 定义类名
-    using EventFunction = std::function<void()>;
-    using CallbackFunction = std::function<void()>;
-    using WorkFunction = std::function<void()>;
-    template<typename T>
-    using ptr = std::shared_ptr<T>;
+	Q_OBJECT
 
 public:
-    View(QWidget *parent = nullptr);
-    ~View();
-    // 初始化布局
-    void initQLayout();
-    void initMenu();
-    void initBody();
-public:
-    // 命令
-    void setLoadImg4Dir(WorkFunction command)
-    {
-        loadImg4Dir = command;
-    }
-    void setRenderLatexString(WorkFunction command)
-    {
-        renderLatexString = command;
-    }
-    void setDisplayLatexFormula(WorkFunction command)
-    {
-        displayLatexFormula = command;
-    }
-    void setChangeLatexFormula(WorkFunction command)
-    {
-        changeLatexFormula = command;
-    }
-    void setDisplayHelpDocument(WorkFunction command)
-    {
-        displayHelpDocument = command;
-    }
+	View(QWidget* parent = nullptr);
+	~View();
+	// 初始化布局
+	void initQLayout();
+	void initMenu();
+	void initBody();
 
-    // 控件设置
-    void setImgLabel(ptr<QLabel> iLabel);
-    void setLatexLabel(ptr<QLabel> iLabel);
-    void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
-    //void setLatexFormula(std::string iString);
-    void setLatexFormula(ptr<const std::string> iString);
-    void setTimer(ptr<QTimer> iTimer);
-    // 由ui提供
+	// 命令
+	void setLoadImg4Dir(WorkFunctionNoArg command)
+	{
+		loadImg4Dir = command;
+	}
+	void setRenderLatexString(WorkFunctionNoArg command)
+	{
+		renderLatexString = command;
+	}
+	void setDisplayLatexFormula(WorkFunctionNoArg command)
+	{
+		displayLatexFormula = command;
+	}
+	void setChangeLatexFormula(WorkFunctionNoArg command)
+	{
+		changeLatexFormula = command;
+	}
+	void setDisplayHelpDocument(WorkFunctionNoArg command)
+	{
+		displayHelpDocument = command;
+	}
+
+	/******************** data-getter setter and data-setter setter ********************/
+
+	void setLatexStringGetter(Getter<ptr<const std::string>> getter)
+	{
+		latexStringGetter = getter;
+	}
+	void setLatexStringSetter(Setter<std::string> setter)
+	{
+		latexStringSetter = setter;
+	}
+
+	/******************** data getter and setter ********************/
+	// 有用吗, 没用就删了
+
+	auto getLatexString()
+	{
+		return latexStringGetter();
+	}
+	void setLatexString(const std::string& str)
+	{
+		latexStringSetter(str);
+	}
+	
+	// 控件设置
+	void setImgLabel(ptr<QLabel> iLabel);
+	void setLatexLabel(ptr<QLabel> iLabel);
+	void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
+	// void setLatexFormula(std::string iString);
+	void setLatexFormula(ptr<const std::string> iString);
+	void setTimer(ptr<QTimer> iTimer);
+	// 由ui提供
 //    void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
 //    void setTitleMenuBar(ptr<QMenuBar> iMenuBar);
 
-    auto getImgLabel();
-    auto getLatexLabel();
-    auto getLatexEditor();
-    auto getLatexFormula();
-    auto getGridLayoutBody();
-    auto getTitleMenuBar();
-    auto getTimer();
-
-    // event callback
+	auto getImgLabel();
+	auto getLatexLabel();
+	auto getLatexEditor();
+	auto getLatexFormula();
+	auto getGridLayoutBody();
+	auto getTitleMenuBar();
+	auto getTimer();
+	
+	/******************** callback function ********************/
 
 	void latexStringViewUpdateNotified()
 	{
 		// TODO:
 		// update view
+		latex_Formula = latexStringGetter();
 	}
 
 	void imageDataViewUpdateNotified()
@@ -112,36 +131,40 @@ public:
 	}
 
 private slots:
-    void onChangeLatexFormula();
-    void onChangeLatexDisplay();
+	void onChangeLatexFormula();
+	void onChangeLatexDisplay();
 
 private:
-    Ui::View *ui;
+	Ui::View* ui;
 
-    ptr<QGridLayout> gridLayout_Body;
+	ptr<QGridLayout> gridLayout_Body;
 
-    ptr<QMenuBar> title_MenuBar;
-    ptr<QLabel> img_Label;
-    ptr<QLabel> latex_Label;
-    ptr<QPlainTextEdit> latex_Editor;
-    ptr<QTimer> timer;
+	ptr<QMenuBar> title_MenuBar;
+	ptr<QLabel> img_Label;
+	ptr<QLabel> latex_Label;
+	ptr<QPlainTextEdit> latex_Editor;
+	ptr<QTimer> timer;
 
-    // view model数据
+	// view model数据
 	// TODO:
 	// 补充其他数据的指针
-	
+	// 注意添加getter and setter
+
 	ptr<const std::string> latex_Formula;
 
-    // 用于动态绑定view model
-	
-    WorkFunction displayLatexFormula;
-    WorkFunction renderLatexString;
-    WorkFunction loadImg4Dir;
-    WorkFunction changeLatexFormula;
-    WorkFunction displayHelpDocument;
-    WorkFunction changeLatexDisplay;
+	Getter<ptr<const std::string>> latexStringGetter;
+	Setter<std::string> latexStringSetter;
+
+	// 用于动态绑定view model
+
+	WorkFunctionNoArg displayLatexFormula;
+	WorkFunctionNoArg renderLatexString;
+	WorkFunctionNoArg loadImg4Dir;
+	WorkFunctionNoArg changeLatexFormula;
+	WorkFunctionNoArg displayHelpDocument;
+	WorkFunctionNoArg changeLatexDisplay;
 
 
-    // img_Label和latex_Label事件过滤器
-    bool eventFilter(QObject *watched, QEvent *event);
+	// img_Label和latex_Label事件过滤器
+	bool eventFilter(QObject* watched, QEvent* event);
 };
