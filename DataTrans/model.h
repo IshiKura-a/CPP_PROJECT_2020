@@ -12,7 +12,7 @@ class ViewModel;
 class Model
 {
 private:
-	using Byte = unsigned char;
+	using Byte = char;
 	using VariableValuePair = std::pair<std::string, double_t>;
 	template <typename T>
 	using ptr = std::shared_ptr<T>;

@@ -15,7 +15,7 @@ private:
 	using ptr = std::shared_ptr<T>;
 	using EventFunction = std::function<void()>;
 	using CallbackFunction = std::function<void()>;
-	using WorkFunction = std::function<void>();
+	using WorkFunction = std::function<void()>;
 
 
 	std::shared_ptr<Model> model;
@@ -51,7 +51,7 @@ public:
 	// 绑定一个model实例，在model触发data changed事件时调用此view model的notified函数
 	void bindModel(std::shared_ptr<Model> model)
 	{
-		this->model = model;
+		this->model = model;		
 		this->model->setLatexStringChangedNotifier(
 			[&]() {this->latexStringChangedNotified(); }
 		);
