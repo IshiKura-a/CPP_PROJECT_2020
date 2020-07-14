@@ -20,6 +20,8 @@
 #include <QEvent>
 #include <QMessageBox>
 #include <QDialog>
+#include <QStatusBar>
+#include <QRadioButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class View; }
@@ -109,7 +111,7 @@ public:
 	{
 		// TODO:
 		// update view
-		latex_Formula = latexStringGetter();
+		latexFormula = latexStringGetter();
 	}
 
 	void imageDataViewUpdateNotified()
@@ -137,20 +139,29 @@ private slots:
 private:
 	Ui::View* ui;
 
-	ptr<QGridLayout> gridLayout_Body;
+	ptr<QGridLayout> gridLayoutBody;
 
-	ptr<QMenuBar> title_MenuBar;
-	ptr<QLabel> img_Label;
-	ptr<QLabel> latex_Label;
-	ptr<QPlainTextEdit> latex_Editor;
+	ptr<QMenuBar> titleMenuBar;
+	ptr<QLabel> imgLabel;
+	ptr<QLabel> latexLabel;
+	ptr<QPlainTextEdit> latexEditor;
 	ptr<QTimer> timer;
+	ptr<QStatusBar> statusBar;
+	ptr<QPushButton> loadButton;
+	ptr<QPushButton> editButton;
+	ptr<QPushButton> downloadButton;
+	ptr<QPushButton> resetButton;
+	ptr<QRadioButton> baiduButton;
+	ptr<QRadioButton> mathpixButton;
+	ptr<QPlainTextEdit> imgInfo;
+	ptr<QPushButton> calculateButton;
 
 	// view model数据
 	// TODO:
 	// 补充其他数据的指针
 	// 注意添加getter and setter
 
-	ptr<const std::string> latex_Formula;
+	ptr<const std::string> latexFormula;
 
 	Getter<ptr<const std::string>> latexStringGetter;
 	Setter<std::string> latexStringSetter;
@@ -165,6 +176,29 @@ private:
 	WorkFunctionNoArg changeLatexDisplay;
 
 
-	// img_Label和latex_Label事件过滤器
+	// imgLabel和latexLabel事件过滤器
 	bool eventFilter(QObject* watched, QEvent* event);
+	// 底部消息提示函数
+	void displayMsg(std::string msg, int duration = 0);
+	void displayErrorMsg(std::string errorMsg);
+
+	// Font
+	const QFont textNormal = QFont("Courier New", 14, QFont::Normal, false);
+	const QFont textBold = QFont("Courier New", 14, QFont::Bold, false);
+	const QFont titleBold = QFont("Courier New", 22, QFont::Bold, false);
+	const QFont menuNormal = QFont("微软雅黑", 10, QFont::Normal, false);
+	const QFont msgNormal = QFont("Courier New", 10, QFont::Normal, false);
+
+	// StyleSheet
+	const QString whiteBackground = "background: white;";
+	const QString lightBlueBackground = "background: #7BD9D2; ";
+	const QString lightDarkBackground = "background: #2E323A;";
+
+	const QString whiteWords = "color: white;";
+	const QString redWords = "color: #FF5555;";
+	const QString blackWords = "color: black;";
+
+	const QString blackBorder2Px = "border: 2px solid black;";
+	const QString noBottomBorder = "border-bottom: 0px;";
+	
 };
