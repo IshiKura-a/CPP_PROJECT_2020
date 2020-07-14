@@ -7,8 +7,13 @@ View::View(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowTitle("Welcome!");
-    gridLayout_Body = ptr<QGridLayout>(ui->gridLayout_Body);
-    title_MenuBar = ptr<QMenuBar>(ui->title_MenuBar);
+    gridLayoutBody = ptr<QGridLayout>(ui->gridLayoutBody);
+    titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
+    imgLabel = ptr<QLabel>(ui->imgLabel);
+    latexLabel = ptr<QLabel>(ui->latexLabel);
+    
+    
+    statusBar = std::make_shared<QStatusBar>();
 }
 
 View::~View()
@@ -18,58 +23,65 @@ View::~View()
 
 void View::initQLayout()
 {
-    setFixedSize(800,600);
+    // setFixedSize(960,600);
+    setFixedSize(QSize(960, 615));
+    setContentsMargins(0, 0, 0, 0);
     
-    latex_Label->installEventFilter(this);
-    latex_Editor->installEventFilter(this);
+    latexLabel->installEventFilter(this);
+    latexEditor->installEventFilter(this);
     initMenu();
     initBody();
 }
 
 void View::initMenu()
 {
-    title_MenuBar->setFont(QFont("幼圆",10,QFont::Normal,false));
+    titleMenuBar->setFont(menuNormal);
 
     QMenu* File;
-    File = (title_MenuBar->addMenu("文件"));
+    File = (titleMenuBar->addMenu("文件"));
 
     // 设置文件菜单下有导入、关闭功能
-    QAction* act_Load = (File->addAction("导入"));
-    act_Load->setFont(QFont("幼圆",10,QFont::Normal,false));
-    connect(act_Load, &QAction::triggered, [=](){
-
+    QAction* actLoad = (File->addAction("导入"));
+    actLoad->setFont(menuNormal);
+    connect(actLoad, &QAction::triggered, [=](){
+        imgLabel->setText("");
         if(loadImg4Dir)
         {
             qDebug() << "Load";
+            displayMsg("Load");
             //loadImg4Dir();
         }
         else
         {
+            displayErrorMsg("No load available!");
             qDebug() << "No load available.";
         }
 
     });
 
-    QAction* act_Exit = (File->addAction("关闭"));
-    act_Exit->setFont(QFont("幼圆",10,QFont::Normal,false));
-    connect(act_Exit, &QAction::triggered, [=](){
+    QAction* actExit = (File->addAction("关闭"));
+    actExit->setFont(menuNormal);
+    connect(actExit, &QAction::triggered, [=](){
         exit(0);
         qDebug() << "Quit";
+        displayMsg("Quit");
     });
 
     // 帮助
-    QAction* act_help = (title_MenuBar->addAction("帮助"));
-    act_help->setFont(QFont("幼圆",10,QFont::Normal,false));
-    connect(act_help, &QAction::triggered, [=](){
+    QAction* actHelp = (titleMenuBar->addAction("帮助"));
+    actHelp->setFont(menuNormal);
+    connect(actHelp, &QAction::triggered, [=](){
 
         if(displayHelpDocument)
         {
             qDebug() << "Help";
+            displayMsg("Help");
             displayHelpDocument();
         }
         else
         {
             qDebug() << "No help available.";
+            displayErrorMsg("No help available!");
         }
 
     });
@@ -78,35 +90,46 @@ void View::initMenu()
 
 void View::initBody()
 {
-    img_Label->setStyleSheet("background: #7BD9D2");
-    // img_Label->setHidden(true);
-    img_Label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    gridLayout_Body->addWidget(img_Label.get(),0,0);
+    gridLayoutBody->setContentsMargins(1.5, 1.5, 0, 22);
+    gridLayoutBody->setVerticalSpacing(0);
+    imgLabel->setStyleSheet(lightBlueBackground + whiteWords + blackBorder2Px + noBottomBorder);
+    imgLabel->setText("No image loaded");
+    imgLabel->setAlignment(Qt::AlignCenter);
+    imgLabel->setFont(titleBold);
+    // imgLabel->setHidden(true);
+    imgLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    gridLayoutBody->addWidget(imgLabel.get(),0,0);
 
-    if (latex_Formula && !latex_Formula->empty())
+    if (latexFormula && !latexFormula->empty())
     {
-        latex_Editor->setPlainText(QString(latex_Formula->c_str()));
-        latex_Editor->setFont(QFont("Courier New", 14, QFont::Normal, false));
-        qDebug() << "latex_Editor: " + latex_Editor->toPlainText();
+        latexEditor->setPlainText(QString(latexFormula->c_str()));
+        qDebug() << "latexEditor: " + latexEditor->toPlainText();
     }
     else
     {
-        latex_Editor->clear();
-        qDebug() << "latex_Editor is empty.";
+        latexEditor->setPlainText("Please input latex formula...");
+        qDebug() << "latexEditor is empty.";
     }
-    latex_Editor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    latexEditor->setFont(textNormal);
 
-    gridLayout_Body->addWidget(latex_Editor.get(),1,0);
+    latexEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    latexEditor->setHidden(true);
+
+    gridLayoutBody->addWidget(latexLabel.get(), 1, 0);
+    gridLayoutBody->addWidget(latexEditor.get(), 1, 0);
 
 
-    latex_Label->setStyleSheet("background: #FFFFFF");
-    latex_Label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    gridLayout_Body->addWidget(latex_Label.get(),1,0);
-    // latex_Label->setHidden(true);
-    gridLayout_Body->setRowStretch(0,1);
-    gridLayout_Body->setRowStretch(1,1);
-    gridLayout_Body->setColumnStretch(0,1);
-    gridLayout_Body->setColumnStretch(1,1);
+    latexLabel->setStyleSheet(whiteBackground + blackBorder2Px);
+    latexLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    latexLabel->setText("No formula to render");
+    latexLabel->setFont(titleBold);
+    latexLabel->setAlignment(Qt::AlignCenter);
+    
+    
+    setStatusBar(statusBar.get());
+    statusBar->setFont(msgNormal);
+    statusBar->setStyleSheet(lightDarkBackground + whiteWords);
+    displayMsg("Hello", 4000);
 }
 
 
@@ -117,24 +140,24 @@ void View::onChangeLatexFormula()
 
 void View::setImgLabel(ptr<QLabel> iLabel)
 {
-    img_Label = iLabel;
+    imgLabel = iLabel;
 }
 void View::setLatexLabel(ptr<QLabel> iLabel)
 {
-    latex_Label = iLabel;
+    latexLabel = iLabel;
 }
 void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
 {
-    latex_Editor = iPlainTextEdit;
+    latexEditor = iPlainTextEdit;
 }
 //void View::setLatexFormula(std::string iString)
 //{
-    //latex_Formula->clear();
-    //latex_Formula->append(iString.c_str());
+    //latexFormula->clear();
+    //latexFormula->append(iString.c_str());
 //}
 void View::setLatexFormula(ptr<const std::string> iString)
 {
-    latex_Formula = iString;
+    latexFormula = iString;
 }
 void View::setTimer(ptr<QTimer> iTimer)
 {
@@ -142,19 +165,19 @@ void View::setTimer(ptr<QTimer> iTimer)
 }
 auto View::getImgLabel()
 {
-    return img_Label;
+    return imgLabel;
 }
 auto View::getLatexLabel()
 {
-    return latex_Label;
+    return latexLabel;
 }
 auto View::getLatexEditor()
 {
-    return latex_Editor;
+    return latexEditor;
 }
 auto View::getLatexFormula()
 {
-    return latex_Formula;
+    return latexFormula;
 }
 auto View::getTimer()
 {
@@ -163,34 +186,35 @@ auto View::getTimer()
 
 auto View::getGridLayoutBody()
 {
-    return gridLayout_Body;
+    return gridLayoutBody;
 }
 auto View::getTitleMenuBar()
 {
-    return title_MenuBar;
+    return titleMenuBar;
 }
 
 bool View::eventFilter(QObject* watched, QEvent* event)
 {
     connect(timer.get(), SIGNAL(timeout()), this, SLOT(onChangeLatexDisplay()));
-    if (watched == latex_Label.get())
+    if (watched == latexLabel.get())
     {
         if (event->type() == QEvent::MouseButtonPress)
         {
-            qDebug() << "Click on latex_Label";
+            qDebug() << "Click on latexLabel";
+            displayMsg("Click on latexLabel");
             QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
 
             if (mouseEvent->button() == Qt::LeftButton)
             {
-                latex_Label->setHidden(true);
-                latex_Editor->setHidden(false);
+                latexLabel->setHidden(true);
+                latexEditor->setHidden(false);
                 return false;
             }
             else return false;
         }
         else return false;
     }
-    else if (watched == latex_Editor.get())
+    else if (watched == latexEditor.get())
     {
         qDebug() << event->type();
         if (event->type() == QEvent::Leave)
@@ -208,34 +232,51 @@ bool View::eventFilter(QObject* watched, QEvent* event)
 
 void View::onChangeLatexDisplay()
 {
-    if (latex_Label->isHidden())
+    if (latexLabel->isHidden())
     {
 
-        qDebug() << latex_Formula.get();
-        qDebug() << latex_Editor->document()->toPlainText();
-        if (latex_Formula && latex_Formula.get()->data() != (latex_Editor->document())->toPlainText())
+        qDebug() << latexFormula.get();
+        qDebug() << latexEditor->document()->toPlainText();
+        if (latexFormula && latexFormula.get()->data() != (latexEditor->document())->toPlainText())
         {
             qDebug() << "Text changed.";
-            //setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
+            displayMsg("Text changed");
+            //setLatexFormula(latexEditor->document()->toPlainText().toStdString());
             if(displayLatexFormula)
             {
                 qDebug() << "Display latex formula";
+                displayMsg("Display latex formula");
                 displayLatexFormula();
             }
             else
             {
+                displayErrorMsg("No latex formula display function!");
                 qDebug() << "No latex formula display";
             }
         }
 
-        qDebug() << "Hide latex_Editor";
-        latex_Label->setHidden(false);
-        latex_Editor->setHidden(true);
+        qDebug() << "Hide latexEditor";
+        displayMsg("Hide latexEditor");
+        latexLabel->setHidden(false);
+        latexEditor->setHidden(true);
 
     }
     else
     {
-        //setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
+        //setLatexFormula(latexEditor->document()->toPlainText().toStdString());
     }
 }
 
+void View::displayMsg(std::string msg, int duration)
+{
+    statusBar->setStyleSheet(lightDarkBackground + whiteWords);
+    if (duration == 0)
+        statusBar->showMessage(msg.c_str(), 4000);
+    else
+        statusBar->showMessage(msg.c_str(), duration);
+}
+void View::displayErrorMsg(std::string errorMsg)
+{
+    statusBar->setStyleSheet(lightDarkBackground + redWords);
+    statusBar->showMessage(errorMsg.c_str(), 4000);
+}

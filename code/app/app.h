@@ -30,8 +30,8 @@ public:
 		view->setChangeLatexFormula(viewModel->getChangeLatexFormula());
 		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 
-		view->setImgLabel(std::make_shared<QLabel>());
-		view->setLatexLabel(std::make_shared<QLabel>());
+		// view->setImgLabel(std::make_shared<QLabel>());
+		// view->setLatexLabel(std::make_shared<QLabel>());
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
 		view->setTimer(std::make_shared<QTimer>());
 
@@ -60,7 +60,7 @@ public:
 		model->notifyAll();
 
 		// 试试, 如果显示成功就说明数据传输正常
-		view->setLatexString("quit");
+		// view->setLatexString("quit");
 		model->notifyAll();
 
 		// testestestestestestsetset
