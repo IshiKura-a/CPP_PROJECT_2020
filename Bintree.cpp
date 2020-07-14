@@ -7,12 +7,18 @@ int main()
 {
 	Tree* t=new Tree;
 	t->root->setop('c');
-	t->root->setissingleeye(10);
+	t->root->setisSingleEye(10);
 	Node* left=new Node, *right=new Node;
-	left->setval(1);
-	right->setisn(1);
+	Node* left1 = new Node, *right1 = new Node;
+	left1->setisn(1);
+	right1->setval(1);
+	left->setop('+');
+	//left->setval(1);
+	//left->setisn(1);
 	t->root->setleft(left);
 	t->root->setright(right);
+	left->setleft(left1);
+	left->setright(right1);
 	printf("%lf", t->result(t->root,-1));
 		return 0;
 }

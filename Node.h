@@ -9,7 +9,7 @@ private:
 	char op;
 	double val;
 	Node *left, *right;
-	int issingleeye;
+	int isSingleEye;
 	bool isn;
 
 public:
@@ -19,7 +19,7 @@ public:
 		val = 0;
 		left = NULL;
 		right = NULL;
-		issingleeye = 0;
+		isSingleEye = 0;
 		isn = 0;
 	}
 	double getval()
@@ -74,13 +74,13 @@ public:
 		else
 			return 0;
 	}
-	void setissingleeye(int num)
+	void setisSingleEye(int num)
 	{
-		issingleeye = num;
+		isSingleEye = num;
 	}
-	int getissingleeye()
+	int getisSingleEye()
 	{
-		return issingleeye;
+		return isSingleEye;
 	}
 	
 };
