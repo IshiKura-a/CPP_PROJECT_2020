@@ -6,7 +6,6 @@
 #include <rapidjson/prettywriter.h>
 #include <cassert>
 #pragma comment(lib,"libcurl.lib")
-#pragma comment(lib,"TokenDecode.lib")
 
 
 const std::string HTTPRequestManager::baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
