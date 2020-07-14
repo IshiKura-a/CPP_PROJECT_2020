@@ -13,27 +13,27 @@ private:
 	static EventId idRegistrar;
 	static EventId getEventId();
 public:
-	// ×¢²áÊÂ¼ş
+	// æ³¨å†Œäº‹ä»¶
 	// @param
-	// event: ÊÂ¼ş¶ÔÓ¦µÄ»Øµ÷º¯Êı
+	// event: äº‹ä»¶å¯¹åº”çš„å›è°ƒå‡½æ•°
 	// @return
-	// ±»×¢²áÊÂ¼şµÄID
+	// è¢«æ³¨å†Œäº‹ä»¶çš„ID
 	static EventId registerEvent(CallbackFunction event)
 	{
 		EventId id = getEventId();
 		events.push_back(event);
 		return id;
 	}
-	// ×¢ÏúÊÂ¼ş
+	// æ³¨é”€äº‹ä»¶
 	// @param
-	// id: ĞèÒª×¢ÏúµÄÊÂ¼şµÄid
+	// id: éœ€è¦æ³¨é”€çš„äº‹ä»¶çš„id
 	static void unregisterEvent(EventId id)
 	{
 		events.at(id) = unregistered;
 	}
-	// ´¥·¢ÊÂ¼ş×¢²áµÄ»Øµ÷º¯Êı
+	// è§¦å‘äº‹ä»¶æ³¨å†Œçš„å›è°ƒå‡½æ•°
 	// @param
-	// id: ÊÂ¼şµÄID
+	// id: äº‹ä»¶çš„ID
 	static void raiseEvent(EventId id) noexcept(false)
 	{
 		events[id]();

@@ -134,6 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +147,7 @@
     <PostBuildEvent>
       <Command>move $(OutDir)CppCurl.lib $(SolutionDir)..\lib\
 move $(OutDir)CppCurl.dll $(SolutionDir)..\bin\
-move $(SolutionDir)..\module\cppcurl\CppCurl.h $(SolutionDir)..\include\</Command>
+copy $(SolutionDir)..\module\cppcurl\CppCurl.h $(SolutionDir)..\include\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,6 +158,7 @@ move $(SolutionDir)..\module\cppcurl\CppCurl.h $(SolutionDir)..\include\</Comman
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,6 +169,11 @@ move $(SolutionDir)..\module\cppcurl\CppCurl.h $(SolutionDir)..\include\</Comman
     <PreLinkEvent>
       <Command>copy $(SolutionDir)prebuilt\*.dll $(TargetDir)</Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>move $(OutDir)CppCurl.lib $(SolutionDir)..\lib\
+move $(OutDir)CppCurl.dll $(SolutionDir)..\bin\
+copy $(SolutionDir)..\module\cppcurl\CppCurl.h $(SolutionDir)..\include\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
