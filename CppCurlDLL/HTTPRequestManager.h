@@ -14,32 +14,32 @@ private:
 	static std::vector<Byte> render_result;
 
 	// @param:
-	// file_path: Í¼ÏñÂ·¾¶
+	// file_path: å›¾åƒè·¯å¾„
 	// @return:
-	// Í¼Ïñ¾­¹ıbase64±àÂë, url encodeºóµÄstring
+	// å›¾åƒç»è¿‡base64ç¼–ç , url encodeåçš„string
 	std::string imageBase64UrlEncode(const std::string& file_path);
 
 	// @param:
-	// raw_image: Í¼Ïñ¶ş½øÖÆÊı¾İ
+	// raw_image: å›¾åƒäºŒè¿›åˆ¶æ•°æ®
 	// @return:
-	// Í¼Ïñ¾­¹ıbase64±àÂë, url encodeºóµÄstring
+	// å›¾åƒç»è¿‡base64ç¼–ç , url encodeåçš„string
 	std::string imageBase64UrlEncode(const std::vector<Byte>& raw_image);
 
 	// @param:
-	// file_path: Í¼ÏñÂ·¾¶
+	// file_path: å›¾åƒè·¯å¾„
 	// @return:
-	// Í¼Ïñ¾­¹ıbase64±àÂë, ·ûºÏdata url schemeµÄstring
+	// å›¾åƒç»è¿‡base64ç¼–ç , ç¬¦åˆdata url schemeçš„string
 	std::string imageBase64DataUrlScheme(const std::string& file_path);
 
 	// @param:
-	// file_path: Í¼Ïñ¶ş½øÖÆÊı¾İ
+	// file_path: å›¾åƒäºŒè¿›åˆ¶æ•°æ®
 	// @return:
-	// Í¼Ïñ¾­¹ıbase64±àÂë, ·ûºÏdata url schemeµÄstring
+	// å›¾åƒç»è¿‡base64ç¼–ç , ç¬¦åˆdata url schemeçš„string
 	std::string imageBase64DataUrlScheme(const std::vector<Byte>& raw_image, const std::string& image_format);
 
-	
-	// libcurlÓÃµ½µÄ»Øµ÷º¯Êı. »Øµ÷º¯Êı±ØĞëÊÇ¾²Ì¬µÄ¡£
-	
+
+	// libcurlç”¨åˆ°çš„å›è°ƒå‡½æ•°. å›è°ƒå‡½æ•°å¿…é¡»æ˜¯é™æ€çš„ã€‚
+
 	friend size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream);
 
 	friend size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream);

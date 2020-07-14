@@ -53,9 +53,9 @@ size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* str
 std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
 {
 
-	// ·µ»Ø¹«Ê½Ê¶±ğµÄ½á¹û×Ö·û´®
-	// Èç¹ûcurlµÄ³õÊ¼»¯¹ı³ÌÖĞ²úÉú´íÎó£¬Å×³öruntime_error
-	// °Ù¶ÈµÄ·şÎñÆ÷¶Ë²úÉúµÄ´íÎó²»»áÅ×³öÒì³££¬µ«·µ»ØµÄjson stringÓĞ´íÎóĞÅÏ¢
+	// è¿”å›å…¬å¼è¯†åˆ«çš„ç»“æœå­—ç¬¦ä¸²
+	// å¦‚æœcurlçš„åˆå§‹åŒ–è¿‡ç¨‹ä¸­äº§ç”Ÿé”™è¯¯ï¼ŒæŠ›å‡ºruntime_error
+	// ç™¾åº¦çš„æœåŠ¡å™¨ç«¯äº§ç”Ÿçš„é”™è¯¯ä¸ä¼šæŠ›å‡ºå¼‚å¸¸ï¼Œä½†è¿”å›çš„json stringæœ‰é”™è¯¯ä¿¡æ¯
 
 	CURL* curl = NULL;
 	curl_slist* headerlist = NULL;
@@ -70,27 +70,27 @@ std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>&
 
 	if (curl) {
 
-		// https×¥°üÊ¹ÓÃ
+		// httpsæŠ“åŒ…ä½¿ç”¨
 		//curl_easy_setopt(curl, CURLOPT_PROXY, "127.0.0.1:8888");
 
-		// headerÉèÖÃ£¬ËÆºõ¿ÉÒÔÊ¡ÂÔ
+		// headerè®¾ç½®ï¼Œä¼¼ä¹å¯ä»¥çœç•¥
 		headerlist = curl_slist_append(headerlist, "Content-Type:application/x-www-form-urlencoded");
 
-		// ´òÓ¡µ÷ÊÔĞÅÏ¢
+		// æ‰“å°è°ƒè¯•ä¿¡æ¯
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-		// URLµØÖ·£¬¼ÓÃÜ·ÃÎÊ
+		// URLåœ°å€ï¼ŒåŠ å¯†è®¿é—®
 		url_link(curl, baidu_request_url, access_token);
-		// ÉèÖÃPOSTÄÚÈİ£¬ÄÚÈİÖ¸Õëencoded_imageÎªchar*£¬×¢Òâ×Ö·û´®ÖĞÒª´øÉÏ±íµ¥Ãû³Æimage=
+		// è®¾ç½®POSTå†…å®¹ï¼Œå†…å®¹æŒ‡é’ˆencoded_imageä¸ºchar*ï¼Œæ³¨æ„å­—ç¬¦ä¸²ä¸­è¦å¸¦ä¸Šè¡¨å•åç§°image=
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, encoded_image.c_str());
-		// °ó¶¨header
+		// ç»‘å®šheader
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-		// ÉèÖÃĞ´º¯Êı
+		// è®¾ç½®å†™å‡½æ•°
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFormulaResult);
-		// ÉèÖÃ±¾´Î²Ù×÷ÎªPOST
+		// è®¾ç½®æœ¬æ¬¡æ“ä½œä¸ºPOST
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
-		// ÉèÖÃ±¾´Î²Ù×÷Ê¹ÓÃheader
+		// è®¾ç½®æœ¬æ¬¡æ“ä½œä½¿ç”¨header
 		curl_easy_setopt(curl, CURLOPT_HEADER, 1);
-		// ÉèÖÃcallbackº¯ÊıµÄµÚËÄ¸ö²ÎÊıÎªdata_ptr
+		// è®¾ç½®callbackå‡½æ•°çš„ç¬¬å››ä¸ªå‚æ•°ä¸ºdata_ptr
 		//curl_easy_setopt(curl,CURLOPT_WRITEDATA,data_ptr);
 
 		result_code = curl_easy_perform(curl);
@@ -120,9 +120,9 @@ std::string HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_
 std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
 {
 
-	// ·µ»Ø¹«Ê½Ê¶±ğµÄ½á¹û×Ö·û´®
-	// Èç¹ûcurlµÄ³õÊ¼»¯¹ı³ÌÖĞ²úÉú´íÎó£¬Å×³öruntime_error
-	// mathpixµÄ·şÎñÆ÷¶Ë²úÉúµÄ´íÎó²»»áÅ×³öÒì³££¬µ«·µ»ØµÄjson stringÓĞ´íÎóĞÅÏ¢
+	// è¿”å›å…¬å¼è¯†åˆ«çš„ç»“æœå­—ç¬¦ä¸²
+	// å¦‚æœcurlçš„åˆå§‹åŒ–è¿‡ç¨‹ä¸­äº§ç”Ÿé”™è¯¯ï¼ŒæŠ›å‡ºruntime_error
+	// mathpixçš„æœåŠ¡å™¨ç«¯äº§ç”Ÿçš„é”™è¯¯ä¸ä¼šæŠ›å‡ºå¼‚å¸¸ï¼Œä½†è¿”å›çš„json stringæœ‰é”™è¯¯ä¿¡æ¯
 
 	CURL* curl = NULL;
 	std::string url = mathpix_request_url;
@@ -136,7 +136,7 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte
 
 	if (curl) {
 
-		// headerÉèÖÃ
+		// headerè®¾ç½®
 		headerlist = curl_slist_append(headerlist, "Content-Type:application/json");
 		headerlist = curl_slist_append(headerlist, "app_id:tmp_key");
 		headerlist = curl_slist_append(headerlist, "app_key:ey4fCTFxcjJ3kqbEaH7j23b926HBAux3a98");
@@ -159,22 +159,22 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte
 
 		std::string json_content = buffer.GetString();
 
-		// ´òÓ¡µ÷ÊÔĞÅÏ¢
+		// æ‰“å°è°ƒè¯•ä¿¡æ¯
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-		// URLµØÖ·
+		// URLåœ°å€
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		// ÉèÖÃPOSTÄÚÈİ£¬ÄÚÈİÖ¸Õëencoded_imageÎªchar*£¬×¢Òâ×Ö·û´®ÖĞÒª´øÉÏ±íµ¥Ãû³Æimage=
+		// è®¾ç½®POSTå†…å®¹ï¼Œå†…å®¹æŒ‡é’ˆencoded_imageä¸ºchar*ï¼Œæ³¨æ„å­—ç¬¦ä¸²ä¸­è¦å¸¦ä¸Šè¡¨å•åç§°image=
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_content.c_str());
-		// °ó¶¨header
+		// ç»‘å®šheader
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
-		// ÉèÖÃĞ´º¯Êı
+		// è®¾ç½®å†™å‡½æ•°
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFormulaResult
 		);
-		// ÉèÖÃ±¾´Î²Ù×÷ÎªPOST
+		// è®¾ç½®æœ¬æ¬¡æ“ä½œä¸ºPOST
 		curl_easy_setopt(curl, CURLOPT_POST, 1);
-		// ÉèÖÃ±¾´Î²Ù×÷Ê¹ÓÃheader
+		// è®¾ç½®æœ¬æ¬¡æ“ä½œä½¿ç”¨header
 		curl_easy_setopt(curl, CURLOPT_HEADER, 1);
-		// ÉèÖÃcallbackº¯ÊıµÄµÚËÄ¸ö²ÎÊıÎªdata_ptr
+		// è®¾ç½®callbackå‡½æ•°çš„ç¬¬å››ä¸ªå‚æ•°ä¸ºdata_ptr
 		//curl_easy_setopt(curl,CURLOPT_WRITEDATA,data_ptr);
 
 		result_code = curl_easy_perform(curl);
@@ -213,17 +213,20 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 	FILE* fp = NULL;
 	fopen_s(&fp, file_path.c_str(), "wb");
 
+	if (!fp)
+		throw std::runtime_error("Cannot open image file " + file_path);
+
 	curl = curl_easy_init();
 
 	if (curl) {
 
-		// ´òÓ¡µ÷ÊÔĞÅÏ¢
+		// æ‰“å°è°ƒè¯•ä¿¡æ¯
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-		// URLµØÖ·£¬ĞèÒªchar*
+		// URLåœ°å€ï¼Œéœ€è¦char*
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		// ÉèÖÃĞ´º¯Êı
+		// è®¾ç½®å†™å‡½æ•°
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteFile);
-		// ÉèÖÃĞ´º¯ÊıĞ´ÈëµÄÖ¸Õë
+		// è®¾ç½®å†™å‡½æ•°å†™å…¥çš„æŒ‡é’ˆ
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
 		result_code = curl_easy_perform(curl);
@@ -253,11 +256,11 @@ std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormul
 
 	if (curl) {
 
-		// ´òÓ¡µ÷ÊÔĞÅÏ¢
+		// æ‰“å°è°ƒè¯•ä¿¡æ¯
 		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-		// URLµØÖ·£¬ĞèÒªchar*
+		// URLåœ°å€ï¼Œéœ€è¦char*
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-		// ÉèÖÃĞ´º¯Êı
+		// è®¾ç½®å†™å‡½æ•°
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteRenderResult);
 
 		result_code = curl_easy_perform(curl);
@@ -284,7 +287,7 @@ std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormul
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 
-static inline bool isBase64(const char c)
+static bool isBase64(const char c)
 {
 	return (isalnum(c) || (c == '+') || (c == '/'));
 }

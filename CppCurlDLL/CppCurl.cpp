@@ -6,3 +6,8 @@ std::shared_ptr<IHTTPRequestManager> getHTTPRequestManager()
 {
 	return std::make_shared<HTTPRequestManager>();
 }
+
+RequestManager::RequestManager() :manager(getHTTPRequestManager())
+{
+
+}

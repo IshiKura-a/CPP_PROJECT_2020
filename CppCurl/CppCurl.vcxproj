@@ -80,10 +80,11 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\curl\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\curl\lib;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,14 +120,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
     </Link>
+    <PreLinkEvent>
+      <Command>copy $(SolutionDir)prebuilt\*.dll $(TargetDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -143,6 +144,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreLinkEvent>
+      <Command>copy $(SolutionDir)prebuilt\*.dll $(TargetDir)</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppCurlTest.cpp" />

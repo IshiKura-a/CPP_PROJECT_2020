@@ -14,36 +14,59 @@ int main()
 	std::cout << "Trying fetching rendered latex formula image...\n\n";
 	// get image in buffer
 
-	auto formula_buffer = manager->downloadRenderedFormula(latex, "png");
+	try {
+		auto formula_buffer = manager->downloadRenderedFormula(latex, "png");
 
-	std::cout << "Successfully download image in buffer...\n\n";
+		std::cout << "Successfully download image in buffer...\n\n";
 
-	manager->saveImage(formula_buffer,"formula_buffer.png");
-	
-	std::cout << "Successfully save buffer in ./formula_buffer.png\n\n";
+		manager->saveImage(formula_buffer, "formula_buffer.png");
+
+		std::cout << "Successfully save buffer in ./formula_buffer.png\n\n";
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cout << e.what();
+	}
 
 	// get image as file
-	
-	std::cout << "Successfully download image as file in ./formula.png\n\n";
-	
-	manager->downloadRenderedFormula(latex, "formula.png", "png");
+	try {
+		manager->downloadRenderedFormula(latex, "formula.png", "png");
 
+		std::cout << "Successfully download image as file in ./formula.png\n\n";
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cout << e.what();
+	}
 
 	// test recognition API
 
 	std::cout << "\n\nUsing baidu API...\n\n";
 
 	// using vector<Byte>
-	
-	auto s = manager->openImage("img.png");
 
-	std::cout << manager->formulaRecognitionBaidu(s) << std::endl;
+	try {
+		auto s = manager->openImage("img.png");
+
+		std::cout << manager->formulaRecognitionBaidu(s) << std::endl;
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cout << e.what();
+	}
+
 
 	std::cout << "\n\nUsing mathpix API...\n\n";
 
 	// using file path
-	
-	std::cout << manager->formulaRecognitionMathpix("img.png") << std::endl;
+
+	try {
+		std::cout << manager->formulaRecognitionMathpix("img.png") << std::endl;
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cout << e.what();
+	}
 
 	system("pause");
 }

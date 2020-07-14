@@ -2,34 +2,34 @@
 #include <string>
 
 // @param:
-// bytes_to_encode: ĞèÒª±»±àÂëµÄÊı¾İµÄÖ¸Õë.
-// in_len: ĞèÒª±»±àÂëµÄÊı¾İµÄ³¤¶È.
+// bytes_to_encode: éœ€è¦è¢«ç¼–ç çš„æ•°æ®çš„æŒ‡é’ˆ.
+// in_len: éœ€è¦è¢«ç¼–ç çš„æ•°æ®çš„é•¿åº¦.
 // @return:
-// base64±àÂëºóµÄÊı¾İ.
+// base64ç¼–ç åçš„æ•°æ®.
 std::string base64Encode(const char* bytes_to_encode, unsigned int in_len);
 
 // @param:
-// encoded_string: base64±àÂëµÄÊı¾İ.
+// encoded_string: base64ç¼–ç çš„æ•°æ®.
 // @return:
-// base64½âÂëºóµÄÊı¾İ.
-// !Î´²âÊÔ
+// base64è§£ç åçš„æ•°æ®.
+// !æœªæµ‹è¯•
 std::string base64Decode(const std::string & encoded_string);
 
 // @param:
-// bytes_to_encode: ĞèÒª±»±àÂëµÄÊı¾İ.
+// bytes_to_encode: éœ€è¦è¢«ç¼–ç çš„æ•°æ®.
 // @return:
-// urlencodeºóµÄÊı¾İ.
+// urlencodeåçš„æ•°æ®.
 std::string urlEncode(const std::string& bytes_to_encode);
 
 // @param:
-// encoded_string: ĞèÒª±»½âÂëµÄÊı¾İ.
+// encoded_string: éœ€è¦è¢«è§£ç çš„æ•°æ®.
 // @return:
-// urldecodeºóµÄÊı¾İ.
-// !Î´²âÊÔ
+// urldecodeåçš„æ•°æ®.
+// !æœªæµ‹è¯•
 std::string urlDecode(const std::string& encoded_string);
 
 // @param:
-// file_path: Í¼ÏñÂ·¾¶
+// file_path: å›¾åƒè·¯å¾„
 // @return:
-// Í¼Ïñ¾­¹ıbase64±àÂë, urlencodeºóµÄstring
+// å›¾åƒç»è¿‡base64ç¼–ç , urlencodeåçš„string
 std::string imageBase64UrlEncode(const std::string& file_path);

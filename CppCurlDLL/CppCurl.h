@@ -14,64 +14,81 @@ class IHTTPRequestManager
 public:
 
 	// @param:
-	// raw_image: ĞèÒª½øĞĞ¹«Ê½Ê¶±ğµÄÍ¼Æ¬¶ş½øÖÆÔ­Ê¼Êı¾İ.
+	// raw_image: éœ€è¦è¿›è¡Œå…¬å¼è¯†åˆ«çš„å›¾ç‰‡äºŒè¿›åˆ¶åŸå§‹æ•°æ®.
 	// @return:
-	// ¹«Ê½Ê¶±ğ½á¹û,json¸ñÊ½.
-	virtual std::string formulaRecognitionBaidu(const std::vector<Byte>& raw_image) = 0;
+	// å…¬å¼è¯†åˆ«ç»“æœ, jsonæ ¼å¼.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::string formulaRecognitionBaidu(const std::vector<Byte>& raw_image) noexcept(false) = 0;
 
 	// @param:
-	// file_path: ĞèÒª½øĞĞ¹«Ê½Ê¶±ğµÄÍ¼Æ¬Â·¾¶.
+	// file_path: éœ€è¦è¿›è¡Œå…¬å¼è¯†åˆ«çš„å›¾ç‰‡è·¯å¾„.
 	// @return:
-	// ¹«Ê½Ê¶±ğ½á¹û,json¸ñÊ½.
-	virtual std::string formulaRecognitionBaidu(const std::string& file_path) = 0;
+	// å…¬å¼è¯†åˆ«ç»“æœ,jsonæ ¼å¼.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	// è¯»å–æ–‡ä»¶è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::string formulaRecognitionBaidu(const std::string& file_path) noexcept(false) = 0;
 
 	// @param:
-	// raw_image: ĞèÒª½øĞĞ¹«Ê½Ê¶±ğµÄÍ¼Æ¬¶ş½øÖÆÔ­Ê¼Êı¾İ.
-	// image_format: ¶ş½øÖÆÊı¾İÍ¼Æ¬µÄ¸ñÊ½.
+	// raw_image: éœ€è¦è¿›è¡Œå…¬å¼è¯†åˆ«çš„å›¾ç‰‡äºŒè¿›åˆ¶åŸå§‹æ•°æ®.
+	// image_format: äºŒè¿›åˆ¶æ•°æ®å›¾ç‰‡çš„æ ¼å¼.
 	// @return:
-	// ¹«Ê½Ê¶±ğ½á¹û,json¸ñÊ½.
-	virtual std::string formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format) = 0;
+	// å…¬å¼è¯†åˆ«ç»“æœ,jsonæ ¼å¼.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::string formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format) noexcept(false) = 0;
 
 	// @param:
-	// file_path: ĞèÒª½øĞĞ¹«Ê½Ê¶±ğµÄÍ¼Æ¬Â·¾¶.
+	// file_path: éœ€è¦è¿›è¡Œå…¬å¼è¯†åˆ«çš„å›¾ç‰‡è·¯å¾„.
 	// @return:
-	// ¹«Ê½Ê¶±ğ½á¹û,json¸ñÊ½.
-	virtual std::string formulaRecognitionMathpix(const std::string& file_path) = 0;
+	// å…¬å¼è¯†åˆ«ç»“æœ,jsonæ ¼å¼.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	// è¯»å–æ–‡ä»¶è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::string formulaRecognitionMathpix(const std::string& file_path) noexcept(false) = 0;
 
 	// @param:
-	// latex_string: ĞèÒªäÖÈ¾µÄlatex string.
-	// file_path: ÏÂÔØäÖÈ¾ºóÍ¼Æ¬µÄÂ·¾¶.
-	// format: ÏÂÔØÍ¼Æ¬µÄ¸ñÊ½. Ö§³Ögif, svg, png.
-	virtual void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format) = 0;
+	// latex_string: éœ€è¦æ¸²æŸ“çš„latex string.
+	// file_path: ä¸‹è½½æ¸²æŸ“åå›¾ç‰‡çš„è·¯å¾„.
+	// format: ä¸‹è½½å›¾ç‰‡çš„æ ¼å¼. æ”¯æŒgif, svg, png.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format) noexcept(false) = 0;
 
 	// @param:
-	// latex_string: ĞèÒªäÖÈ¾µÄlatex string. ×¢ÒâÉ¾³ıËùÓĞ¿Õ°××Ö·û.
-	// format: ÏÂÔØÍ¼Æ¬µÄ¸ñÊ½. Ö§³Ögif, svg, png.
+	// latex_string: éœ€è¦æ¸²æŸ“çš„latex string. æ³¨æ„åˆ é™¤æ‰€æœ‰ç©ºç™½å­—ç¬¦.
+	// format: ä¸‹è½½å›¾ç‰‡çš„æ ¼å¼. æ”¯æŒgif, svg, png.
 	// @return:
-	// ÏÂÔØµÄÍ¼Æ¬ÎÄ¼şµÄ¶ş½øÖÆÊı¾İ.
-	virtual std::vector<Byte> downloadRenderedFormula(const std::string& latex_string, const std::string& format) = 0;
+	// ä¸‹è½½çš„å›¾ç‰‡æ–‡ä»¶çš„äºŒè¿›åˆ¶æ•°æ®.
+	// @throw:
+	// curlåˆå§‹åŒ–è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	// è¯»å–æ–‡ä»¶è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::vector<Byte> downloadRenderedFormula(const std::string& latex_string, const std::string& format) noexcept(false) = 0;
 
 	// @param:
-	// file_path: Í¼Æ¬ÎÄ¼şÂ·¾¶.
+	// file_path: å›¾ç‰‡æ–‡ä»¶è·¯å¾„.
 	// @return:
-	// Í¼Æ¬ÎÄ¼şµÄ¶ş½øÖÆÊı¾İ.
-	virtual std::vector<Byte> openImage(const std::string& file_path) = 0;
+	// å›¾ç‰‡æ–‡ä»¶çš„äºŒè¿›åˆ¶æ•°æ®.
+	// @throw:
+	// è¯»å–æ–‡ä»¶è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual std::vector<Byte> openImage(const std::string& file_path) noexcept(false) = 0;
 
 	// @param:
-	// data: ĞèÒª±£´æµÄÍ¼Æ¬µÄ¶ş½øÖÆÊı¾İ.
-	// file_path: ±£´æµÄÂ·¾¶.
-	virtual void saveImage(const std::vector<Byte>& data, const std::string& file_path) = 0;
+	// data: éœ€è¦ä¿å­˜çš„å›¾ç‰‡çš„äºŒè¿›åˆ¶æ•°æ®.
+	// file_path: ä¿å­˜çš„è·¯å¾„.
+	// @throw:
+	// è¯»å–æ–‡ä»¶è‹¥äº§ç”Ÿé”™è¯¯, åˆ™æŠ›å‡ºruntime_error
+	virtual void saveImage(const std::vector<Byte>& data, const std::string& file_path) noexcept(false) = 0;
 
 	virtual ~IHTTPRequestManager() = default;
 };
 
-std::shared_ptr<IHTTPRequestManager> getHTTPRequestManager();
-
 CPPCURL_API class RequestManager
 {
 private:
-	std::shared_ptr<IHTTPRequestManager> manager = getHTTPRequestManager();
+	std::shared_ptr<IHTTPRequestManager> manager;
 public:
-	CPPCURL_API RequestManager() = default;
+	CPPCURL_API RequestManager();
 	CPPCURL_API IHTTPRequestManager* operator->() const { return manager.get(); }
 };
