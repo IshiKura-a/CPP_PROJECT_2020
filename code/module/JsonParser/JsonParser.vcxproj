@@ -18,25 +18,11 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CppCurl.cpp" />
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="HTTPRequestManager.cpp" />
-    <ClCompile Include="pch.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CppCurl.h" />
-    <ClInclude Include="Encoder.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="HTTPRequestManager.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="TokenDecode.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{cac19f5e-2d10-473a-8c9d-c41a3fb3136a}</ProjectGuid>
-    <RootNamespace>CppCurl</RootNamespace>
+    <ProjectGuid>{3e91ce9d-3456-4857-af2b-511c3700a9f5}</ProjectGuid>
+    <RootNamespace>JsonParser</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -54,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -92,13 +78,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -132,7 +116,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;CPPCURL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -140,17 +124,6 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreLinkEvent>
-      <Command>
-      </Command>
-    </PreLinkEvent>
-    <PostBuildEvent>
-      <Command>move "$(OutDir)CppCurl.lib" "$(SolutionDir)..\lib\"
-move "$(OutDir)CppCurl.dll" "$(SolutionDir)..\bin\"
-if not exist "$(SolutionDir)..\include" mkdir "$(SolutionDir)..\include"
-copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
-</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -158,7 +131,7 @@ copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CPPCURL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -168,18 +141,13 @@ copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreLinkEvent>
-      <Command>
-      </Command>
-    </PreLinkEvent>
-    <PostBuildEvent>
-      <Command>move "$(OutDir)CppCurl.lib" "$(SolutionDir)..\lib\"
-move "$(OutDir)CppCurl.dll" "$(SolutionDir)..\bin\"
-if not exist "$(SolutionDir)..\include" mkdir "$(SolutionDir)..\include"
-copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
-</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="JsonParser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="JsonParser.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
