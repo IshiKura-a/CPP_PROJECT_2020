@@ -37,11 +37,10 @@ public:
 	/******************** function ********************/
 	// 如果修改了model中的数据, 需要调用对应的notify函数或使用setter
 
-
-	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
+	// 打开图片文件, 并更新model的imageData
 	// @param:
 	// file_path: 需要读取的图片路径
-	void getFormulaFromImage(std::string file_path);
+	void openImage(std::string file_path);
 
 	// 渲染model中的latexString, 并更新model的imageData
 	void renderLatexFormula();

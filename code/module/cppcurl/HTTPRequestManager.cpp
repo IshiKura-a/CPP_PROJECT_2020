@@ -5,6 +5,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
 #include <cassert>
+#pragma comment(lib,"libcurl.lib")
 
 
 const std::string HTTPRequestManager::baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
@@ -13,9 +14,16 @@ const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix
 
 const std::string HTTPRequestManager::latex_rendering_request_url = "https://latex.codecogs.com/";
 
-ptr<std::string> HTTPRequestManager::formula_result = nullptr;
 
-ptr<std::vector<Byte>> HTTPRequestManager::render_result = nullptr;
+std::string base64Encode(const char* bytes_to_encode, unsigned int in_len);
+
+std::string urlEncode(const std::string& bytes_to_encode);
+
+
+std::string HTTPRequestManager::formula_result;
+
+
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::render_result;
 
 const std::string HTTPRequestManager::access_token = "7A4F0C7C6D1AA836183C6245AF5A546D\
 CA62994D2AD6DF01083A5170573825F8\
@@ -31,17 +39,17 @@ size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 
 size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::formula_result = std::make_shared<std::string>(static_cast<char*>(ptr), size * nmemb);
+	HTTPRequestManager::formula_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
 size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::render_result = std::make_shared< std::vector<Byte>>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	HTTPRequestManager::render_result = std::vector<HTTPRequestManager::Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
 	return size * nmemb;
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
 {
 
 	// 返回公式识别的结果字符串
@@ -94,10 +102,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<B
 		}
 
 		curl_easy_cleanup(curl);
-
-		auto ret_val = formula_result;
-		formula_result = nullptr;
-		return ret_val;
+		return formula_result;
 	}
 	else
 	{
@@ -105,13 +110,13 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<B
 	}
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_path)
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_path)
 {
 	return formulaRecognitionBaidu(openImage(file_path));
 }
 
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
+std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
 {
 
 	// 返回公式识别的结果字符串
@@ -181,10 +186,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector
 		}
 
 		curl_easy_cleanup(curl);
-
-		auto ret_val = formula_result;
-		formula_result = nullptr;
-		return ret_val;
+		return formula_result;
 	}
 	else
 	{
@@ -192,7 +194,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector
 	}
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::string& file_path)
+std::string HTTPRequestManager::formulaRecognitionMathpix(const std::string& file_path)
 {
 	auto data = openImage(file_path);
 	auto format = file_path.substr(file_path.find_last_of('.') + 1);
@@ -243,7 +245,7 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 	}
 }
 
-ptr<std::vector<Byte>> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
 	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
 	CURL* curl = NULL;
@@ -269,9 +271,7 @@ ptr<std::vector<Byte>> HTTPRequestManager::downloadRenderedFormula(const std::st
 			throw std::runtime_error(errmsg);
 		}
 		curl_easy_cleanup(curl);
-		auto ret_val = render_result;
-		render_result = nullptr;
-		return ret_val;
+		return render_result;
 	}
 	else
 	{
@@ -291,11 +291,6 @@ static bool isBase64(const char c)
 	return (isalnum(c) || (c == '+') || (c == '/'));
 }
 
-// @param:
-// bytes_to_encode: 需要被编码的数据的指针.
-// in_len: 需要被编码的数据的长度.
-// @return:
-// base64编码后的数据.
 std::string base64Encode(const char* bytes_to_encode, unsigned int in_len)
 {
 	std::string ret;
@@ -346,11 +341,6 @@ std::string base64Encode(const char* bytes_to_encode, unsigned int in_len)
 	return ret;
 }
 
-// @param:
-// encoded_string: base64编码的数据.
-// @return:
-// base64解码后的数据.
-// !未测试
 std::string base64Decode(const std::string& encoded_string)
 {
 	int in_len = encoded_string.size();
@@ -408,10 +398,6 @@ unsigned char hexToDec(unsigned char x)
 	return y;
 }
 
-// @param:
-// bytes_to_encode: 需要被编码的数据.
-// @return:
-// urlencode后的数据.
 std::string urlEncode(const std::string& bytes_to_encode)
 {
 	std::string strTemp = "";
@@ -436,11 +422,6 @@ std::string urlEncode(const std::string& bytes_to_encode)
 	return strTemp;
 }
 
-// @param:
-// encoded_string: 需要被解码的数据.
-// @return:
-// urldecode后的数据.
-// !未测试
 std::string urlDecode(const std::string& encoded_string)
 {
 	std::string strTemp = "";
@@ -460,7 +441,7 @@ std::string urlDecode(const std::string& encoded_string)
 	return strTemp;
 }
 
-std::vector<Byte> HTTPRequestManager::openImage(const std::string& file_path)
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::openImage(const std::string& file_path)
 {
 	FILE* fp = NULL;
 	fopen_s(&fp, file_path.c_str(), "rb");
@@ -477,7 +458,6 @@ std::vector<Byte> HTTPRequestManager::openImage(const std::string& file_path)
 	fread(retVal.data(), 1, size, fp);
 
 	fclose(fp);
-
 	return retVal;
 }
 
