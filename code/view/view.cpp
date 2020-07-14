@@ -49,7 +49,7 @@ void View::initMenu()
         {
             qDebug() << "Load";
             displayMsg("Load");
-            loadImg4Dir();
+            //loadImg4Dir();
         }
         else
         {

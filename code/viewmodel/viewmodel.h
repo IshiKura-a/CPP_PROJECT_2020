@@ -38,7 +38,7 @@ private:
 
 	WorkFunctionNoArg getFormulaResult;
 	WorkFunctionNoArg renderLatexString;
-	WorkFunctionNoArg loadImg4Dir;
+	WorkFunction loadImg4Dir;
 	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;
 	WorkFunctionNoArg changeLatexDisplay;
@@ -118,6 +118,9 @@ public:
 			[this]() {this->resultChangedNotified(); }
 		);
 	}
+
+	// 绑定功能函数
+	void bindFunction();
 
 	/******************** callback function binding ********************/
 

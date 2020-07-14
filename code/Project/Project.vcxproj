@@ -16,6 +16,7 @@
     <ClInclude Include="..\common\def.h" />
     <ClInclude Include="..\common\notifiable.h" />
     <ClInclude Include="..\model\model.h" />
+    <ClInclude Include="..\module\JsonParser\JsonParser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
     <ClInclude Include="..\view\ui_view.h" />
     <QtMoc Include="..\view\view.h" />
@@ -26,6 +27,7 @@
     <ClCompile Include="..\common\notifiable.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\model\model.cpp" />
+    <ClCompile Include="..\module\JsonParser\JsonParser.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />
     <ClCompile Include="..\view\view.cpp" />
   </ItemGroup>
@@ -36,17 +38,19 @@
     <ProjectGuid>{0879F828-F8D9-4698-B411-05FD27AF4C8F}</ProjectGuid>
     <Keyword>QtVS_v303</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -65,13 +69,28 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
     <QtUic>
       <QtUicDir>../view/</QtUicDir>
     </QtUic>
@@ -82,7 +101,7 @@
     <QtInstall>msvc2019_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>5.15.0</QtInstall>
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
