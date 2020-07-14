@@ -125,6 +125,7 @@ public:
 	{
 		// TODO:
 		// update view
+		imagedata
 	}
 
 	void varValPairsUpdateNotified()
@@ -169,9 +170,12 @@ private:
 	// 注意添加getter and setter
 
 	ptr<const std::string> latexFormula;
+	ptr<const std::vector<Byte>> imageData;
 
 	Getter<ptr<const std::string>> latexStringGetter;
 	Setter<std::string> latexStringSetter;
+	Getter<ptr<const std::vector<Byte>>> imageDataGetter;
+	Setter<std::vector<Byte>> imageDataSetter;
 
 	// 用于动态绑定view model
 

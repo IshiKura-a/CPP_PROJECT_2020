@@ -1,17 +1,31 @@
 #include "model.h"
 #include "CppCurl.h"
 #include "../module/JsonParser/JsonParser.h"
+#include <iostream>
 
-void Model::openImage(std::string file_path)
+
+
+void Model::getFormulaFromImage(std::string file_path)
 {
 	RequestManager manager;
-	setImageData(manager->openImage(file_path));
+	try {
+		auto json = manager->formulaRecognitionMathpix(file_path);
+		setLatexString(JsonParser::parseCurlReturnValMathpix(json));
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cerr << e.what();
+	}
 }
 
-
-void Model::parseFormula()
+void Model::renderLatexFormula()
 {
 	RequestManager manager;
-	auto json = manager->formulaRecognitionMathpix(*imageData, "png");
-	setLatexString(JsonParser::parseCurlReturnValMathpix(json));
+	try {
+		imageData = std::make_shared<std::vector<Byte>>(manager->downloadRenderedFormula(*latexString, "svg"));
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cerr << e.what();
+	}
 }
