@@ -40,7 +40,7 @@ public:
 	void initBody();
 
 	// 命令
-	void setLoadImg4Dir(WorkFunctionNoArg command)
+	void setLoadImg4Dir(WorkFunction command)
 	{
 		loadImg4Dir = command;
 	}
@@ -59,6 +59,13 @@ public:
 	void setDisplayHelpDocument(WorkFunctionNoArg command)
 	{
 		displayHelpDocument = command;
+	}
+
+	/******************** function entry ********************/
+
+	void loadImageFromDir(std::string file_path)
+	{
+		loadImg4Dir(file_path);
 	}
 
 	/******************** data-getter setter and data-setter setter ********************/
@@ -159,7 +166,7 @@ private:
 
 	WorkFunctionNoArg displayLatexFormula;
 	WorkFunctionNoArg renderLatexString;
-	WorkFunctionNoArg loadImg4Dir;
+	WorkFunction loadImg4Dir;
 	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;
 	WorkFunctionNoArg changeLatexDisplay;

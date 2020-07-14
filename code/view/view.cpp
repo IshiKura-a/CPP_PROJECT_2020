@@ -41,7 +41,7 @@ void View::initMenu()
         if(loadImg4Dir)
         {
             qDebug() << "Load";
-            loadImg4Dir();
+            //loadImg4Dir();
         }
         else
         {
@@ -238,3 +238,4 @@ void View::onChangeLatexDisplay()
         //setLatexFormula(latex_Editor->document()->toPlainText().toStdString());
     }
 }
+
