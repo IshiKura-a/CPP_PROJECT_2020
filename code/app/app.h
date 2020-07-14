@@ -22,6 +22,7 @@ public:
 		model = std::make_shared<Model>();
 
 		viewModel->bindModel(model);
+		viewModel->bindFunction();
 
 		view->setRenderLatexString(viewModel->getRenderLatexString());
 		view->setDisplayLatexFormula(viewModel->getGetFormulaResult());
@@ -29,11 +30,11 @@ public:
 		view->setChangeLatexFormula(viewModel->getChangeLatexFormula());
 		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 
-		view->setImgLabel(std::make_shared<QLabel>());
-		view->setLatexLabel(std::make_shared<QLabel>());
+		// view->setImgLabel(std::make_shared<QLabel>());
+		// view->setLatexLabel(std::make_shared<QLabel>());
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
 		view->setTimer(std::make_shared<QTimer>());
-		view->setLatexStringGetter(viewModel->getLatexString);
+
 
 		// view update notification动态绑定
 		viewModel->bindCallback_LatexStringUpdateView(
@@ -59,8 +60,11 @@ public:
 		model->notifyAll();
 
 		// 试试, 如果显示成功就说明数据传输正常
-		view->setLatexString("quit");
+		// view->setLatexString("quit");
 		model->notifyAll();
+
+		// testestestestestestsetset
+		view->loadImageFromDir("maxwell.png");
 	};
 	void run()
 	{

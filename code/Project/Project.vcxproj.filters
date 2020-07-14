@@ -52,6 +52,18 @@
     <Filter Include="Source Files\common">
       <UniqueIdentifier>{c98d239a-792e-44e7-9d05-f94eb60cce39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\module">
+      <UniqueIdentifier>{38344001-0573-45ec-8c7d-9305fe7a925d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\module\JsonParser">
+      <UniqueIdentifier>{6a7d2154-cd30-4187-8464-a71f6c0ff866}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\module">
+      <UniqueIdentifier>{f112a40b-78cc-48ed-bc8f-5c34f9925ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\module\JsonParser">
+      <UniqueIdentifier>{830ed893-ebc3-45cc-9bf5-a4331991a7d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app\app.h">
@@ -75,6 +87,9 @@
     <ClInclude Include="..\common\notifiable.h">
       <Filter>Header Files\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\module\JsonParser\JsonParser.h">
+      <Filter>Header Files\module\JsonParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\app\app.cpp">
@@ -97,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="..\common\notifiable.cpp">
       <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\module\JsonParser\JsonParser.cpp">
+      <Filter>Source Files\module\JsonParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
