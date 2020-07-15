@@ -37,7 +37,7 @@ private:
 	// TODO
 
 	WorkFunctionNoArg getFormulaResult;
-	WorkFunctionNoArg renderLatexString;
+	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
 	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;

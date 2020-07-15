@@ -18,7 +18,9 @@
 
 ## 添加view model功能函数
 
-1. 确认这个函数必须在view model中操作model，且无法通过调用已绑定的view model函数达到相同功能。
+view model中的函数可以调用一个或多个model的函数。注意满足原子性。
+
+1. 确认这个函数必须操作model，且无法通过调用已绑定的view model函数达到相同功能。
 
 2. 在view model中添加相应的std::function，无参数的函数定义为WorkFunction，有参数的函数定义为WorkFunctionNoArg。
 

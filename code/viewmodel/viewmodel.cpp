@@ -24,7 +24,10 @@ void ViewModel::bindFunction()
 {
 	loadImg4Dir = [this](std::any file_path)
 	{
-		model->openImage(std::any_cast<std::string>(file_path));
-		model->parseFormula();
+		model->getFormulaFromImage(std::any_cast<std::string>(file_path));
+	};
+	renderLatexString = [this](std::any image_format)
+	{
+		model->renderLatexFormula(std::any_cast<std::string>(image_format));
 	};
 }

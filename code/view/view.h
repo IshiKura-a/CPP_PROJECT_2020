@@ -46,7 +46,7 @@ public:
 	{
 		loadImg4Dir = command;
 	}
-	void setRenderLatexString(const WorkFunctionNoArg& command)
+	void setRenderLatexString(const WorkFunction& command)
 	{
 		renderLatexString = command;
 	}
@@ -191,7 +191,7 @@ private:
 	// 用于动态绑定view model
 
 	WorkFunctionNoArg displayLatexFormula;
-	WorkFunctionNoArg renderLatexString;
+	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
 	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;
