@@ -84,11 +84,11 @@ public:
 	virtual ~IHTTPRequestManager() = default;
 };
 
-CPPCURL_API class RequestManager
+class CPPCURL_API RequestManager
 {
 private:
 	std::shared_ptr<IHTTPRequestManager> manager;
 public:
-	CPPCURL_API RequestManager();
-	CPPCURL_API IHTTPRequestManager* operator->() const { return manager.get(); }
+	RequestManager();
+	IHTTPRequestManager* operator->() const { return manager.get(); }
 };

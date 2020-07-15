@@ -5,6 +5,7 @@
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
 #include <cassert>
+#pragma comment(lib,"libcurl.lib")
 
 using Byte = char;
 
@@ -265,8 +266,8 @@ std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string&
 			curl_easy_cleanup(curl);
 			throw std::runtime_error(errmsg);
 		}
-		
-		return std::move(render_result);
+        curl_easy_cleanup(curl);
+        return std::move(render_result);
 	}
 	else
 	{
@@ -286,11 +287,6 @@ static bool isBase64(const char c)
 	return (isalnum(c) || (c == '+') || (c == '/'));
 }
 
-// @param:
-// bytes_to_encode: 需要被编码的数据的指针.
-// in_len: 需要被编码的数据的长度.
-// @return:
-// base64编码后的数据.
 std::string base64Encode(const char* bytes_to_encode, unsigned int in_len)
 {
 	std::string ret;
@@ -341,11 +337,6 @@ std::string base64Encode(const char* bytes_to_encode, unsigned int in_len)
 	return ret;
 }
 
-// @param:
-// encoded_string: base64编码的数据.
-// @return:
-// base64解码后的数据.
-// !未测试
 std::string base64Decode(const std::string& encoded_string)
 {
 	int in_len = encoded_string.size();
@@ -403,10 +394,6 @@ unsigned char hexToDec(unsigned char x)
 	return y;
 }
 
-// @param:
-// bytes_to_encode: 需要被编码的数据.
-// @return:
-// urlencode后的数据.
 std::string urlEncode(const std::string& bytes_to_encode)
 {
 	std::string strTemp = "";
@@ -431,11 +418,6 @@ std::string urlEncode(const std::string& bytes_to_encode)
 	return strTemp;
 }
 
-// @param:
-// encoded_string: 需要被解码的数据.
-// @return:
-// urldecode后的数据.
-// !未测试
 std::string urlDecode(const std::string& encoded_string)
 {
 	std::string strTemp = "";
@@ -455,7 +437,7 @@ std::string urlDecode(const std::string& encoded_string)
 	return strTemp;
 }
 
-std::vector<Byte> HTTPRequestManager::openImage(const std::string& file_path)
+std::vector<HTTPRequestManager::Byte> HTTPRequestManager::openImage(const std::string& file_path)
 {
 	FILE* fp = NULL;
 	fopen_s(&fp, file_path.c_str(), "rb");
@@ -472,7 +454,6 @@ std::vector<Byte> HTTPRequestManager::openImage(const std::string& file_path)
 	fread(retVal.data(), 1, size, fp);
 
 	fclose(fp);
-
 	return retVal;
 }
 
