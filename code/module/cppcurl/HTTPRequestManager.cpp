@@ -6,6 +6,7 @@
 #include <rapidjson/prettywriter.h>
 #include <cassert>
 
+using Byte = char;
 
 const std::string HTTPRequestManager::baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
 
@@ -13,9 +14,9 @@ const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix
 
 const std::string HTTPRequestManager::latex_rendering_request_url = "https://latex.codecogs.com/";
 
-ptr<std::string> HTTPRequestManager::formula_result = nullptr;
+std::string HTTPRequestManager::formula_result;
 
-ptr<std::vector<Byte>> HTTPRequestManager::render_result = nullptr;
+std::vector<Byte> HTTPRequestManager::render_result;
 
 const std::string HTTPRequestManager::access_token = "7A4F0C7C6D1AA836183C6245AF5A546D\
 CA62994D2AD6DF01083A5170573825F8\
@@ -31,17 +32,17 @@ size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 
 size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::formula_result = std::make_shared<std::string>(static_cast<char*>(ptr), size * nmemb);
+	HTTPRequestManager::formula_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
 size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::render_result = std::make_shared< std::vector<Byte>>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	HTTPRequestManager::render_result = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
 	return size * nmemb;
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>& raw_image)
 {
 
 	// 返回公式识别的结果字符串
@@ -95,9 +96,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<B
 
 		curl_easy_cleanup(curl);
 
-		auto ret_val = formula_result;
-		formula_result = nullptr;
-		return ret_val;
+		return std::move(formula_result);
 	}
 	else
 	{
@@ -105,13 +104,13 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::vector<B
 	}
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_path)
+std::string HTTPRequestManager::formulaRecognitionBaidu(const std::string& file_path)
 {
 	return formulaRecognitionBaidu(openImage(file_path));
 }
 
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
+std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format)
 {
 
 	// 返回公式识别的结果字符串
@@ -182,9 +181,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector
 
 		curl_easy_cleanup(curl);
 
-		auto ret_val = formula_result;
-		formula_result = nullptr;
-		return ret_val;
+		return std::move(formula_result);
 	}
 	else
 	{
@@ -192,7 +189,7 @@ ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::vector
 	}
 }
 
-ptr<std::string> HTTPRequestManager::formulaRecognitionMathpix(const std::string& file_path)
+std::string HTTPRequestManager::formulaRecognitionMathpix(const std::string& file_path)
 {
 	auto data = openImage(file_path);
 	auto format = file_path.substr(file_path.find_last_of('.') + 1);
@@ -243,7 +240,7 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 	}
 }
 
-ptr<std::vector<Byte>> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
+std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
 	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
 	CURL* curl = NULL;
@@ -268,10 +265,8 @@ ptr<std::vector<Byte>> HTTPRequestManager::downloadRenderedFormula(const std::st
 			curl_easy_cleanup(curl);
 			throw std::runtime_error(errmsg);
 		}
-		curl_easy_cleanup(curl);
-		auto ret_val = render_result;
-		render_result = nullptr;
-		return ret_val;
+		
+		return std::move(render_result);
 	}
 	else
 	{

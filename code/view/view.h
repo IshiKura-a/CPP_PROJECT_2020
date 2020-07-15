@@ -125,7 +125,6 @@ public:
 	{
 		// TODO:
 		// update view
-		imagedata
 	}
 
 	void varValPairsUpdateNotified()

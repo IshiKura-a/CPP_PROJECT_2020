@@ -100,9 +100,19 @@ private:
 		latexString = std::make_shared<std::string>(str);
 		latexStringChangedNotify();
 	}
+	void setLatexString(std::string&& str)
+	{
+		latexString = std::make_shared<std::string>(std::move(str));
+		latexStringChangedNotify();
+	}
 	void setImageData(const std::vector<Byte>& data)
 	{
 		imageData = std::make_shared<std::vector<Byte>>(data);
+		imageDataChangedNotify();
+	}
+	void setImageData(std::vector<Byte>&& data)
+	{
+		imageData = std::make_shared<std::vector<Byte>>(std::move(data));
 		imageDataChangedNotify();
 	}
 	void setVarValPairs(const std::vector<VarValPair>& pair)
@@ -110,9 +120,19 @@ private:
 		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
 		varValPairsChangedNotify();
 	}
-	void setResult(const std::string res)
+	void setVarValPairs(std::vector<VarValPair>&& pair)
+	{
+		varValPairs = std::make_shared<std::vector<VarValPair>>(std::move(pair));
+		varValPairsChangedNotify();
+	}
+	void setResult(const std::string& res)
 	{
 		result = std::make_shared<std::string>(res);
+		resultChangedNotify();
+	}
+	void setResult(std::string&& res)
+	{
+		result = std::make_shared<std::string>(std::move(res));
 		resultChangedNotify();
 	}
 public:

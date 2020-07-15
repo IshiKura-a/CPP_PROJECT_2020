@@ -3,14 +3,15 @@
 
 class HTTPRequestManager : public IHTTPRequestManager
 {
+	using Byte = char;
 private:
 	const static std::string baidu_request_url;
 	const static std::string mathpix_request_url;
 	const static std::string latex_rendering_request_url;
 	const static std::string access_token;
 
-	static ptr<std::string> formula_result;
-	static ptr<std::vector<Byte>> render_result;
+	static std::string formula_result;
+	static std::vector<Byte> render_result;
 
 	// @param:
 	// file_path: 图像路径
@@ -46,15 +47,15 @@ private:
 	friend size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream);
 
 public:
-	ptr<std::string> formulaRecognitionBaidu(const std::vector<Byte>& encoded_image) override;
+	std::string formulaRecognitionBaidu(const std::vector<Byte>& encoded_image) override;
 
-	ptr<std::string> formulaRecognitionBaidu(const std::string& file_path) override;
+	std::string formulaRecognitionBaidu(const std::string& file_path) override;
 
-	ptr<std::string> formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format) override;
+	std::string formulaRecognitionMathpix(const std::vector<Byte>& raw_image, const std::string& image_format) override;
 
-	ptr<std::string> formulaRecognitionMathpix(const std::string& file_path) override;
+	std::string formulaRecognitionMathpix(const std::string& file_path) override;
 
-	ptr<std::vector<Byte>> downloadRenderedFormula(const std::string& latex_string, const std::string& format) override;
+	std::vector<Byte> downloadRenderedFormula(const std::string& latex_string, const std::string& format) override;
 
 	void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format) override;
 

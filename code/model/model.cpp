@@ -22,7 +22,7 @@ void Model::renderLatexFormula()
 {
 	RequestManager manager;
 	try {
-		imageData = std::make_shared<std::vector<Byte>>(manager->downloadRenderedFormula(*latexString, "svg"));
+		setImageData(manager->downloadRenderedFormula(*latexString, "svg"));
 	}
 	catch (std::runtime_error& e)
 	{

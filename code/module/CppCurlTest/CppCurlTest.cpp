@@ -26,7 +26,7 @@ int main()
 
 		time = clock();
 		
-		manager->saveImage(*formula_buffer, "formula_buffer.png");
+		manager->saveImage(formula_buffer, "formula_buffer.png");
 
 		std::cout << "Successfully save buffer in ./formula_buffer.png.\n";
 		std::cout << "time = " << clock() - time << "\n\n";
@@ -61,7 +61,7 @@ int main()
 		
 		auto s = manager->openImage("maxwell.png");
 
-		std::cout << *manager->formulaRecognitionBaidu(s) << std::endl;
+		std::cout << manager->formulaRecognitionBaidu(s) << std::endl;
 		std::cout << "time = " << clock() - time << "\n\n";
 	}
 	catch (std::runtime_error& e)
@@ -76,7 +76,7 @@ int main()
 
 	try {
 		time = clock();
-		std::cout << *manager->formulaRecognitionMathpix("maxwell.png") << std::endl;
+		std::cout << manager->formulaRecognitionMathpix("maxwell.png") << std::endl;
 		std::cout << "time = " << clock() - time << "\n\n";
 	}
 	catch (std::runtime_error& e)
