@@ -4,10 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project", "Project.vcxproj", "{0879F828-F8D9-4698-B411-05FD27AF4C8F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CAC19F5E-2D10-473A-8C9D-C41A3FB3136A} = {CAC19F5E-2D10-473A-8C9D-C41A3FB3136A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppCurl", "..\module\cppcurl\CppCurl.vcxproj", "{CAC19F5E-2D10-473A-8C9D-C41A3FB3136A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JsonParserTest", "..\module\JsonParser\JsonParser.vcxproj", "{5E255C80-B573-44E1-A1EB-D98531C2526E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CAC19F5E-2D10-473A-8C9D-C41A3FB3136A} = {CAC19F5E-2D10-473A-8C9D-C41A3FB3136A}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppCurlTest", "..\module\CppCurlTest\CppCurlTest.vcxproj", "{CDFDFCBE-93F4-459D-9D89-1444044211AC}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -57,7 +63,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2019_64
 		SolutionGuid = {BA313EF4-04B9-48ED-88B8-AE67DD920620}
+		Qt5Version = msvc2019_64
 	EndGlobalSection
 EndGlobal
