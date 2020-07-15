@@ -24,7 +24,7 @@ public:
 		//memcpy(b->vari, num, sizeof(int)*(b->vari[0] + 1));
 		if(num.size()>0)
 		b->vari.assign(num.begin(),num.end());
-		if (b->getisn() >= 0)//è¿ä¹˜å’Œè¿åŠ ç”±äºéœ€è¦ä¸Šå±‚èŠ‚ç‚¹çš„nï¼Œæ‰€ä»¥ä¼ ä¸€ä¸ªå‚æ•°ä¸‹å»ï¼Œå¦‚æœè¿™ä¸ªèŠ‚ç‚¹æ˜¯nï¼Œç›´æ¥è¿”å›å‚æ•°
+		if (b->getisn() >= 0)//Á¬³ËºÍÁ¬¼ÓÓÉÓÚĞèÒªÉÏ²ã½ÚµãµÄn£¬ËùÒÔ´«Ò»¸ö²ÎÊıÏÂÈ¥£¬Èç¹ûÕâ¸ö½ÚµãÊÇn£¬Ö±½Ó·µ»Ø²ÎÊı
 			return (double)b->vari[b->getisn()];
 		if (b->getisSingleEye() == 0)
 		{
@@ -51,7 +51,7 @@ public:
 				res2 = result(b->getright(), b->vari);
 				if (res2 == 0)
 				{
-					//åº”è¯¥è¿”å›ä¸€ä¸ªé”™è¯¯ï¼Œä½†æ˜¯ä¸ä¼šå†™
+					//Ó¦¸Ã·µ»ØÒ»¸ö´íÎó£¬µ«ÊÇ²»»áĞ´
 					exit(1);
 				}
 				b->setval(res1 / res2);
@@ -65,7 +65,7 @@ public:
 					ans *= res1;
 				}
 				b->setval(ans);
-			case 'l'://log,å·¦è¾¹åº•æ•°å³è¾¹çœŸæ•°
+			case 'l'://log,×ó±ßµ×ÊıÓÒ±ßÕæÊı
 				res1 = result(b->getleft(), b->vari);
 				res2 = result(b->getright(), b->vari);
 				b->setval(log(res2)/log(res1));
@@ -101,7 +101,7 @@ public:
 					res1 = result(b->getleft(), b->vari);
 					if (res1 > 1 || res1 < -1)
 					{
-						//è¿”å›å¼‚å¸¸
+						//·µ»ØÒì³£
 						exit(1);
 					}
 					b->setval(asin(res1));
@@ -110,7 +110,7 @@ public:
 					res1 = result(b->getleft(), b->vari);
 					if (res1 > 1 || res1 < -1)
 					{
-						//è¿”å›å¼‚å¸¸
+						//·µ»ØÒì³£
 						exit(1);
 					}
 					b->setval(acos(res1));
@@ -119,7 +119,7 @@ public:
 					res1 = result(b->getleft(), b->vari);
 					if (res1 > 1 || res1 < -1)
 					{
-						//è¿”å›å¼‚å¸¸
+						//·µ»ØÒì³£
 						exit(1);
 					}
 					b->setval(atan(res1));
@@ -141,6 +141,7 @@ public:
 		else if (b->getisSingleEye() > 1)
 		{
 			double ans;
+			int start = b->start;
 			int n = b->getisSingleEye();
 			//int *p = b->vari.end();
 			switch (b->getop())
@@ -150,7 +151,7 @@ public:
 				ans = 0;
 				//p += b->vari[0];
 				//b->vari[0]++;
-				for (int i = 0; i < n; i++)
+				for (int i = start; i < n + start; i++)
 				{
 					//*p = i;
 					
@@ -166,10 +167,10 @@ public:
 				//int *p = b->vari + 1;
 				//p += b->vari[0];
 				//b->vari[0]++;
-				for (int i = 0; i < n; i++)
+				for (int i = start; i < start + n; i++)
 				{
 					//*p = i;
-					
+				
 					b->vari.push_back(i);
 					res1 = result(b->getleft(), b->vari);
 					ans *= res1;

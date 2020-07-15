@@ -8,6 +8,7 @@ int main()
 	Tree* t=new Tree;
 	t->root->setop('c');
 	t->root->setisSingleEye(3);
+	t->root->start = 0;
 	Node* left=new Node, *right=new Node;
 	Node* left1 = new Node, *right1 = new Node;
 	Node* left2 = new Node, *right2 = new Node;
@@ -21,6 +22,7 @@ int main()
 	//right1->setval(1);
 	left->setop('c');
 	left->setisSingleEye(3);
+	left->start = 0;
 	//left1->setisn(1);
 	left1->setop('+');
 	//left2->setop('+');

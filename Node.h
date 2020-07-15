@@ -15,6 +15,7 @@ private:
 	
 public:
 	vector<int> vari;
+	int start;
 	Node()
 	{
 		op = '\0';
@@ -23,7 +24,7 @@ public:
 		right = NULL;
 		isSingleEye = 0;
 		isn = -1;
-		
+		start = 0;
 	}
 	double getval()
 	{
