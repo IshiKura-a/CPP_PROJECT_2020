@@ -148,20 +148,20 @@ public:
 
 	/******************** callback function binding ********************/
 
-	void bindCallback_LatexStringChanged(CallbackFunction fun)
+	void bindCallback_LatexStringChanged(const CallbackFunction& fun)
 	{
 		latexStringChanged = registerEvent(fun);
 	}
-	void bindCallback_ImageDataChanged(CallbackFunction fun)
+	void bindCallback_ImageDataChanged(const CallbackFunction& fun)
 	{
 		imageDataChanged = registerEvent(fun);
 	}
 	// 主动同步时使用
-	void bindCallback_VarValPairsChanged(CallbackFunction fun)
+	void bindCallback_VarValPairsChanged(const CallbackFunction& fun)
 	{
 		varValuePairsChanged = registerEvent(fun);
 	}
-	void bindCallback_ResultChanged(CallbackFunction fun)
+	void bindCallback_ResultChanged(const CallbackFunction& fun)
 	{
 		resultChanged = registerEvent(fun);
 	}

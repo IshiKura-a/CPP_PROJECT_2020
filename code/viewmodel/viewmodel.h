@@ -2,6 +2,9 @@
 #include "../model/model.h"
 #include "../common/def.h"
 #include "../common/notifiable.h"
+#include <QString>
+#include <QByteArray>
+#include <QVector>
 
 class ViewModel :public Notifiable
 {
@@ -9,18 +12,14 @@ private:
 
 	ptr<Model> model;
 
-	// TODO:
-	// 下列数据类型需要改成对应的Qt类
-	// ********************************
 	// 用于解析和渲染图片的latex string
-	ptr<std::string> latexString;
+	ptr<QString> latexString;
 	// 渲染后图片的二进制数据
-	ptr<std::vector<Byte>> imageData;
+	ptr<QByteArray> imageData;
 	// 公式中的变量-值组
-	ptr<std::vector<VarValPair>> varValPairs;
+	ptr<QVector<VarValPair>> varValPairs;
 	// 公式计算结果
-	ptr<std::string> result;
-	// ********************************
+	ptr<QString> result;
 
 	/******************** notifier ********************/
 	// 当model中的数据发生变化时, 通知view model
@@ -35,6 +34,7 @@ private:
 	// 用于view的动态绑定
 	// WorkFunction: 参数为std::any
 	// WorkFunctionNoArg: 参数为void
+	// TODO
 
 	WorkFunctionNoArg getFormulaResult;
 	WorkFunctionNoArg renderLatexString;
@@ -71,72 +71,52 @@ public:
 	/******************** data getter and setter ********************/
 	// 禁止直接使用getter返回的指针修改数据(这样捕捉不到data changed事件)
 	// setter会将view的修改同步到model
-	// getter直接使用lambda函数, 便于view的绑定
+	// 直接使用lambda函数便于view的绑定
 
-	Getter<ptr<const std::string>> getLatexString = [this]()
-	{return latexString; };
-	Setter<std::string> setLatexString = [this](const std::string& str)
+	Getter<ptr<QString>> getLatexString = [this]() {return latexString; };
+	Setter<QString> setLatexString = [this](const QString& str)
 	{
-		latexString = std::make_shared<std::string>(str);
+		latexString = std::make_shared<QString>(str);
 		this->latexStringChangeApplyToModel();
 	};
-	Getter<ptr<const std::vector<Byte>>> getImageData = [this]() {return imageData; };
+
+	Getter<ptr<QByteArray>> getImageData = [this]() {return imageData; };
 	// image data不能被view设置
-	//void setImageData(const std::vector<Byte>& data)
-	//{
-	//	imageData = std::make_shared<std::vector<Byte>>(data);
-	//}
-	Getter<ptr<const std::vector<VarValPair>>> getVarValPairs = [this]() {return varValPairs; };
-	Setter<std::vector<VarValPair>> setVarValPairs = [this](std::vector<VarValPair> pair)
+
+
+	Getter<ptr<const QVector<VarValPair>>> getVarValPairs = [this]() {return varValPairs; };
+	Setter<QVector<VarValPair>> setVarValPairs = [this](const QVector<VarValPair>& pair)
 	{
-		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
+		varValPairs = std::make_shared<QVector<VarValPair>>(pair);
 		this->varValPairsChangeApplyToModel();
 	};
-	Getter<ptr<const std::string>> getResult = [this]() {return result; };
+
+	Getter<ptr<QString>> getResult = [this]() {return result; };
 	// result不能被view设置
-	//void setResult(const std::string res)
-	//{
-	//	result = std::make_shared<std::string>(res);
-	//}
 
 	/******************** binding ********************/
 
-	// 绑定一个model实例，在model触发data changed事件时调用此view model的notified函数
-	void bindModel(ptr<Model> model)
-	{
-		this->model = model;
-		this->model->bindCallback_LatexStringChanged(
-			[this]() {this->latexStringChangedNotified(); }
-		);
-		this->model->bindCallback_ImageDataChanged(
-			[this]() {this->imageDataChangedNotified(); }
-		);
-		this->model->bindCallback_VarValPairsChanged(
-			[this]() {this->varValPairsChangedNotified(); }
-		);
-		this->model->bindCallback_ResultChanged(
-			[this]() {this->resultChangedNotified(); }
-		);
-	}
+	// 绑定一个model实例，在model触发数据成员变化事件时调用此view model的notified函数
+	void bindModel(ptr<Model> model);
 
 	// 绑定功能函数
 	void bindFunction();
 
 	/******************** callback function binding ********************/
 
-	void bindCallback_LatexStringUpdateView(CallbackFunction fun)
+	void bindCallback_LatexStringUpdateView(const CallbackFunction& fun)
 	{
 		latexStringUpdateView = registerEvent(fun);
 	}
-	void bindCallback_ImageDataUpdateView(CallbackFunction fun)
+	void bindCallback_ImageDataUpdateView(const CallbackFunction& fun)
 	{
 		imageDataUpdateView = registerEvent(fun);
 	}
-	void bindCallback_VarValPairsUpdateView(CallbackFunction fun)
+	void bindCallback_VarValPairsUpdateView(const CallbackFunction& fun)
 	{
 		varValPairsUpdateView = registerEvent(fun);
 	}
-	void bindCallback_ResultUpdateView(CallbackFunction fun)
+	void bindCallback_ResultUpdateView(const CallbackFunction& fun)
 	{
 		resultUpdateView = registerEvent(fun);
 	}
@@ -151,14 +131,8 @@ public:
 
 	void latexStringChangedNotified()
 	{
-		// TODO:
-		// 更新view model中的data
-		// 此处应当更新view model中的latex string
-		// 将model使用的数据结构转成view使用的数据结构
-		// 例如latex string就应 string->QString
-
-		auto latex_string = model->getLatexString();
-		latexString = std::make_shared<std::string>(*latex_string);
+		const auto latex_string = model->getLatexString();
+		latexString = std::make_shared<QString>(latex_string->c_str());
 
 		// 触发view的更新事件
 		latexStringUpdateViewNotify();
@@ -166,13 +140,8 @@ public:
 
 	void imageDataChangedNotified()
 	{
-		// TODO:
-		// 更新view model中的data
-		// 此处应当更新view model中的image data
-		// somefunction()
-
-		auto image_data = model->getImageData();
-		imageData = std::make_shared<std::vector<Byte>>(*image_data);
+		const auto image_data = model->getImageData();
+		imageData = std::make_shared<QByteArray>(image_data->data(), image_data->size());
 
 		// 触发view的更新事件
 		imageDataUpdateViewNotify();
@@ -181,13 +150,8 @@ public:
 	// model向上同步数据时会用到
 	void varValPairsChangedNotified()
 	{
-		// TODO:
-		// 更新view model中的data
-		// 此处应当更新view model中的variable value pairs
-		// somefunction()
-
-		auto variable_value_pairs = model->getVarValPairs();
-		varValPairs = std::make_shared<std::vector<VarValPair>>(*variable_value_pairs);
+		const auto variable_value_pairs = model->getVarValPairs();
+		varValPairs = std::make_shared<QVector<VarValPair>>(variable_value_pairs->begin(),variable_value_pairs->end());
 
 		// 触发view的更新事件
 		varValPairsUpdateViewNotify();
@@ -195,13 +159,8 @@ public:
 
 	void resultChangedNotified()
 	{
-		// TODO:
-		// 更新view model中的data
-		// 此处应当更新view model中的result
-		// somefunction()
-
-		auto res = model->getResult();
-		result = std::make_shared<std::string>(*res);
+		const auto res = model->getResult();
+		result = std::make_shared<QString>(res->c_str());
 
 		// 触发view的更新事件
 		resultUpdateViewNotify();
@@ -212,12 +171,12 @@ public:
 
 	void latexStringChangeApplyToModel() const
 	{
-		model->setLatexStringWithoutNotify(*latexString);
+		model->setLatexStringWithoutNotify(latexString->toStdString());
 	}
 
 	void varValPairsChangeApplyToModel() const
 	{
-		model->setVarValPairsWithoutNotify(*varValPairs);
+		model->setVarValPairsWithoutNotify(std::vector<VarValPair>(varValPairs->begin(),varValPairs->end()));
 	}
 
 	/******************** event trigger ********************/

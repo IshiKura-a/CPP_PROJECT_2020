@@ -51,16 +51,19 @@ public:
 		);
 
 		// 绑定数据
-		// TODO:
-		// 还没写完, 要把其他数据也绑定上去
 		view->setLatexStringGetter(viewModel->getLatexString);
 		view->setLatexStringSetter(viewModel->setLatexString);
+		view->setImageDataGetter(viewModel->getImageData);
+		view->setVarValPairsGetter(viewModel->getVarValPairs);
+		view->setVarValPairsSetter(viewModel->setVarValPairs);
+		view->setResultGetter(viewModel->getResult);
+
 
 		// 同步数据
 		model->notifyAll();
 
 		// 试试, 如果显示成功就说明数据传输正常
-		// view->setLatexString("quit");
+		view->setLatexString("quit");
 		model->notifyAll();
 
 		// testestestestestestsetset
