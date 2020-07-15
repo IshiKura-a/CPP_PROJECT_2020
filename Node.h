@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<vector>
 using namespace std;
 #ifndef _Node
 #define _Node
@@ -10,9 +11,10 @@ private:
 	double val;
 	Node *left, *right;
 	int isSingleEye;
-	bool isn;
-
+	int isn;
+	
 public:
+	vector<int> vari;
 	Node()
 	{
 		op = '\0';
@@ -20,7 +22,8 @@ public:
 		left = NULL;
 		right = NULL;
 		isSingleEye = 0;
-		isn = 0;
+		isn = -1;
+		
 	}
 	double getval()
 	{
@@ -59,11 +62,11 @@ public:
 		delete left;
 		delete right;
 	}
-	bool getisn()
+	int getisn()
 	{
 		return isn;
 	}
-	void setisn(bool n)
+	void setisn(int n)
 	{
 		isn = n;
 	}

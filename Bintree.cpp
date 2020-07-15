@@ -7,19 +7,37 @@ int main()
 {
 	Tree* t=new Tree;
 	t->root->setop('c');
-	t->root->setisSingleEye(10);
+	t->root->setisSingleEye(3);
 	Node* left=new Node, *right=new Node;
 	Node* left1 = new Node, *right1 = new Node;
-	left1->setisn(1);
-	right1->setval(1);
-	left->setop('+');
-	//left->setval(1);
-	//left->setisn(1);
+	Node* left2 = new Node, *right2 = new Node;
+	Node* left3 = new Node, *right3 = new Node;
+
+
+	//left->setisn(0);
 	t->root->setleft(left);
 	t->root->setright(right);
+	
+	//right1->setval(1);
+	left->setop('c');
+	left->setisSingleEye(3);
+	//left1->setisn(1);
+	left1->setop('+');
+	//left2->setop('+');
+	left2->setisn(1);
+	right2->setisn(0);
+	//left->setval(1);
+
 	left->setleft(left1);
 	left->setright(right1);
-	printf("%lf", t->result(t->root,-1));
+	left1->setleft(left2);
+	left1->setright(right2);
+	//left2->setleft(left3);
+	//left2->setright(right3);
+	//int num[1] = { 0 };
+	//<int> num{ 0 };	
+	//这个测试的式子是sum（sum（m+n）），m和n范围都是0-2
+	printf("%lf", t->result(t->root,t->root->vari));
 		return 0;
 }
 
