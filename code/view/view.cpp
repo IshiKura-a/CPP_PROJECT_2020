@@ -13,7 +13,16 @@ View::View(QWidget *parent)
     latexLabel = ptr<QLabel>(ui->latexLabel);
     
     
-    statusBar = std::make_shared<QStatusBar>();
+    
+    loadButton = ptr<QPushButton>(ui->loadButton);
+    editButton = ptr<QPushButton>(ui->editButton);
+    downloadButton = ptr<QPushButton>(ui->downloadButton);
+    resetButton = ptr<QPushButton>(ui->resetButton);
+    calculateButton = ptr<QPushButton>(ui->calculateButton);
+    applyButton = ptr<QPushButton>(ui->applyButton);
+    prettifyButton = ptr<QPushButton>(ui->prettifyButton);
+
+    imgInfo = ptr<QTextEdit>(ui->imgInfo);
 }
 
 View::~View()
@@ -24,7 +33,7 @@ View::~View()
 void View::initQLayout()
 {
     // setFixedSize(960,600);
-    setFixedSize(QSize(960, 615));
+    setMinimumSize(QSize(960, 615));
     setContentsMargins(0, 0, 0, 0);
     
     latexLabel->installEventFilter(this);
@@ -43,21 +52,7 @@ void View::initMenu()
     // 设置文件菜单下有导入、关闭功能
     QAction* actLoad = (File->addAction("导入"));
     actLoad->setFont(menuNormal);
-    connect(actLoad, &QAction::triggered, [=](){
-        imgLabel->setText("");
-        if(loadImg4Dir)
-        {
-            qDebug() << "Load";
-            displayMsg("Load");
-            //loadImg4Dir();
-        }
-        else
-        {
-            displayErrorMsg("No load available!");
-            qDebug() << "No load available.";
-        }
-
-    });
+    connect(actLoad, SIGNAL(triggered()), SLOT(onClickLoadButton()));
 
     QAction* actExit = (File->addAction("关闭"));
     actExit->setFont(menuNormal);
@@ -90,7 +85,7 @@ void View::initMenu()
 
 void View::initBody()
 {
-    gridLayoutBody->setContentsMargins(1.5, 1.5, 0, 22);
+    gridLayoutBody->setContentsMargins(0, 0, 0, 0);
     gridLayoutBody->setVerticalSpacing(0);
     imgLabel->setStyleSheet(lightBlueBackground + whiteWords + blackBorder2Px + noBottomBorder);
     imgLabel->setText("No image loaded");
@@ -126,26 +121,110 @@ void View::initBody()
     latexLabel->setAlignment(Qt::AlignCenter);
     
     
-    setStatusBar(statusBar.get());
+    QMainWindow::setStatusBar(statusBar.get());
     statusBar->setFont(msgNormal);
     statusBar->setStyleSheet(lightDarkBackground + whiteWords);
     displayMsg("Hello", 4000);
+
+
+    initCmdInterface();
 }
 
+void View::initCmdInterface()
+{
+    // 绑定按钮事件
+    connect(loadButton.get(), SIGNAL(clicked()), this, SLOT(onClickLoadButton()));
+
+    
+    connect(resetButton.get(), &QPushButton::clicked, [=]() {
+        if (resetInterface)
+        {
+            qDebug() << "Reset";
+            displayMsg("Reset");
+            // resetInterface();
+        }
+        else
+        {
+            qDebug() << "No reset function";
+            displayErrorMsg("No reset function!");
+        }
+    });
+    connect(editButton.get(), &QPushButton::clicked, [=]() {
+        if (editLatexFormula)
+        {
+            qDebug() << "Edit";
+            displayMsg("Edit");
+
+            // editLatexFormula();
+        }
+        else
+        {
+            qDebug() << "No edit function";
+            displayErrorMsg("No edit function!");
+        }
+    });
+    connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
+        if (applyLatexFormulaChanges)
+        {
+            qDebug() << "Apply changes";
+            displayMsg("Apply changes");
+        }
+        else
+        {
+            qDebug() << "No apply function";
+            displayErrorMsg("No apply function!");
+        }
+    });
+    connect(downloadButton.get(), &QPushButton::clicked, [=]() {
+        if (downloadRenderedLatexImg)
+        {
+            qDebug() << "Download";
+            displayMsg("Download");
+        }
+        else
+        {
+            qDebug() << "No download function";
+            displayErrorMsg("No download function!");
+        }
+    });
+    connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
+        if (prettifyLatexFormula)
+        {
+            qDebug() << "Prettify";
+            displayMsg("Prettify");
+        }
+        else
+        {
+            qDebug() << "No prettify function";
+            displayErrorMsg("No prettify function!");
+        }
+    });
+    connect(calculateButton.get(), &QPushButton::clicked, [=]() {
+        if (calculateLatexFormula)
+        {
+            qDebug() << "Calculate";
+            displayMsg("Calculate");
+        }
+        else
+        {
+            qDebug() << "No calculate function";
+            displayErrorMsg("No calculate function!");
+        }
+    });
+    
+    // 设置图片信息属性
+    imgInfo->setReadOnly(true);
+    imgInfo->setText("No image loaded");
+    imgInfo->setFont(textNormal);
+    imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+
+}
 
 void View::onChangeLatexFormula()
 {
     qDebug() << "Change Latex formula";
 }
 
-void View::setImgLabel(ptr<QLabel> iLabel)
-{
-    imgLabel = iLabel;
-}
-void View::setLatexLabel(ptr<QLabel> iLabel)
-{
-    latexLabel = iLabel;
-}
 void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
 {
     latexEditor = iPlainTextEdit;
@@ -155,6 +234,10 @@ void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
     //latexFormula->clear();
     //latexFormula->append(iString.c_str());
 //}
+void View::setStatusBar(ptr<QStatusBar> iStatusBar)
+{
+    statusBar = iStatusBar;
+}
 void View::setLatexFormula(ptr<const std::string> iString)
 {
     latexFormula = iString;
@@ -191,6 +274,10 @@ auto View::getGridLayoutBody()
 auto View::getTitleMenuBar()
 {
     return titleMenuBar;
+}
+auto View::getStatusBar()
+{
+    return statusBar;
 }
 
 bool View::eventFilter(QObject* watched, QEvent* event)
@@ -271,12 +358,28 @@ void View::displayMsg(std::string msg, int duration)
 {
     statusBar->setStyleSheet(lightDarkBackground + whiteWords);
     if (duration == 0)
-        statusBar->showMessage(msg.c_str(), 4000);
+        statusBar->showMessage(msg.c_str());
     else
         statusBar->showMessage(msg.c_str(), duration);
 }
 void View::displayErrorMsg(std::string errorMsg)
 {
     statusBar->setStyleSheet(lightDarkBackground + redWords);
-    statusBar->showMessage(errorMsg.c_str(), 4000);
+    statusBar->showMessage(errorMsg.c_str());
+}
+
+void View::onClickLoadButton()
+{
+    imgLabel->setText("");
+    if (loadImg4Dir)
+    {
+        qDebug() << "Load";
+        displayMsg("Load");
+        //loadImg4Dir();
+    }
+    else
+    {
+        displayErrorMsg("No load available!");
+        qDebug() << "No load available.";
+    }
 }

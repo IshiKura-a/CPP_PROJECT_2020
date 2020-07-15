@@ -34,6 +34,7 @@ public:
 		// view->setLatexLabel(std::make_shared<QLabel>());
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
 		view->setTimer(std::make_shared<QTimer>());
+		view->setStatusBar(std::make_shared<QStatusBar>());
 
 
 		// view update notification动态绑定
