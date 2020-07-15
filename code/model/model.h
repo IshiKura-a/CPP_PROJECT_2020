@@ -99,9 +99,19 @@ private:
 		latexString = std::make_shared<std::string>(str);
 		latexStringChangedNotify();
 	}
+	void setLatexString(std::string&& str)
+	{
+		latexString = std::make_shared<std::string>(std::move(str));
+		latexStringChangedNotify();
+	}
 	void setImageData(const std::vector<Byte>& data)
 	{
 		imageData = std::make_shared<std::vector<Byte>>(data);
+		imageDataChangedNotify();
+	}
+	void setImageData(std::vector<Byte>&& data)
+	{
+		imageData = std::make_shared<std::vector<Byte>>(std::move(data));
 		imageDataChangedNotify();
 	}
 	void setVarValPairs(const std::vector<VarValPair>& pair)
@@ -109,9 +119,19 @@ private:
 		varValPairs = std::make_shared<std::vector<VarValPair>>(pair);
 		varValPairsChangedNotify();
 	}
-	void setResult(const std::string res)
+	void setVarValPairs(std::vector<VarValPair>&& pair)
+	{
+		varValPairs = std::make_shared<std::vector<VarValPair>>(std::move(pair));
+		varValPairsChangedNotify();
+	}
+	void setResult(const std::string& res)
 	{
 		result = std::make_shared<std::string>(res);
+		resultChangedNotify();
+	}
+	void setResult(std::string&& res)
+	{
+		result = std::make_shared<std::string>(std::move(res));
 		resultChangedNotify();
 	}
 public:
@@ -127,20 +147,20 @@ public:
 
 	/******************** callback function binding ********************/
 
-	void bindCallback_LatexStringChanged(CallbackFunction fun)
+	void bindCallback_LatexStringChanged(const CallbackFunction& fun)
 	{
 		latexStringChanged = registerEvent(fun);
 	}
-	void bindCallback_ImageDataChanged(CallbackFunction fun)
+	void bindCallback_ImageDataChanged(const CallbackFunction& fun)
 	{
 		imageDataChanged = registerEvent(fun);
 	}
 	// 主动同步时使用
-	void bindCallback_VarValPairsChanged(CallbackFunction fun)
+	void bindCallback_VarValPairsChanged(const CallbackFunction& fun)
 	{
 		varValuePairsChanged = registerEvent(fun);
 	}
-	void bindCallback_ResultChanged(CallbackFunction fun)
+	void bindCallback_ResultChanged(const CallbackFunction& fun)
 	{
 		resultChanged = registerEvent(fun);
 	}

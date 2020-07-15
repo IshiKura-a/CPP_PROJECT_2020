@@ -7,6 +7,7 @@
 #include <cassert>
 #pragma comment(lib,"libcurl.lib")
 
+using Byte = char;
 
 const std::string HTTPRequestManager::baidu_request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/formula";
 
@@ -14,16 +15,9 @@ const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix
 
 const std::string HTTPRequestManager::latex_rendering_request_url = "https://latex.codecogs.com/";
 
-
-std::string base64Encode(const char* bytes_to_encode, unsigned int in_len);
-
-std::string urlEncode(const std::string& bytes_to_encode);
-
-
 std::string HTTPRequestManager::formula_result;
 
-
-std::vector<HTTPRequestManager::Byte> HTTPRequestManager::render_result;
+std::vector<Byte> HTTPRequestManager::render_result;
 
 const std::string HTTPRequestManager::access_token = "7A4F0C7C6D1AA836183C6245AF5A546D\
 CA62994D2AD6DF01083A5170573825F8\
@@ -45,7 +39,7 @@ size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* st
 
 size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::render_result = std::vector<HTTPRequestManager::Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	HTTPRequestManager::render_result = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
 	return size * nmemb;
 }
 
@@ -102,7 +96,8 @@ std::string HTTPRequestManager::formulaRecognitionBaidu(const std::vector<Byte>&
 		}
 
 		curl_easy_cleanup(curl);
-		return formula_result;
+
+		return std::move(formula_result);
 	}
 	else
 	{
@@ -186,7 +181,8 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::vector<Byte
 		}
 
 		curl_easy_cleanup(curl);
-		return formula_result;
+
+		return std::move(formula_result);
 	}
 	else
 	{
@@ -245,7 +241,7 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 	}
 }
 
-std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
+std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
 	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
 	CURL* curl = NULL;
@@ -270,8 +266,8 @@ std::vector<HTTPRequestManager::Byte> HTTPRequestManager::downloadRenderedFormul
 			curl_easy_cleanup(curl);
 			throw std::runtime_error(errmsg);
 		}
-		curl_easy_cleanup(curl);
-		return render_result;
+        curl_easy_cleanup(curl);
+        return std::move(render_result);
 	}
 	else
 	{

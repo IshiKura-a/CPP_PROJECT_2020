@@ -12,6 +12,11 @@ void Model::openImage(std::string file_path)
 void Model::parseFormula()
 {
 	RequestManager manager;
-	auto json = manager->formulaRecognitionMathpix(*imageData, "png");
-	setLatexString(JsonParser::parseCurlReturnValMathpix(json));
+	try {
+		setImageData(manager->downloadRenderedFormula(*latexString, "svg"));
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cerr << e.what();
+	}
 }

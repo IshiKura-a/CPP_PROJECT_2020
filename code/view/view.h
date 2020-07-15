@@ -42,63 +42,79 @@ public:
 	void initBody();
 
 	// 命令
-	void setLoadImg4Dir(WorkFunction command)
+	void setLoadImg4Dir(const WorkFunction& command)
 	{
 		loadImg4Dir = command;
 	}
-	void setRenderLatexString(WorkFunctionNoArg command)
+	void setRenderLatexString(const WorkFunctionNoArg& command)
 	{
 		renderLatexString = command;
 	}
-	void setDisplayLatexFormula(WorkFunctionNoArg command)
+	void setDisplayLatexFormula(const WorkFunctionNoArg& command)
 	{
 		displayLatexFormula = command;
 	}
-	void setChangeLatexFormula(WorkFunctionNoArg command)
+	void setChangeLatexFormula(const WorkFunctionNoArg& command)
 	{
 		changeLatexFormula = command;
 	}
-	void setDisplayHelpDocument(WorkFunctionNoArg command)
+	void setDisplayHelpDocument(const WorkFunctionNoArg& command)
 	{
 		displayHelpDocument = command;
 	}
 
 	/******************** function entry ********************/
 
-	void loadImageFromDir(std::string file_path)
+	void loadImageFromDir(const std::string& file_path)
 	{
 		loadImg4Dir(file_path);
 	}
 
 	/******************** data-getter setter and data-setter setter ********************/
 
-	void setLatexStringGetter(Getter<ptr<const std::string>> getter)
+	void setLatexStringGetter(const Getter<ptr<const QString>>& getter)
 	{
 		latexStringGetter = getter;
 	}
-	void setLatexStringSetter(Setter<std::string> setter)
+	void setLatexStringSetter(const Setter<QString>& setter)
 	{
 		latexStringSetter = setter;
+	}
+	void setImageDataGetter(const Getter<ptr<const QByteArray>>& getter)
+	{
+		imageDataGetter = getter;
+	}
+	void setVarValPairsGetter(const Getter<ptr<const QVector<VarValPair>>>& getter)
+	{
+		varValPairsGetter = getter;
+	}
+	void setVarValPairsSetter(const Setter<const QVector<VarValPair>>& setter)
+	{
+		varValPairsSetter = setter;
+	}
+	void setResultGetter(const Getter<ptr<const QString>>& getter)
+	{
+		resultGetter = getter;
 	}
 
 	/******************** data getter and setter ********************/
 	// 有用吗, 没用就删了
 
-	auto getLatexString()
+	auto getLatexString() const
 	{
 		return latexStringGetter();
 	}
-	void setLatexString(const std::string& str)
+	void setLatexString(const QString& str)
 	{
 		latexStringSetter(str);
 	}
-	
+
 	// 控件设置
 	void setImgLabel(ptr<QLabel> iLabel);
 	void setLatexLabel(ptr<QLabel> iLabel);
 	void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
 	// void setLatexFormula(std::string iString);
-	void setLatexFormula(ptr<const std::string> iString);
+	void setLatexFormula(ptr<const QString> iString);
 	void setTimer(ptr<QTimer> iTimer);
 	// 由ui提供
 //    void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
@@ -111,32 +127,27 @@ public:
 	auto getGridLayoutBody();
 	auto getTitleMenuBar();
 	auto getTimer();
-	
+
 	/******************** callback function ********************/
 
 	void latexStringViewUpdateNotified()
 	{
-		// TODO:
-		// update view
 		latexFormula = latexStringGetter();
 	}
 
 	void imageDataViewUpdateNotified()
 	{
-		// TODO:
-		// update view
+		imageData = imageDataGetter();
 	}
 
 	void varValPairsUpdateNotified()
 	{
-		// TODO:
-		// update view
+		varValPairs = varValPairsGetter();
 	}
 
 	void resultViewUpdateNotified()
 	{
-		// TODO:
-		// update view
+		result = resultGetter();
 	}
 
 private slots:
@@ -163,15 +174,19 @@ private:
 	ptr<QPlainTextEdit> imgInfo;
 	ptr<QPushButton> calculateButton;
 
-	// view model数据
-	// TODO:
-	// 补充其他数据的指针
-	// 注意添加getter and setter
+	// view model数据对象指针
 
-	ptr<const std::string> latexFormula;
+	ptr<const QString> latexFormula;
+	ptr<const QByteArray> imageData;
+	ptr<const QVector<VarValPair>> varValPairs;
+	ptr<const QString> result;
 
-	Getter<ptr<const std::string>> latexStringGetter;
-	Setter<std::string> latexStringSetter;
+	Getter<ptr<const QString>> latexStringGetter;
+	Setter<QString> latexStringSetter;
+	Getter<ptr<const QByteArray>> imageDataGetter;
+	Getter<ptr<const QVector<VarValPair>>> varValPairsGetter;
+	Setter<const QVector<VarValPair>> varValPairsSetter;
+	Getter<ptr<const QString>> resultGetter;
 
 	// 用于动态绑定view model
 
@@ -207,5 +222,5 @@ private:
 
 	const QString blackBorder2Px = "border: 2px solid black;";
 	const QString noBottomBorder = "border-bottom: 0px;";
-	
+
 };

@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 
-std::string JsonParser::parseCurlReturnVal(std::string json, std::string API)
+std::string JsonParser::parseCurlReturnVal(const std::string& json, std::string API)
 {
 	for (auto& ch : API) {
 		ch = std::tolower(ch);
@@ -18,7 +18,7 @@ std::string JsonParser::parseCurlReturnVal(std::string json, std::string API)
 		throw std::runtime_error("Invalid API for formula recognition");
 }
 
-std::string JsonParser::parseCurlReturnValBaidu(std::string json)
+std::string JsonParser::parseCurlReturnValBaidu(const std::string& json)
 {
 	rapidjson::Document doc;
 	doc.Parse(json.c_str());
@@ -32,7 +32,7 @@ std::string JsonParser::parseCurlReturnValBaidu(std::string json)
 	return latex_string;
 }
 
-std::string JsonParser::parseCurlReturnValMathpix(std::string json)
+std::string JsonParser::parseCurlReturnValMathpix(const std::string& json)
 {
 	rapidjson::Document doc;
 	doc.Parse(json.c_str());

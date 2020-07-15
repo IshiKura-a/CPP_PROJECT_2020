@@ -100,9 +100,9 @@ void View::initBody()
     imgLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     gridLayoutBody->addWidget(imgLabel.get(),0,0);
 
-    if (latexFormula && !latexFormula->empty())
+    if (latexFormula && !latexFormula->isEmpty())
     {
-        latexEditor->setPlainText(QString(latexFormula->c_str()));
+        latexEditor->setPlainText(*latexFormula);
         qDebug() << "latexEditor: " + latexEditor->toPlainText();
     }
     else
@@ -155,7 +155,7 @@ void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
     //latexFormula->clear();
     //latexFormula->append(iString.c_str());
 //}
-void View::setLatexFormula(ptr<const std::string> iString)
+void View::setLatexFormula(ptr<const QString> iString)
 {
     latexFormula = iString;
 }
