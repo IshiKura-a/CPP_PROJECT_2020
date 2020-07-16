@@ -32,13 +32,17 @@ size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 
 size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
+	// 经过测试, 多次传输中只有最后一次传输会传送相应的latex string json, 在此之前都是传输http header
 	HTTPRequestManager::formula_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
 size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::render_result = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	// !HACK
+	// 图片文件极有可能多次传输, 需要拼合
+	auto tmp = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	HTTPRequestManager::render_result.insert(HTTPRequestManager::render_result.end(), tmp.begin(), tmp.end());
 	return size * nmemb;
 }
 

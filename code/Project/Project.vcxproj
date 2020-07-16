@@ -109,10 +109,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>5.15.0</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>5.15.0</QtInstall>
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
