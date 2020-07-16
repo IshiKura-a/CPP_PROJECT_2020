@@ -109,9 +109,9 @@ void View::initBody()
     imgLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     gridLayoutBody->addWidget(imgLabel.get(),0,0);
 
-    if (latexFormula && !latexFormula->isEmpty())
+    if (latexString && !latexString->isEmpty())
     {
-        latexEditor->setPlainText(*latexFormula);
+        latexEditor->setPlainText(*latexString);
         qDebug() << "latexEditor: " + latexEditor->toPlainText();
     }
     else
@@ -196,7 +196,7 @@ void View::initCmdInterface()
             qDebug() << imageData->isEmpty();
             qDebug() << imageData->constData();
             
-        }while((imgType == "svg" && svg->load(*imageData)) || (imgType != "svg" && img->loadFromData(*imageData)));
+        } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
 
         if (imgType == "svg")
         {
@@ -245,43 +245,53 @@ void View::initCmdInterface()
 
 void View::onChangeLatexFormula()
 {
-    const std::string imgType = "svg";
+    const std::string imgType = "png";
     if (true)
     {
         qDebug() << "Text changed." + latexEditor->document()->toPlainText();
         displayMsg("Text changed");
         setLatexString(latexEditor->document()->toPlainText());
+
+        
         if (renderLatexString)
         {
             qDebug() << "Display latex formula";
             displayMsg("Rendering",0);
 
-            QSvgRenderer* svg;
+            QSvgRenderer* svg = new QSvgRenderer;
+            QImage* img = new QImage;
             do {
                 renderLatexString(imgType);
 
-                svg = new QSvgRenderer;
                 qDebug() << imageData->isEmpty();
                 qDebug() << imageData->constData();
-            } while (!(svg->load(*imageData)));
+
+            } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
             
+            if (imgType == "svg")
+            {
+                displayMsg("Success!");
+                qDebug() << svg->defaultSize();
+
+                int width = svg->defaultSize().width() * 2;
+                if (width >= 400) width = 400;
+                int height = svg->defaultSize().height() * 2;
+                if (height >= 285) height = 285;
+
+                QPixmap* pixmap = new QPixmap(width, height);
+                //img->loadFromData(img_bytes);
+                img->fill(Qt::white);
+                QPainter painter(img);
+                svg->render(&painter);
+
+                latexLabel->setPixmap(*pixmap);
+                latexLabel->setAlignment(Qt::AlignCenter);
+            }
+            else
+            {
+                img->save("D:/xxx.png ", imgType.c_str(), 100);
+            }
             
-            displayMsg("Success!");
-            qDebug() << svg->defaultSize();
-
-            int width = svg->defaultSize().width() * 2;
-            if (width >= 400) width = 400;
-            int height = svg->defaultSize().height() * 2;
-            if (height >= 285) height = 285;
-
-            QPixmap* img = new QPixmap(width, height);
-            //img->loadFromData(img_bytes);
-            img->fill(Qt::white);
-            QPainter painter(img);
-            svg->render(&painter);
-
-            latexLabel->setPixmap(*img);
-            latexLabel->setAlignment(Qt::AlignCenter);
         }
         else
         {
@@ -306,7 +316,7 @@ void View::setStatusBar(ptr<QStatusBar> iStatusBar)
 }
 void View::setLatexFormula(ptr<const QString> iString)
 {
-    latexFormula = iString;
+    latexString = iString;
 }
 void View::setTimer(ptr<QTimer> iTimer)
 {
@@ -330,7 +340,7 @@ auto View::getLatexEditor()
 }
 auto View::getLatexFormula()
 {
-    return latexFormula;
+    return latexString;
 }
 auto View::getTimer()
 {
@@ -409,7 +419,7 @@ void View::onChangeLatexDisplay()
     if (latexLabel->isHidden())
     {
 
-        qDebug() << latexFormula.get();
+        qDebug() << latexString.get();
         qDebug() << latexEditor->document()->toPlainText();
 
         qDebug() << "Hide latexEditor";
@@ -417,7 +427,7 @@ void View::onChangeLatexDisplay()
         latexLabel->setHidden(false);
         latexEditor->setHidden(true);
 
-        if(latexEditor->toPlainText() != *latexFormula)
+        if(latexEditor->toPlainText() != *latexString)
             onChangeLatexFormula();
 
         
@@ -455,7 +465,7 @@ void View::onClickLoadButton()
         qDebug() << "Load";
         loadImg4Dir(imgDir);
         displayMsg("Load " + imgDir);
-        latexEditor->setPlainText(*latexFormula);
+        latexEditor->setPlainText(*latexString);
         
         imgLabel->setPixmap(QPixmap(imgDir.c_str()).scaled(imgLabel->size(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation));

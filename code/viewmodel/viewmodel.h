@@ -74,11 +74,11 @@ public:
 	// 直接使用lambda函数便于view的绑定
 
 	Getter<ptr<QString>> getLatexString = [this]() {return latexString; };
-	Setter<QString> setLatexString = [this](const QString& str)
+/*	Setter<QString> setLatexString = [this](const QString& str)
 	{
 		latexString = std::make_shared<QString>(str);
-		this->latexStringChangeApplyToModel();
-	};
+		latexStringChangeApplyToModel();
+	};*/
 
 	Getter<ptr<QByteArray>> getImageData = [this]() {return imageData; };
 	// image data不能被view设置
@@ -169,10 +169,9 @@ public:
 	// view->view model->model方向
 	// 需要修改model的数据，不需要触发update view
 
-	void latexStringChangeApplyToModel() //const
+	void latexStringChangeApplyToModel() const
 	{
 		model->setLatexStringWithoutNotify(latexString->toStdString());
-		latexStringChangedNotified();
 	}
 
 	void varValPairsChangeApplyToModel() const
@@ -201,5 +200,11 @@ public:
 	{
 		raiseEvent(resultUpdateView);
 	}
+
+	Setter<QString> setLatexString = [this](const QString& str)
+	{
+		latexString = std::make_shared<QString>(str);
+		latexStringChangeApplyToModel();
+	};
 
 };

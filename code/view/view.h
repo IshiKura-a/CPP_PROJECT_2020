@@ -134,6 +134,7 @@ public:
 	void setLatexString(const QString& str)
 	{
 		latexStringSetter(str);
+		latexString = latexStringGetter();
 	}
 
 	// 控件设置
@@ -164,7 +165,7 @@ public:
 
 	void latexStringViewUpdateNotified()
 	{
-		latexFormula = latexStringGetter();
+		latexString = latexStringGetter();
 	}
 
 	void imageDataViewUpdateNotified()
@@ -210,7 +211,7 @@ private:
 
 	// view model数据对象指针
 
-	ptr<const QString> latexFormula;
+	ptr<const QString> latexString;
 	ptr<const QByteArray> imageData;
 	ptr<const QVector<VarValPair>> varValPairs;
 	ptr<const QString> result;
