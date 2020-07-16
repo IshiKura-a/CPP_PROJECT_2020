@@ -169,9 +169,10 @@ public:
 	// view->view model->model方向
 	// 需要修改model的数据，不需要触发update view
 
-	void latexStringChangeApplyToModel() const
+	void latexStringChangeApplyToModel() //const
 	{
 		model->setLatexStringWithoutNotify(latexString->toStdString());
+		latexStringChangedNotified();
 	}
 
 	void varValPairsChangeApplyToModel() const

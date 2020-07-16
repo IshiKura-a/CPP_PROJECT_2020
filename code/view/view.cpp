@@ -1,5 +1,6 @@
 #include "view.h"
 #include "ui_view.h"
+#include <Windows.h>
 
 View::View(QWidget *parent)
     : QMainWindow(parent)
@@ -32,42 +33,55 @@ View::~View()
 
 void View::initQLayout()
 {
-    // setFixedSize(960,600);
-    setMinimumSize(QSize(960, 615));
+
+    setMinimumSize(getAdaptedSize(960,600));
     setContentsMargins(0, 0, 0, 0);
     
     latexLabel->installEventFilter(this);
     latexEditor->installEventFilter(this);
+    engineSelectionInterface->installEventFilter(this);
+
     initMenu();
     initBody();
+    engineSelectionInterface->initQLayout();
 }
 
 void View::initMenu()
 {
     titleMenuBar->setFont(menuNormal);
 
-    QMenu* File;
-    File = (titleMenuBar->addMenu("文件"));
+    QMenu* file;
+    file = (titleMenuBar->addMenu("文件"));
 
     // 设置文件菜单下有导入、关闭功能
-    QAction* actLoad = (File->addAction("导入"));
+    QAction* actLoad = (file->addAction("导入"));
     actLoad->setFont(menuNormal);
     connect(actLoad, SIGNAL(triggered()), SLOT(onClickLoadButton()));
 
-    QAction* actExit = (File->addAction("关闭"));
+    QAction* actExit = (file->addAction("关闭"));
     actExit->setFont(menuNormal);
-    connect(actExit, &QAction::triggered, [=](){
+    connect(actExit, &QAction::triggered, [=]() {
         exit(0);
         qDebug() << "Quit";
         displayMsg("Quit");
-    });
+        });
+
+    // 设置
+    QMenu* settings = titleMenuBar->addMenu("设置");
+    QAction* actSetRecognizeEngine = settings->addAction("设置识别引擎");
+    actSetRecognizeEngine->setFont(menuNormal);
+    connect(actSetRecognizeEngine, &QAction::triggered, [=]() {
+        engineSelectionInterface->show();
+        qDebug() << "Set Recognize Engine";
+        displayMsg("Set Recognize Engine");
+        });
 
     // 帮助
     QAction* actHelp = (titleMenuBar->addAction("帮助"));
     actHelp->setFont(menuNormal);
-    connect(actHelp, &QAction::triggered, [=](){
+    connect(actHelp, &QAction::triggered, [=]() {
 
-        if(displayHelpDocument)
+        if (displayHelpDocument)
         {
             qDebug() << "Help";
             displayMsg("Help");
@@ -79,7 +93,7 @@ void View::initMenu()
             displayErrorMsg("No help available!");
         }
 
-    });
+        });
 
 }
 
@@ -164,30 +178,38 @@ void View::initCmdInterface()
         }
     });
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
-        if (applyLatexFormulaChanges)
-        {
-            qDebug() << "Apply changes";
-            displayMsg("Apply changes");
-        }
-        else
-        {
-            qDebug() << "No apply function";
-            displayErrorMsg("No apply function!");
-        }
+        onChangeLatexDisplay();
     });
     connect(downloadButton.get(), &QPushButton::clicked, [=]() {
-        if (downloadRenderedLatexImg)
+        std::string imgDir = QFileDialog::getOpenFileName(
+            NULL, "保存", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
+
+        const std::string imgType = imgDir.substr(imgDir.find_last_of("."));
+        displayMsg("Save as " + imgDir, 0);
+        qDebug() << imgType.c_str();
+
+        QSvgRenderer* svg = new QSvgRenderer;
+        QImage* img = new QImage;
+        do {
+            renderLatexString(imgType);
+
+            qDebug() << imageData->isEmpty();
+            qDebug() << imageData->constData();
+            
+        }while((imgType == "svg" && svg->load(*imageData)) || (imgType != "svg" && img->loadFromData(*imageData)));
+
+        if (imgType == "svg")
         {
-            qDebug() << "Download";
-            displayMsg("Download");
+            //  TO DO
+            // svg->load()
         }
         else
         {
-            qDebug() << "No download function";
-            displayErrorMsg("No download function!");
+            img->save(imgDir.c_str(), imgType.c_str(), 100);
         }
     });
     connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
+        // TO DO
         if (prettifyLatexFormula)
         {
             qDebug() << "Prettify";
@@ -200,6 +222,7 @@ void View::initCmdInterface()
         }
     });
     connect(calculateButton.get(), &QPushButton::clicked, [=]() {
+        // To Do
         if (calculateLatexFormula)
         {
             qDebug() << "Calculate";
@@ -222,7 +245,50 @@ void View::initCmdInterface()
 
 void View::onChangeLatexFormula()
 {
-    qDebug() << "Change Latex formula";
+    const std::string imgType = "svg";
+    if (true)
+    {
+        qDebug() << "Text changed." + latexEditor->document()->toPlainText();
+        displayMsg("Text changed");
+        setLatexString(latexEditor->document()->toPlainText());
+        if (renderLatexString)
+        {
+            qDebug() << "Display latex formula";
+            displayMsg("Rendering",0);
+
+            QSvgRenderer* svg;
+            do {
+                renderLatexString(imgType);
+
+                svg = new QSvgRenderer;
+                qDebug() << imageData->isEmpty();
+                qDebug() << imageData->constData();
+            } while (!(svg->load(*imageData)));
+            
+            
+            displayMsg("Success!");
+            qDebug() << svg->defaultSize();
+
+            int width = svg->defaultSize().width() * 2;
+            if (width >= 400) width = 400;
+            int height = svg->defaultSize().height() * 2;
+            if (height >= 285) height = 285;
+
+            QPixmap* img = new QPixmap(width, height);
+            //img->loadFromData(img_bytes);
+            img->fill(Qt::white);
+            QPainter painter(img);
+            svg->render(&painter);
+
+            latexLabel->setPixmap(*img);
+            latexLabel->setAlignment(Qt::AlignCenter);
+        }
+        else
+        {
+            displayErrorMsg("No latex formula display function!");
+            qDebug() << "No latex formula display";
+        }
+    }
 }
 
 void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
@@ -246,6 +312,10 @@ void View::setTimer(ptr<QTimer> iTimer)
 {
     timer = iTimer;
 }
+void View::setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection)
+{
+    engineSelectionInterface = iEngineSelection;
+}
 auto View::getImgLabel()
 {
     return imgLabel;
@@ -265,6 +335,10 @@ auto View::getLatexFormula()
 auto View::getTimer()
 {
     return timer;
+}
+auto View::getEngineSelectionInterface()
+{
+    return engineSelectionInterface;
 }
 
 auto View::getGridLayoutBody()
@@ -314,7 +388,20 @@ bool View::eventFilter(QObject* watched, QEvent* event)
         }
         return false;
     }
-    else return QWidget::eventFilter(watched, event);
+    else if(watched == engineSelectionInterface.get())
+    {
+        if (event->type() == QEvent::HideToParent)
+        {
+            isMathPix = engineSelectionInterface->isMathPix();
+            if(isMathPix) displayMsg("Choose MathPix");
+            else displayMsg("Choose Baidu");
+        }
+        return false;
+    }
+    else
+    {
+        return QWidget::eventFilter(watched, event);
+    }
 }
 
 void View::onChangeLatexDisplay()
@@ -324,33 +411,21 @@ void View::onChangeLatexDisplay()
 
         qDebug() << latexFormula.get();
         qDebug() << latexEditor->document()->toPlainText();
-        if (latexFormula && latexFormula.get()->data() != (latexEditor->document())->toPlainText())
-        {
-            qDebug() << "Text changed.";
-            displayMsg("Text changed");
-            //setLatexFormula(latexEditor->document()->toPlainText().toStdString());
-            if(displayLatexFormula)
-            {
-                qDebug() << "Display latex formula";
-                displayMsg("Display latex formula");
-                displayLatexFormula();
-            }
-            else
-            {
-                displayErrorMsg("No latex formula display function!");
-                qDebug() << "No latex formula display";
-            }
-        }
 
         qDebug() << "Hide latexEditor";
         displayMsg("Hide latexEditor");
         latexLabel->setHidden(false);
         latexEditor->setHidden(true);
 
+        if(latexEditor->toPlainText() != *latexFormula)
+            onChangeLatexFormula();
+
+        
+
     }
     else
     {
-        //setLatexFormula(latexEditor->document()->toPlainText().toStdString());
+        // setLatexString(latexEditor->document()->toPlainText());
     }
 }
 
@@ -370,12 +445,20 @@ void View::displayErrorMsg(std::string errorMsg)
 
 void View::onClickLoadButton()
 {
-    imgLabel->setText("");
+    imgLabel->setText("               ");
+    latexLabel->setText("               ");
+    std::string imgDir = QFileDialog::getOpenFileName(
+        NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
+
     if (loadImg4Dir)
     {
         qDebug() << "Load";
-        displayMsg("Load");
-        //loadImg4Dir();
+        loadImg4Dir(imgDir);
+        displayMsg("Load " + imgDir);
+        latexEditor->setPlainText(*latexFormula);
+        
+        imgLabel->setPixmap(QPixmap(imgDir.c_str()).scaled(imgLabel->size(),
+            Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     else
     {

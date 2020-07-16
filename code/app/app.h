@@ -3,10 +3,6 @@
 #include "../viewmodel/viewmodel.h"
 #include "../model/model.h"
 
-#ifndef APP_H
-#define APP_H
-
-#endif // APP_H
 
 class App
 {
@@ -35,6 +31,7 @@ public:
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
 		view->setTimer(std::make_shared<QTimer>());
 		view->setStatusBar(std::make_shared<QStatusBar>());
+		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
 
 
 		// view update notification动态绑定
@@ -68,7 +65,7 @@ public:
 		model->notifyAll();
 
 		// testestestestestestsetset
-		view->loadImageFromDir("maxwell.png");
+		// view->loadImageFromDir("C:/Users/15634/Desktop/test.png");
 	};
 	void run()
 	{

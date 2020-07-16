@@ -255,6 +255,8 @@ public:
 
         latexLabel = new QLabel(centralwidget);
         latexLabel->setObjectName(QString::fromUtf8("latexLabel"));
+        sizePolicy.setHeightForWidth(latexLabel->sizePolicy().hasHeightForWidth());
+        latexLabel->setSizePolicy(sizePolicy);
 
         gridLayoutBody->addWidget(latexLabel, 1, 0, 1, 1);
 
