@@ -67,6 +67,14 @@ public:
 	[[nodiscard]] virtual std::vector<Byte> downloadRenderedFormula(const std::string& latex_string, const std::string& format) noexcept(false) = 0;
 
 	// @param:
+	// latex_string: 需要计算的latex string.
+	// @return:
+	// 计算结果, xml格式
+	// @throw:
+	// curl初始化若产生错误, 则抛出runtime_error
+	[[nodiscard]] virtual std::string getFormulaResult(const std::string& latex_string) noexcept(false) = 0;
+
+	// @param:
 	// file_path: 图片文件路径.
 	// @return:
 	// 图片文件的二进制数据.

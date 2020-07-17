@@ -17,6 +17,7 @@
     <ClInclude Include="..\common\notifiable.h" />
     <ClInclude Include="..\model\model.h" />
     <ClInclude Include="..\module\JsonParser\JsonParser.h" />
+    <ClInclude Include="..\module\XMLparser\XMLparser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
     <ClInclude Include="..\view\ui_view.h" />
     <QtMoc Include="..\view\view.h" />
@@ -28,6 +29,7 @@
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\model\model.cpp" />
     <ClCompile Include="..\module\JsonParser\JsonParser.cpp" />
+    <ClCompile Include="..\module\XMLparser\XMLparser.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />
     <ClCompile Include="..\view\view.cpp" />
   </ItemGroup>
@@ -69,32 +71,40 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)..\include;D:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <IncludePath>$(SolutionDir)..\include;D:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtUic>
       <QtUicDir>../view/</QtUicDir>
     </QtUic>
+    <PreLinkEvent>
+      <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
+copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtUic />
+    <PreLinkEvent>
+      <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
+copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>

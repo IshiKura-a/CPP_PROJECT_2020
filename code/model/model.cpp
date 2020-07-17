@@ -1,6 +1,7 @@
 #include "model.h"
 #include "CppCurl.h"
 #include "../module/JsonParser/JsonParser.h"
+#include "../module/XMLparser/XMLparser.h"
 #include <iostream>
 
 void Model::getFormulaFromImage(const std::string& file_path)
@@ -27,3 +28,17 @@ void Model::renderLatexFormula(const std::string& image_format)
 		std::cerr << e.what();
 	}
 }
+
+void Model::calculateFormula()
+{
+	RequestManager manager;
+	try
+	{
+		setResult(XMLParser::parseCurlResult(manager->getFormulaResult(*latexString)));
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cerr << e.what();
+	}
+}
+

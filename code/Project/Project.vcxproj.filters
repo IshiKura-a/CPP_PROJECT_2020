@@ -64,6 +64,12 @@
     <Filter Include="Header Files\module\JsonParser">
       <UniqueIdentifier>{830ed893-ebc3-45cc-9bf5-a4331991a7d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\module\XMLParser">
+      <UniqueIdentifier>{d84cdf97-7547-4f66-a79e-76432bc78049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\module\XMLParser">
+      <UniqueIdentifier>{d9d0aa85-769f-4c10-acd9-dbef0990b0d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app\app.h">
@@ -90,6 +96,9 @@
     <ClInclude Include="..\module\JsonParser\JsonParser.h">
       <Filter>Header Files\module\JsonParser</Filter>
     </ClInclude>
+    <ClInclude Include="..\module\XMLparser\XMLparser.h">
+      <Filter>Header Files\module\XMLParser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\app\app.cpp">
@@ -115,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="..\module\JsonParser\JsonParser.cpp">
       <Filter>Source Files\module\JsonParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\module\XMLparser\XMLparser.cpp">
+      <Filter>Source Files\module\XMLParser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
