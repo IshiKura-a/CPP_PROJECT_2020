@@ -24,6 +24,8 @@ CA62994D2AD6DF01083A5170573825F8\
 D63F06E28A2AA8D4251B7222F3DC52BE\
 CACE6DD82CDB6F51353347977A16371B";
 
+std::string urlEncode(const std::string& bytes_to_encode);
+
 size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 {
 	fwrite(ptr, size, nmemb, static_cast<FILE*>(stream));
@@ -204,7 +206,12 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::string& fil
 
 void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format)
 {
-	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
+	std::string url_encoded_latex_string = urlEncode(latex_string);
+	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
+
+	WCHAR wurl[1500];
+	swprintf_s(wurl, L"%S", url.c_str());
+	OutputDebugString(wurl);
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -246,7 +253,13 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 
 std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
-	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
+	std::string url_encoded_latex_string = urlEncode(latex_string);
+	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
+
+	WCHAR wurl[1500];
+	swprintf_s(wurl, L"%S", url.c_str());
+	OutputDebugString(wurl);
+
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -424,7 +437,10 @@ std::string urlEncode(const std::string& bytes_to_encode)
 			(bytes_to_encode[i] == '~'))
 			strTemp += bytes_to_encode[i];
 		else if (bytes_to_encode[i] == ' ')
-			strTemp += "+";
+		{
+			// strTemp += "+";
+			strTemp += "%20";
+		}	
 		else
 		{
 			strTemp += '%';

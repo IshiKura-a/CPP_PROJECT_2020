@@ -23,7 +23,6 @@ public:
 		view->setRenderLatexString(viewModel->getRenderLatexString());
 		view->setDisplayLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
-		view->setChangeLatexFormula(viewModel->getChangeLatexFormula());
 		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 
 		// view->setImgLabel(std::make_shared<QLabel>());

@@ -58,29 +58,9 @@ public:
 	{
 		displayLatexFormula = command;
 	}
-	void setChangeLatexFormula(const WorkFunctionNoArg& command)
-	{
-		changeLatexFormula = command;
-	}
 	void setDisplayHelpDocument(const WorkFunctionNoArg& command)
 	{
 		displayHelpDocument = command;
-	}
-	void setChangeLatexDisplay(WorkFunctionNoArg command)
-	{
-		changeLatexDisplay = command;
-	}
-	void setResetInterface(WorkFunctionNoArg command)
-	{
-		resetInterface = command;
-	}
-	void setEditLatexFormula(WorkFunctionNoArg command)
-	{
-		editLatexFormula = command;
-	}
-	void setDownloadRenderedLatexImg(WorkFunctionNoArg command)
-	{
-		downloadRenderedLatexImg = command;
 	}
 	void setPrettifyLatexFormula(WorkFunctionNoArg command)
 	{
@@ -141,15 +121,8 @@ public:
 	
 	void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
 	void setStatusBar(ptr<QStatusBar> iStatusBar);
-	// void setLatexFormula(std::string iString);
-	void setLatexFormula(ptr<const QString> iString);
 	void setTimer(ptr<QTimer> iTimer);
 	void setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection);
-	// 由ui提供
-	// void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
-	// void setTitleMenuBar(ptr<QMenuBar> iMenuBar);
-	// void setImgLabel(ptr<QLabel> iLabel);
-	// void setLatexLabel(ptr<QLabel> iLabel);
 
 	auto getImgLabel();
 	auto getLatexLabel();
@@ -228,18 +201,15 @@ private:
 	WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
-	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;
-	WorkFunctionNoArg changeLatexDisplay;
-	WorkFunctionNoArg resetInterface;//
-	WorkFunctionNoArg editLatexFormula;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
-	WorkFunctionNoArg downloadRenderedLatexImg;
 	WorkFunctionNoArg prettifyLatexFormula;
 	WorkFunctionNoArg calculateLatexFormula;
 
 	// 选择识别引擎
 	bool isMathPix = true;
+	QSize screenSize;
+	QSize imgSizeLimit;
 
 
 	// imgLabel和latexLabel事件过滤器

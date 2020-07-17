@@ -34,7 +34,9 @@ View::~View()
 void View::initQLayout()
 {
 
-    setMinimumSize(getAdaptedSize(960,600));
+    screenSize = getAdaptedSize(960, 600);
+    imgSizeLimit = QSize((int)(screenSize.width() * 0.618 * 0.8), (int)(screenSize.height() * 0.4));
+    setMinimumSize(screenSize);
     setContentsMargins(0, 0, 0, 0);
     
     latexLabel->installEventFilter(this);
@@ -116,7 +118,7 @@ void View::initBody()
     }
     else
     {
-        latexEditor->setPlainText("Please input latex formula...");
+        latexEditor->setPlainText("");
         qDebug() << "latexEditor is empty.";
     }
     latexEditor->setFont(textNormal);
@@ -151,46 +153,45 @@ void View::initCmdInterface()
 
     
     connect(resetButton.get(), &QPushButton::clicked, [=]() {
-        if (resetInterface)
-        {
-            qDebug() << "Reset";
-            displayMsg("Reset");
-            // resetInterface();
-        }
-        else
-        {
-            qDebug() << "No reset function";
-            displayErrorMsg("No reset function!");
-        }
+        displayMsg("Reset");
+        imgLabel->clear();
+        imgLabel->setText("No image loaded");
+        latexLabel->clear();
+        latexLabel->setText("No formula to render");
+        latexEditor->clear();
+        setLatexString("");
     });
     connect(editButton.get(), &QPushButton::clicked, [=]() {
-        if (editLatexFormula)
-        {
-            qDebug() << "Edit";
-            displayMsg("Edit");
-
-            // editLatexFormula();
-        }
-        else
-        {
-            qDebug() << "No edit function";
-            displayErrorMsg("No edit function!");
-        }
+        latexLabel->setHidden(true);
+        latexEditor->setHidden(false);
     });
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
         onChangeLatexDisplay();
     });
     connect(downloadButton.get(), &QPushButton::clicked, [=]() {
-        std::string imgDir = QFileDialog::getOpenFileName(
-            NULL, "保存", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
+        std::string imgDir = QFileDialog::getSaveFileName(
+            NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
+        if (imgDir.empty())
+        {
+            displayErrorMsg("Save aborted!");
+            return;
+        }
 
-        const std::string imgType = imgDir.substr(imgDir.find_last_of("."));
+        const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
+
+        
         displayMsg("Save as " + imgDir, 0);
         qDebug() << imgType.c_str();
 
         QSvgRenderer* svg = new QSvgRenderer;
         QImage* img = new QImage;
+        int cnt = 0;
         do {
+            if (cnt++ >= 2)
+            {
+                displayErrorMsg(imageData->constData());
+                return;
+            }
             renderLatexString(imgType);
 
             qDebug() << imageData->isEmpty();
@@ -245,7 +246,7 @@ void View::initCmdInterface()
 
 void View::onChangeLatexFormula()
 {
-    const std::string imgType = "png";
+    const std::string imgType = "svg";
     if (true)
     {
         qDebug() << "Text changed." + latexEditor->document()->toPlainText();
@@ -255,12 +256,20 @@ void View::onChangeLatexFormula()
         
         if (renderLatexString)
         {
-            qDebug() << "Display latex formula";
-            displayMsg("Rendering",0);
+            qDebug() << "Render latex formula";
+            // displayMsg("Rendering",0);
 
             QSvgRenderer* svg = new QSvgRenderer;
             QImage* img = new QImage;
+            int width, height;
+
+            int cnt = 0;
             do {
+                if (++cnt >= 2)
+                {
+                    displayErrorMsg(imageData->constData());
+                    return;
+                }
                 renderLatexString(imgType);
 
                 qDebug() << imageData->isEmpty();
@@ -273,23 +282,35 @@ void View::onChangeLatexFormula()
                 displayMsg("Success!");
                 qDebug() << svg->defaultSize();
 
-                int width = svg->defaultSize().width() * 2;
-                if (width >= 400) width = 400;
-                int height = svg->defaultSize().height() * 2;
-                if (height >= 285) height = 285;
+                width = svg->defaultSize().width();
+                height = svg->defaultSize().height();
 
-                QPixmap* pixmap = new QPixmap(width, height);
+                if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
+                {
+                    height = (height * imgSizeLimit.width() / width);
+                    width = imgSizeLimit.width();
+                }
+                else
+                {
+                    width = (width * imgSizeLimit.height()) / height;
+                    height = imgSizeLimit.height();
+                }
+
+                QPixmap* pixmap = new QPixmap(QSize(width,height));
                 //img->loadFromData(img_bytes);
-                img->fill(Qt::white);
-                QPainter painter(img);
+                pixmap->fill(Qt::white);
+                QPainter painter(pixmap);
                 svg->render(&painter);
 
                 latexLabel->setPixmap(*pixmap);
                 latexLabel->setAlignment(Qt::AlignCenter);
             }
             else
-            {
-                img->save("D:/xxx.png ", imgType.c_str(), 100);
+            {   
+                displayMsg("Success!");
+                latexLabel->setPixmap(QPixmap::fromImage(*img, Qt::AutoColor).scaled(QSize(imgSizeLimit),
+                    Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                // img->save("D:/xxx.png ", imgType.c_str(), 100);
             }
             
         }
@@ -305,18 +326,9 @@ void View::setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit)
 {
     latexEditor = iPlainTextEdit;
 }
-//void View::setLatexFormula(std::string iString)
-//{
-    //latexFormula->clear();
-    //latexFormula->append(iString.c_str());
-//}
 void View::setStatusBar(ptr<QStatusBar> iStatusBar)
 {
     statusBar = iStatusBar;
-}
-void View::setLatexFormula(ptr<const QString> iString)
-{
-    latexString = iString;
 }
 void View::setTimer(ptr<QTimer> iTimer)
 {
@@ -390,7 +402,7 @@ bool View::eventFilter(QObject* watched, QEvent* event)
         qDebug() << event->type();
         if (event->type() == QEvent::Leave)
         {
-            timer->start(500);
+            timer->start(5000);
         }
         else
         {
@@ -430,12 +442,6 @@ void View::onChangeLatexDisplay()
         if(latexEditor->toPlainText() != *latexString)
             onChangeLatexFormula();
 
-        
-
-    }
-    else
-    {
-        // setLatexString(latexEditor->document()->toPlainText());
     }
 }
 
@@ -460,7 +466,7 @@ void View::onClickLoadButton()
     std::string imgDir = QFileDialog::getOpenFileName(
         NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
 
-    if (loadImg4Dir)
+    if (loadImg4Dir && !imgDir.empty())
     {
         qDebug() << "Load";
         loadImg4Dir(imgDir);
@@ -469,10 +475,13 @@ void View::onClickLoadButton()
         
         imgLabel->setPixmap(QPixmap(imgDir.c_str()).scaled(imgLabel->size(),
             Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        
+        onChangeLatexFormula();
+
     }
     else
     {
-        displayErrorMsg("No load available!");
-        qDebug() << "No load available.";
+        displayErrorMsg("Load Aborted!");
+        qDebug() << "Load Aborted!";
     }
 }
