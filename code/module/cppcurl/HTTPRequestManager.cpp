@@ -24,6 +24,8 @@ CA62994D2AD6DF01083A5170573825F8\
 D63F06E28A2AA8D4251B7222F3DC52BE\
 CACE6DD82CDB6F51353347977A16371B";
 
+std::string urlEncode(const std::string& bytes_to_encode);
+
 size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 {
 	fwrite(ptr, size, nmemb, static_cast<FILE*>(stream));
@@ -32,13 +34,17 @@ size_t callbackWriteFile(void* ptr, size_t size, size_t nmemb, void* stream)
 
 size_t callbackWriteFormulaResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
+	// 经过测试, 多次传输中只有最后一次传输会传送相应的latex string json, 在此之前都是传输http header
 	HTTPRequestManager::formula_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
 size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::render_result = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	// !HACK
+	// 图片文件极有可能多次传输, 需要拼合
+	auto tmp = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
+	HTTPRequestManager::render_result.insert(HTTPRequestManager::render_result.end(), tmp.begin(), tmp.end());
 	return size * nmemb;
 }
 
@@ -200,7 +206,12 @@ std::string HTTPRequestManager::formulaRecognitionMathpix(const std::string& fil
 
 void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format)
 {
-	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
+	std::string url_encoded_latex_string = urlEncode(latex_string);
+	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
+
+	WCHAR wurl[1500];
+	swprintf_s(wurl, L"%S", url.c_str());
+	OutputDebugString(wurl);
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -242,7 +253,13 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 
 std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string, const std::string& format)
 {
-	std::string url = latex_rendering_request_url + format + ".download?" + latex_string;
+	std::string url_encoded_latex_string = urlEncode(latex_string);
+	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
+
+	WCHAR wurl[1500];
+	swprintf_s(wurl, L"%S", url.c_str());
+	OutputDebugString(wurl);
+
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -420,7 +437,10 @@ std::string urlEncode(const std::string& bytes_to_encode)
 			(bytes_to_encode[i] == '~'))
 			strTemp += bytes_to_encode[i];
 		else if (bytes_to_encode[i] == ' ')
-			strTemp += "+";
+		{
+			// strTemp += "+";
+			strTemp += "%20";
+		}	
 		else
 		{
 			strTemp += '%';
