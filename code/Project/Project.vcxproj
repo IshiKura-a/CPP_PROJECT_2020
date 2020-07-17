@@ -18,6 +18,9 @@
     <ClInclude Include="..\model\model.h" />
     <ClInclude Include="..\module\JsonParser\JsonParser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
+    <QtMoc Include="..\view\engineselection.h" />
+    <ClInclude Include="..\view\stylesheet.h" />
+    <ClInclude Include="..\view\ui_engineselection.h" />
     <ClInclude Include="..\view\ui_view.h" />
     <QtMoc Include="..\view\view.h" />
   </ItemGroup>
@@ -29,9 +32,12 @@
     <ClCompile Include="..\model\model.cpp" />
     <ClCompile Include="..\module\JsonParser\JsonParser.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />
+    <ClCompile Include="..\view\engineselection.cpp" />
+    <ClCompile Include="..\view\stylesheet.cpp" />
     <ClCompile Include="..\view\view.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="..\view\engineselection.ui" />
     <QtUic Include="..\view\view.ui" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -69,12 +75,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;D:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;D:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -83,6 +89,9 @@
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <QtUic>
+      <QtUicDir>../view/</QtUicDir>
+    </QtUic>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -92,14 +101,18 @@
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <QtUic />
+    <QtUic>
+      <QtUicDir>../view/</QtUicDir>
+      <ExecutionDescription>uic ../view view.ui; uic ../view engineselection.ui</ExecutionDescription>
+    </QtUic>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtInstall>5.15.0</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.0</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>

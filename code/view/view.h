@@ -2,6 +2,8 @@
 #include <memory>
 
 #include "../common/def.h"
+#include "engineselection.h"
+#include "stylesheet.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -22,6 +24,7 @@
 #include <QDialog>
 #include <QStatusBar>
 #include <QRadioButton>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class View; }
@@ -40,6 +43,7 @@ public:
 	void initQLayout();
 	void initMenu();
 	void initBody();
+	void initCmdInterface();
 
 	// 命令
 	void setLoadImg4Dir(const WorkFunction& command)
@@ -54,15 +58,18 @@ public:
 	{
 		displayLatexFormula = command;
 	}
-	void setChangeLatexFormula(const WorkFunctionNoArg& command)
-	{
-		changeLatexFormula = command;
-	}
 	void setDisplayHelpDocument(const WorkFunctionNoArg& command)
 	{
 		displayHelpDocument = command;
 	}
-
+	void setPrettifyLatexFormula(WorkFunctionNoArg command)
+	{
+		prettifyLatexFormula = command;
+	}
+	void setCalculateLatexFormula(WorkFunctionNoArg command)
+	{
+		calculateLatexFormula = command;
+	}
 	/******************** function entry ********************/
 
 	void loadImageFromDir(const std::string& file_path)
@@ -107,18 +114,15 @@ public:
 	void setLatexString(const QString& str)
 	{
 		latexStringSetter(str);
+		latexString = latexStringGetter();
 	}
 
 	// 控件设置
-	void setImgLabel(ptr<QLabel> iLabel);
-	void setLatexLabel(ptr<QLabel> iLabel);
+	
 	void setLatexEditor(ptr<QPlainTextEdit> iPlainTextEdit);
-	// void setLatexFormula(std::string iString);
-	void setLatexFormula(ptr<const QString> iString);
+	void setStatusBar(ptr<QStatusBar> iStatusBar);
 	void setTimer(ptr<QTimer> iTimer);
-	// 由ui提供
-//    void setGridLayoutBody(ptr<QGridLayout> iGridLayout);
-//    void setTitleMenuBar(ptr<QMenuBar> iMenuBar);
+	void setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection);
 
 	auto getImgLabel();
 	auto getLatexLabel();
@@ -127,12 +131,14 @@ public:
 	auto getGridLayoutBody();
 	auto getTitleMenuBar();
 	auto getTimer();
-
+	auto getStatusBar();
+	auto getEngineSelectionInterface();
+	
 	/******************** callback function ********************/
 
 	void latexStringViewUpdateNotified()
 	{
-		latexFormula = latexStringGetter();
+		latexString = latexStringGetter();
 	}
 
 	void imageDataViewUpdateNotified()
@@ -153,6 +159,7 @@ public:
 private slots:
 	void onChangeLatexFormula();
 	void onChangeLatexDisplay();
+	void onClickLoadButton();
 
 private:
 	Ui::View* ui;
@@ -169,14 +176,15 @@ private:
 	ptr<QPushButton> editButton;
 	ptr<QPushButton> downloadButton;
 	ptr<QPushButton> resetButton;
-	ptr<QRadioButton> baiduButton;
-	ptr<QRadioButton> mathpixButton;
-	ptr<QPlainTextEdit> imgInfo;
+	ptr<QTextEdit> imgInfo;
 	ptr<QPushButton> calculateButton;
+	ptr<QPushButton> applyButton;
+	ptr<QPushButton> prettifyButton;
+	ptr<EngineSelection> engineSelectionInterface;
 
 	// view model数据对象指针
 
-	ptr<const QString> latexFormula;
+	ptr<const QString> latexString;
 	ptr<const QByteArray> imageData;
 	ptr<const QVector<VarValPair>> varValPairs;
 	ptr<const QString> result;
@@ -193,23 +201,34 @@ private:
 	WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
-	WorkFunctionNoArg changeLatexFormula;
 	WorkFunctionNoArg displayHelpDocument;
-	WorkFunctionNoArg changeLatexDisplay;
+	// WorkFunctionNoArg applyLatexFormulaChanges;
+	WorkFunctionNoArg prettifyLatexFormula;
+	WorkFunctionNoArg calculateLatexFormula;
+
+	// 选择识别引擎
+	bool isMathPix = true;
+	QSize screenSize;
+	QSize imgSizeLimit;
 
 
 	// imgLabel和latexLabel事件过滤器
 	bool eventFilter(QObject* watched, QEvent* event);
 	// 底部消息提示函数
-	void displayMsg(std::string msg, int duration = 0);
+	// @param:
+	// msg: 提示消息
+	// duration: 提示时间，缺省为4000ms
+	void displayMsg(std::string msg, int duration = 4000);
+	// @param:
+	// msg: 提示错误消息，消息常驻
 	void displayErrorMsg(std::string errorMsg);
-
+	
 	// Font
-	const QFont textNormal = QFont("Courier New", 14, QFont::Normal, false);
-	const QFont textBold = QFont("Courier New", 14, QFont::Bold, false);
-	const QFont titleBold = QFont("Courier New", 22, QFont::Bold, false);
-	const QFont menuNormal = QFont("微软雅黑", 10, QFont::Normal, false);
-	const QFont msgNormal = QFont("Courier New", 10, QFont::Normal, false);
+	QFont textNormal = QFont("Courier New", 14, QFont::Normal, false);
+	QFont textBold = QFont("Courier New", 14, QFont::Bold, false);
+	QFont titleBold = QFont("Courier New", 22, QFont::Bold, false);
+	QFont menuNormal = QFont("微软雅黑", 10, QFont::Normal, false);
+	QFont msgNormal = QFont("Courier New", 10, QFont::Normal, false);
 
 	// StyleSheet
 	const QString whiteBackground = "background: white;";
@@ -223,4 +242,29 @@ private:
 	const QString blackBorder2Px = "border: 2px solid black;";
 	const QString noBottomBorder = "border-bottom: 0px;";
 
+	const QString textFontSize = "font-size: 14px";
+
+	// @param:
+	// width: default下的width
+	// height: default下的height
+	// @return
+	// 调整后的size
+	inline QSize getAdaptedSize(int width, int height)
+	{
+		// sysWidth: resolution_width / expanding rate
+		// sysHeight: resolution_height / expanding rate
+		// The dafault size of screen is 1920*1080 125%
+		// In this case, the size of the software is 960*600.
+		// In case of different solutionn, change the width and height in proportion.
+		// Windows.h MUST be included!!!
+		int sysWidth = ::GetSystemMetrics(SM_CXSCREEN);
+		int sysHeight = ::GetSystemMetrics(SM_CYSCREEN);
+		int adaptedWidth = (width * sysWidth) / 1536;
+		int adaptedHeight = (height * sysHeight) / 864;
+		return QSize(adaptedWidth, adaptedHeight);
+	}
+	inline QSize getAdaptedSize(QSize size)
+	{
+		return getAdaptedSize(size.width(), size.height());
+	}
 };
