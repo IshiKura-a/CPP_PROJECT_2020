@@ -163,7 +163,7 @@ void View::initCmdInterface()
     });
     connect(editButton.get(), &QPushButton::clicked, [=]() {
         latexLabel->setHidden(true);
-        latexEditor->setHidden(false);
+        latexEditor->setHidden(false); //显示编辑器,隐藏label
     });
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
         onChangeLatexDisplay();
