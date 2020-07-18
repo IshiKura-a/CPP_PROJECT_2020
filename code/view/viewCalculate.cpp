@@ -27,7 +27,7 @@ viewCalculate::viewCalculate(QWidget *parent) :
     QWidget * pWgt = new QWidget;
 
     QVBoxLayout *pLayout = new QVBoxLayout();//网格布局
-    for(int i = 0; i < 100; i++)
+    for(int i = 0; i < 100; i++)  //TODO : 把100替换为动态产生的参数个数
     {
         QLabel *pLab = new QLabel();
         QLineEdit *pLE =new QLineEdit() ;  //输入参数的文本框,除了分数还得解析pi e

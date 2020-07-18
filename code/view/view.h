@@ -199,7 +199,7 @@ private:
 	Getter<ptr<const QString>> resultGetter;
 
 	// 用于动态绑定view model
-
+	//有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg
 	WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
