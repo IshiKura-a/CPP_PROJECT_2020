@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'view.ui'
 **
-** Created by: Qt User Interface Compiler version 5.15.0
+** Created by: Qt User Interface Compiler version 5.14.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -255,6 +255,8 @@ public:
 
         latexLabel = new QLabel(centralwidget);
         latexLabel->setObjectName(QString::fromUtf8("latexLabel"));
+        sizePolicy.setHeightForWidth(latexLabel->sizePolicy().hasHeightForWidth());
+        latexLabel->setSizePolicy(sizePolicy);
 
         gridLayoutBody->addWidget(latexLabel, 1, 0, 1, 1);
 

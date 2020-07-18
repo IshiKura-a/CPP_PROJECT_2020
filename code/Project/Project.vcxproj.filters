@@ -98,6 +98,11 @@
     </ClInclude>
     <ClInclude Include="..\module\XMLparser\XMLparser.h">
       <Filter>Header Files\module\XMLParser</Filter>
+    <ClInclude Include="..\view\ui_engineselection.h">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\view\stylesheet.h">
+      <Filter>Header Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,16 +132,27 @@
     </ClCompile>
     <ClCompile Include="..\module\XMLparser\XMLparser.cpp">
       <Filter>Source Files\module\XMLParser</Filter>
+    <ClCompile Include="..\view\engineselection.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\view\stylesheet.cpp">
+      <Filter>Source Files\view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\view\view.h">
       <Filter>Header Files\view</Filter>
     </QtMoc>
+    <QtMoc Include="..\view\engineselection.h">
+      <Filter>Header Files\view</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\view\view.ui">
-      <Filter>Resource Files</Filter>
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\view\engineselection.ui">
+      <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
 </Project>
