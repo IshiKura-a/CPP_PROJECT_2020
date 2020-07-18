@@ -7,7 +7,7 @@ View::View(QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
-    setWindowTitle("Welcome!");
+    setWindowTitle("latex recognition and calculation");
     gridLayoutBody = ptr<QGridLayout>(ui->gridLayoutBody);
     titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
     imgLabel = ptr<QLabel>(ui->imgLabel);
@@ -482,6 +482,6 @@ void View::onClickCalculateButton()
 {
 	qDebug() << "打开输入变量窗口";
 	viewCalculate* d = new viewCalculate();
-	d->show();
+	d->show();  
 	d->setWindowTitle("输入变量");
 }

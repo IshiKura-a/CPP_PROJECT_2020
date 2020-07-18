@@ -22,8 +22,10 @@ viewCalculate::viewCalculate(QWidget *parent) :
     ui(new Ui::viewCalculate)
 {
     ui->setupUi(this);
-    connect(this->ui->btn_Cal,SIGNAL(clicked(bool)),this,SLOT(on_btn_Cal_clicked()));
+	this->resize(QSize(800, 600));
+	connect(this->ui->btn_Cal,SIGNAL(clicked(bool)),this,SLOT(on_btn_Cal_clicked()));
     QWidget * pWgt = new QWidget;
+
     QVBoxLayout *pLayout = new QVBoxLayout();//网格布局
     for(int i = 0; i < 100; i++)
     {
