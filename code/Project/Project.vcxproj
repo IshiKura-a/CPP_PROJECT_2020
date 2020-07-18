@@ -90,7 +90,9 @@
     </QtUic>
     <PreLinkEvent>
       <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
-copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
+copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
+copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)" 
+</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,7 +105,9 @@ copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
     <QtUic />
     <PreLinkEvent>
       <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
-copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
+copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
+copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)" 
+</Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
@@ -112,7 +116,7 @@ copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"</Command>
     <QtInstall>5.15.0</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>5.15.0</QtInstall>
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
