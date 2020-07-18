@@ -91,9 +91,7 @@
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <QtUic>
-      <QtUicDir>../view/</QtUicDir>
-    </QtUic>
+    <QtUic />
     <PreLinkEvent>
       <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
 copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
@@ -108,22 +106,18 @@ copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)"
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <QtUic>
-      <QtUicDir>../view/</QtUicDir>
-      <ExecutionDescription>uic ../view view.ui; uic ../view engineselection.ui</ExecutionDescription>
-    </QtUic>
+    <QtUic />
     <PreLinkEvent>
       <Command>copy  "$(SolutionDir)..\bin\libcurl.dll" "$(OutDir)"
 copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
 copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)" 
 </Command>
     </PreLinkEvent>
-    
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>5.15.0</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>5.15.0</QtInstall>

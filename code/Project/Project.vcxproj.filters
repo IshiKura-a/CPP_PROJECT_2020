@@ -98,6 +98,7 @@
     </ClInclude>
     <ClInclude Include="..\module\XMLparser\XMLparser.h">
       <Filter>Header Files\module\XMLParser</Filter>
+    </ClInclude>
     <ClInclude Include="..\view\ui_engineselection.h">
       <Filter>Header Files\view</Filter>
     </ClInclude>
@@ -132,6 +133,7 @@
     </ClCompile>
     <ClCompile Include="..\module\XMLparser\XMLparser.cpp">
       <Filter>Source Files\module\XMLParser</Filter>
+    </ClCompile>
     <ClCompile Include="..\view\engineselection.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>

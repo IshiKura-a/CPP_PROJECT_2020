@@ -19,7 +19,7 @@ int main()
 
 	try {
 		time = clock();
-		
+
 		auto formula_buffer = manager->downloadRenderedFormula(latex, "svg");
 
 		std::cout << "Successfully download image in buffer.\n";
@@ -27,10 +27,12 @@ int main()
 
 		time = clock();
 
+		std::cout << "Successfully save buffer in ./formula_buffer.svg.\n";
 		manager->saveImage(formula_buffer, "formula_buffer.svg");
-		
+
 		std::cout << "time = " << clock() - time << "\n\n";
 	}
+	catch (std::runtime_error& e)
 	{
 		std::cout << e.what();
 	}
@@ -38,7 +40,7 @@ int main()
 	// get image as file
 	try {
 		time = clock();
-		
+
 		manager->downloadRenderedFormula(latex, "formula.svg", "svg");
 
 		std::cout << "Successfully download image as file in ./formula.svg\n";
