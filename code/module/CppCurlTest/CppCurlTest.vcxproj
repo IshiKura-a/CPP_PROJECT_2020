@@ -145,7 +145,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\bin\libcurl.dll" "$(TargetDir)"</Command>
+      <Command>copy "$(SolutionDir)..\bin\libcurl.dll" "$(TargetDir)"
+copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

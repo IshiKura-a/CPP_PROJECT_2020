@@ -10,6 +10,7 @@ int main()
 	RequestManager manager;
 
 	std::string latex = "\\sigma(z)=\\frac{1}{1+e^{-z}}";
+	std::string latex_with_value = "\\frac{1}{1+e^{-2}}";
 
 	auto time = clock();
 
@@ -18,17 +19,17 @@ int main()
 
 	try {
 		time = clock();
-		
+
 		auto formula_buffer = manager->downloadRenderedFormula(latex, "svg");
 
 		std::cout << "Successfully download image in buffer.\n";
 		std::cout << "time = " << clock() - time << "\n\n";
 
 		time = clock();
-		
-		manager->saveImage(formula_buffer, "formula_buffer.svg");
 
 		std::cout << "Successfully save buffer in ./formula_buffer.svg.\n";
+		manager->saveImage(formula_buffer, "formula_buffer.svg");
+
 		std::cout << "time = " << clock() - time << "\n\n";
 	}
 	catch (std::runtime_error& e)
@@ -39,7 +40,7 @@ int main()
 	// get image as file
 	try {
 		time = clock();
-		
+
 		manager->downloadRenderedFormula(latex, "formula.svg", "svg");
 
 		std::cout << "Successfully download image as file in ./formula.svg\n";
@@ -58,7 +59,7 @@ int main()
 
 	try {
 		time = clock();
-		
+
 		auto s = manager->openImage("maxwell.png");
 
 		std::cout << manager->formulaRecognitionBaidu(s) << std::endl;
@@ -77,6 +78,19 @@ int main()
 	try {
 		time = clock();
 		std::cout << manager->formulaRecognitionMathpix("maxwell.png") << std::endl;
+		std::cout << "time = " << clock() - time << "\n\n";
+	}
+	catch (std::runtime_error& e)
+	{
+		std::cout << e.what();
+	}
+
+	std::cout << "Trying calculate latex formula:" << latex << "\n\n";
+
+	try
+	{
+		time = clock();
+		std::cout << manager->getFormulaResult(latex_with_value) << std::endl;
 		std::cout << "time = " << clock() - time << "\n\n";
 	}
 	catch (std::runtime_error& e)

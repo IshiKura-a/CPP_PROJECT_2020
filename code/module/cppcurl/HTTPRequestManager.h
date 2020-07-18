@@ -8,10 +8,12 @@ private:
 	const static std::string baidu_request_url;
 	const static std::string mathpix_request_url;
 	const static std::string latex_rendering_request_url;
+	const static std::string formula_calculate_request_url;
 	const static std::string access_token;
 
 	static std::string formula_result;
 	static std::vector<Byte> render_result;
+	static std::string calculate_result;
 
 	// @param:
 	// file_path: 图像路径
@@ -46,6 +48,8 @@ private:
 
 	friend size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* stream);
 
+	friend size_t callbackWriteCalculateResult(void* ptr, size_t size, size_t nmemb, void* stream);
+
 public:
 	std::string formulaRecognitionBaidu(const std::vector<Byte>& encoded_image) override;
 
@@ -58,6 +62,8 @@ public:
 	std::vector<Byte> downloadRenderedFormula(const std::string& latex_string, const std::string& format) override;
 
 	void downloadRenderedFormula(const std::string& latex_string, const std::string& file_path, const std::string& format) override;
+
+	std::string getFormulaResult(const std::string& latex_string) override;
 
 	std::vector<Byte> openImage(const std::string& file_path) override;
 

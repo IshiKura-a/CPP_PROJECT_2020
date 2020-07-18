@@ -14,9 +14,13 @@ const std::string HTTPRequestManager::mathpix_request_url = "https://api.mathpix
 
 const std::string HTTPRequestManager::latex_rendering_request_url = "https://latex.codecogs.com/";
 
+const std::string HTTPRequestManager::formula_calculate_request_url = "http://api.wolframalpha.com/v2/query";
+
 std::string HTTPRequestManager::formula_result;
 
 std::vector<Byte> HTTPRequestManager::render_result;
+
+std::string HTTPRequestManager::calculate_result;
 
 const std::string HTTPRequestManager::access_token = "7A4F0C7C6D1AA836183C6245AF5A546D\
 CA62994D2AD6DF01083A5170573825F8\
@@ -45,6 +49,12 @@ size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* str
 	// 图片文件极有可能多次传输, 需要拼合
 	auto tmp = std::vector<Byte>(static_cast<char*>(ptr), static_cast<char*>(ptr) + size * nmemb);
 	HTTPRequestManager::render_result.insert(HTTPRequestManager::render_result.end(), tmp.begin(), tmp.end());
+	return size * nmemb;
+}
+
+size_t callbackWriteCalculateResult(void* ptr, size_t size, size_t nmemb, void* stream)
+{
+	HTTPRequestManager::calculate_result = std::string(static_cast<char*>(ptr), size * nmemb);
 	return size * nmemb;
 }
 
@@ -291,6 +301,41 @@ std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string&
 	}
 }
 
+std::string HTTPRequestManager::getFormulaResult(const std::string& latex_string)
+{
+	std::string url = formula_calculate_request_url + "?appid=3YG4PV-RWY3K2Y7P8&format=plaintext&includepodid=result&input=" + latex_string;
+	CURL* curl = NULL;
+	CURLcode result_code;
+
+
+	curl = curl_easy_init();
+
+	if (curl) {
+		// 打印调试信息
+		//curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		// 设置写函数
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callbackWriteCalculateResult);
+
+		result_code = curl_easy_perform(curl);
+		if (result_code != CURLE_OK)
+		{
+			std::string errmsg = "curl_easy_perform() failed.";
+			errmsg = errmsg + curl_easy_strerror(result_code);
+			curl_easy_cleanup(curl);
+			throw std::runtime_error(errmsg);
+		}
+
+		curl_easy_cleanup(curl);
+
+		return std::move(calculate_result);
+	}
+	else
+	{
+		throw std::runtime_error("curl_easy_init() failed.");
+	}
+}
 
 
 // helper function
