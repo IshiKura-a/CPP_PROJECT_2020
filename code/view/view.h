@@ -204,7 +204,7 @@ private:
 	WorkFunctionNoArg displayHelpDocument;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;
-	WorkFunctionNoArg calculateLatexFormula;
+	WorkFunctionNoArg calculateLatexFormula;  //没有参数的
 
 	// 选择识别引擎
 	bool isMathPix = true;
