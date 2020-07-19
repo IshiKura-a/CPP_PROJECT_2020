@@ -40,6 +40,8 @@ Documents in `./doc`.
 
     If you want to build the final application, you should at least build CppCurl and Project. It is highly recommended to run all unit tests too.
 
+    After building, to make a release package, you need to open command prompt in `./code/bin` and run `windeployqt Project.exe` to import Qt dependencies.
+
 ## Third-party dependencies
 
 * [Qt](https://www.qt.io/)
