@@ -7,7 +7,7 @@ View::View(QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
-    setWindowTitle("Welcome!");
+    setWindowTitle("latex recognition and calculation");
     gridLayoutBody = ptr<QGridLayout>(ui->gridLayoutBody);
     titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
     imgLabel = ptr<QLabel>(ui->imgLabel);
@@ -209,6 +209,7 @@ void View::initCmdInterface()
             img->save(imgDir.c_str(), imgType.c_str(), 100);
         }
     });
+	//连接美化按钮
     connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
         // TO DO
         if (prettifyLatexFormula)
@@ -222,19 +223,9 @@ void View::initCmdInterface()
             displayErrorMsg("No prettify function!");
         }
     });
-    connect(calculateButton.get(), &QPushButton::clicked, [=]() {
-        // To Do
-        if (calculateLatexFormula)
-        {
-            qDebug() << "Calculate";
-            displayMsg("Calculate");
-        }
-        else
-        {
-            qDebug() << "No calculate function";
-            displayErrorMsg("No calculate function!");
-        }
-    });
+	//连接计算按钮
+    connect(calculateButton.get(), &QPushButton::clicked, this,&View::onClickCalculateButton);
+	
     
     // 设置图片信息属性
     imgInfo->setReadOnly(true);
@@ -484,4 +475,13 @@ void View::onClickLoadButton()
         displayErrorMsg("Load Aborted!");
         qDebug() << "Load Aborted!";
     }
+}
+
+
+void View::onClickCalculateButton()
+{
+	qDebug() << "打开输入变量窗口";
+	viewCalculate* d = new viewCalculate();
+	d->show();  
+	d->setWindowTitle("输入变量");
 }
