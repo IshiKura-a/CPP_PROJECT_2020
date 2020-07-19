@@ -19,10 +19,9 @@
     <ClInclude Include="..\module\JsonParser\JsonParser.h" />
     <ClInclude Include="..\module\XMLparser\XMLparser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
+    <QtMoc Include="..\view\viewCalculate.h" />
     <QtMoc Include="..\view\engineselection.h" />
     <ClInclude Include="..\view\stylesheet.h" />
-    <ClInclude Include="..\view\ui_engineselection.h" />
-    <ClInclude Include="..\view\ui_view.h" />
     <QtMoc Include="..\view\view.h" />
   </ItemGroup>
   <ItemGroup>
@@ -37,10 +36,12 @@
     <ClCompile Include="..\view\engineselection.cpp" />
     <ClCompile Include="..\view\stylesheet.cpp" />
     <ClCompile Include="..\view\view.cpp" />
+    <ClCompile Include="..\view\viewCalculate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\view\engineselection.ui" />
     <QtUic Include="..\view\view.ui" />
+    <QtUic Include="..\view\viewCalculate.ui" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0879F828-F8D9-4698-B411-05FD27AF4C8F}</ProjectGuid>
