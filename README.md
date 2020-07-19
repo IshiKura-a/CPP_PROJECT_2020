@@ -1,5 +1,7 @@
 # CPP PROJECT 2020
 
+[![Build status](https://ci.appveyor.com/api/projects/status/bp5sdsqh5enn9i22/branch/master?svg=true)](https://ci.appveyor.com/project/IshiKura-a/cpp-project-2020/branch/master)
+
 ## Description
 
 This is a course project for ZJU C++ summer course. This project is implemented with MVVM(Model-View-ViewModel) design as the whole framework and Qt for its GUI.
