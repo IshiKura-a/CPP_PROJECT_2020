@@ -77,12 +77,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,10 +117,10 @@ copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)"
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
-    <QtInstall>5.15.0</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>5.15.0</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
     <QtModules>core;network;gui;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
