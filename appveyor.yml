@@ -1,9 +1,6 @@
 version: 1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
-branches:
-  only:
-  - master
 skip_non_tags: true
 image: Visual Studio 2019
 configuration: Release
@@ -12,7 +9,7 @@ before_build:
 - cmd: >-
     set QTDIR='C:\Qt\5.15.0\msvc2019_64'
 
-    set PATH=%PATH%;%QTDIR%bin;
+    set PATH=%PATH%;%QTDIR%\bin;
 
     reg add "HKCU\Software\Digia\Versions" /v "DefaultQtVersion" /d "msvc2019_64" /f
 
