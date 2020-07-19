@@ -140,6 +140,9 @@
     <ClCompile Include="..\view\stylesheet.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="..\view\viewCalculate.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="..\view\view.h">
@@ -148,12 +151,18 @@
     <QtMoc Include="..\view\engineselection.h">
       <Filter>Header Files\view</Filter>
     </QtMoc>
+    <QtMoc Include="..\view\viewCalculate.h">
+      <Filter>Header Files\view</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="..\view\view.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="..\view\engineselection.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="..\view\viewCalculate.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
