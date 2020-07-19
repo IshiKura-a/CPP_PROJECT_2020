@@ -91,12 +91,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\include;D:\curl\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\rapidjson\include;$(SolutionDir)..\include;C:\curl\include;D:\curl\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\curl\lib;D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)..\include;D:\curl\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\rapidjson\include;$(SolutionDir)..\include;C:\curl\include;D:\curl\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\curl\lib;D:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -150,6 +150,10 @@ if not exist "$(SolutionDir)..\include" mkdir "$(SolutionDir)..\include"
 copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)" </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -178,6 +182,9 @@ if not exist "$(SolutionDir)..\include" mkdir "$(SolutionDir)..\include"
 copy "$(SolutionDir)..\module\cppcurl\CppCurl.h" "$(SolutionDir)..\include\"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)" </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,13 +22,13 @@ view model中的函数可以调用一个或多个model的函数。注意满足�
 
 1. 确认这个函数必须操作model，且无法通过调用已绑定的view model函数达到相同功能。
 
-2. 在view model中添加相应的std::function，无参数的函数定义为WorkFunction，有参数的函数定义为WorkFunctionNoArg。
+2. 在view model中添加相应的std::function，有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg。
 
 3. 在view model的bindFunction函数中添加该WorkFunction的具体代码。
 
 ## view绑定view model的功能函数
 
-1. 在view中添加相应的std::function, 无参数的函数定义为WorkFunction，有参数的函数定义为WorkFunctionNoArg。建议使用与上一节第一步中同样的名字。
+1. 在view中添加相应的std::function, 有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg。建议使用与上一节第一步中同样的名字。
 
 2. （可选）添加相应的类成员函数包装以上std::function。这一步不是必须的，但是由于WorkFunction的参数是std::any，增加一层包装可以使得view层明确这些功能函数的参数类型，提升代码可读性。
 

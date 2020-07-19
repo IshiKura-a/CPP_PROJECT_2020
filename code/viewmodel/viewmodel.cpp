@@ -30,4 +30,8 @@ void ViewModel::bindFunction()
 	{
 		model->renderLatexFormula(std::any_cast<std::string>(image_format));
 	};
+	getFormulaResult = [this]()
+	{
+		model->calculateFormula();
+	};
 }
