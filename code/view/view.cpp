@@ -7,7 +7,7 @@ View::View(QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
-    setWindowTitle("latex recognition and calculation");
+    setWindowTitle("Welcome!");
     gridLayoutBody = ptr<QGridLayout>(ui->gridLayoutBody);
     titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
     imgLabel = ptr<QLabel>(ui->imgLabel);
@@ -24,6 +24,7 @@ View::View(QWidget *parent)
     prettifyButton = ptr<QPushButton>(ui->prettifyButton);
 
     imgInfo = ptr<QTextEdit>(ui->imgInfo);
+
 }
 
 View::~View()
@@ -55,13 +56,17 @@ void View::initMenu()
     QMenu* file;
     file = (titleMenuBar->addMenu("文件"));
 
-    // 设置文件菜单下有导入、关闭功能
-    QAction* actLoad = (file->addAction("导入"));
+    // 设置文件菜单下有导入、下载、关闭功能
+    QAction* actLoad = (file->addAction("导入\tCtrl O"));
     actLoad->setFont(menuNormal);
     connect(actLoad, SIGNAL(triggered()), SLOT(onClickLoadButton()));
 
-    QAction* actExit = (file->addAction("关闭"));
+    QAction* actDownload = (file->addAction("下载\tCtrl S"));
+    connect(actDownload, SIGNAL(triggered()), SLOT(onClickDownloadButton()));
+
+    QAction* actExit = (file->addAction("关闭\tEsc"));
     actExit->setFont(menuNormal);
+    actExit->setShortcut(Qt::Key_Escape);
     connect(actExit, &QAction::triggered, [=]() {
         exit(0);
         qDebug() << "Quit";
@@ -82,19 +87,9 @@ void View::initMenu()
     QAction* actHelp = (titleMenuBar->addAction("帮助"));
     actHelp->setFont(menuNormal);
     connect(actHelp, &QAction::triggered, [=]() {
-
-        if (displayHelpDocument)
-        {
-            qDebug() << "Help";
-            displayMsg("Help");
-            displayHelpDocument();
-        }
-        else
-        {
-            qDebug() << "No help available.";
-            displayErrorMsg("No help available!");
-        }
-
+        displayMsg("Help");
+        QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/IshiKura-a/CPP_PROJECT_2020")));
+        
         });
 
 }
@@ -150,7 +145,8 @@ void View::initCmdInterface()
 {
     // 绑定按钮事件
     connect(loadButton.get(), SIGNAL(clicked()), this, SLOT(onClickLoadButton()));
-
+    // Shortcut: ctrl + o
+    loadButton->setShortcut(Qt::CTRL + Qt::Key_O);
     
     connect(resetButton.get(), &QPushButton::clicked, [=]() {
         displayMsg("Reset");
@@ -161,6 +157,7 @@ void View::initCmdInterface()
         latexEditor->clear();
         setLatexString("");
         imgInfo->setText("No image loaded");
+        imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     });
     connect(editButton.get(), &QPushButton::clicked, [=]() {
         latexLabel->setHidden(true);
@@ -169,57 +166,9 @@ void View::initCmdInterface()
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
         onChangeLatexDisplay();
     });
-    connect(downloadButton.get(), &QPushButton::clicked, [=]() {
-        std::string imgDir = QFileDialog::getSaveFileName(
-            NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
-        if (imgDir.empty())
-        {
-            displayErrorMsg("Save aborted!");
-            return;
-        }
+    connect(downloadButton.get(), SIGNAL(clicked()), this, SLOT(onClickDownloadButton()));
+    downloadButton->setShortcut(Qt::CTRL + Qt::Key_S);
 
-        const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
-
-        qDebug() << imgType.c_str();
-
-        QSvgRenderer* svg = new QSvgRenderer;
-        QImage* img = new QImage;
-        int cnt = 0;
-        do {
-            if (cnt++ >= 2)
-            {
-                displayErrorMsg(imageData->constData());
-                return;
-            }
-            renderLatexString(imgType);
-
-            qDebug() << imageData->isEmpty();
-            qDebug() << imageData->constData();
-            
-        } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
-
-        if (imgType == "svg")
-        {
-            QFile svgFile(imgDir.c_str());
-            if (!svgFile.open(QIODevice::WriteOnly | QIODevice::Text))
-            {
-                displayErrorMsg("Fail to open file: " + imgDir);
-                qDebug() << QString("Fail to open file: " + QString(imgDir.c_str()));
-            }
-            else
-            {
-                QTextStream svgStream(&svgFile);
-                svgStream << *imageData;
-                displayMsg("Save as " + imgDir, 0);
-            }
-            svgFile.close();
-        }
-        else
-        {
-            img->save(imgDir.c_str(), imgType.c_str(), 100);
-            displayMsg("Save as " + imgDir, 0);
-        }
-    });
 	//连接美化按钮
     connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
         // TO DO
@@ -246,6 +195,7 @@ void View::initCmdInterface()
         {
             displayErrorMsg("No calculation function found!");
             qDebug() << "No calculation function found!";
+            onClickCalculateButton();
         }
         });
 	
@@ -261,78 +211,75 @@ void View::initCmdInterface()
 void View::onChangeLatexFormula()
 {
     const std::string imgType = "svg";
-    if (true)
+    qDebug() << "Text changed." + latexEditor->document()->toPlainText();
+    displayMsg("Text changed");
+    setLatexString(latexEditor->document()->toPlainText());
+
+
+    if (renderLatexString)
     {
-        qDebug() << "Text changed." + latexEditor->document()->toPlainText();
-        displayMsg("Text changed");
-        setLatexString(latexEditor->document()->toPlainText());
+        qDebug() << "Render latex formula";
+        // displayMsg("Rendering",0);
 
-        
-        if (renderLatexString)
-        {
-            qDebug() << "Render latex formula";
-            // displayMsg("Rendering",0);
+        QSvgRenderer* svg = new QSvgRenderer;
+        QImage* img = new QImage;
+        int width, height;
 
-            QSvgRenderer* svg = new QSvgRenderer;
-            QImage* img = new QImage;
-            int width, height;
-
-            int cnt = 0;
-            do {
-                if (cnt++ >= 2)
-                {
-                    displayErrorMsg(imageData->constData());
-                    return;
-                }
-                renderLatexString(imgType);
-
-                qDebug() << imageData->isEmpty();
-                qDebug() << imageData->constData();
-
-            } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
-            
-            if (imgType == "svg")
+        int cnt = 0;
+        do {
+            if (cnt++ >= 2)
             {
-                displayMsg("Success!");
-                qDebug() << svg->defaultSize();
+                displayErrorMsg(imageData->constData());
+                return;
+            }
+            renderLatexString(imgType);
 
-                width = svg->defaultSize().width();
-                height = svg->defaultSize().height();
+            qDebug() << imageData->isEmpty();
+            qDebug() << imageData->constData();
 
-                if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
-                {
-                    height = (height * imgSizeLimit.width() / width);
-                    width = imgSizeLimit.width();
-                }
-                else
-                {
-                    width = (width * imgSizeLimit.height()) / height;
-                    height = imgSizeLimit.height();
-                }
+        } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
 
-                QPixmap* pixmap = new QPixmap(QSize(width,height));
-                //img->loadFromData(img_bytes);
-                pixmap->fill(Qt::white);
-                QPainter painter(pixmap);
-                svg->render(&painter);
+        if (imgType == "svg")
+        {
+            displayMsg("Success!");
+            qDebug() << svg->defaultSize();
 
-                latexLabel->setPixmap(*pixmap);
-                latexLabel->setAlignment(Qt::AlignCenter);
+            width = svg->defaultSize().width();
+            height = svg->defaultSize().height();
+
+            if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
+            {
+                height = (height * imgSizeLimit.width() / width);
+                width = imgSizeLimit.width();
             }
             else
-            {   
-                displayMsg("Success!");
-                latexLabel->setPixmap(QPixmap::fromImage(*img, Qt::AutoColor).scaled(QSize(imgSizeLimit),
-                    Qt::KeepAspectRatio, Qt::SmoothTransformation));
-                // img->save("D:/xxx.png ", imgType.c_str(), 100);
+            {
+                width = (width * imgSizeLimit.height()) / height;
+                height = imgSizeLimit.height();
             }
-            
+
+            QPixmap* pixmap = new QPixmap(QSize(width, height));
+            //img->loadFromData(img_bytes);
+            pixmap->fill(Qt::white);
+            QPainter painter(pixmap);
+            svg->render(&painter);
+
+            latexLabel->setPixmap(*pixmap);
+            latexLabel->setAlignment(Qt::AlignCenter);
         }
         else
         {
-            displayErrorMsg("No latex formula display function!");
-            qDebug() << "No latex formula display";
+            displayMsg("Success!");
+            latexLabel->setPixmap(QPixmap::fromImage(*img, Qt::AutoColor).scaled(QSize(imgSizeLimit),
+                Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            // img->save("D:/xxx.png ", imgType.c_str(), 100);
         }
+
+    }
+    else
+    {
+        displayErrorMsg("No latex formula display function!");
+        qDebug() << "No latex formula display";
     }
 }
 
@@ -351,6 +298,10 @@ void View::setTimer(ptr<QTimer> iTimer)
 void View::setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection)
 {
     engineSelectionInterface = iEngineSelection;
+}
+void View::setCalculateInterface(ptr<viewCalculate> iViewCalculate)
+{
+    calculateInterface = iViewCalculate;
 }
 auto View::getImgLabel()
 {
@@ -375,6 +326,10 @@ auto View::getTimer()
 auto View::getEngineSelectionInterface()
 {
     return engineSelectionInterface;
+}
+auto View::getCalculateInterface()
+{
+    return calculateInterface;
 }
 
 auto View::getGridLayoutBody()
@@ -483,6 +438,7 @@ void View::onClickLoadButton()
     if (loadImg4Dir && !imgDir.empty())
     {
         imgInfo->setText(imgDir.c_str());
+        imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         qDebug() << "Load";
         loadImg4Dir(imgDir);
         displayMsg("Load " + imgDir);
@@ -505,7 +461,59 @@ void View::onClickLoadButton()
 void View::onClickCalculateButton()
 {
 	qDebug() << "打开输入变量窗口";
-	viewCalculate* d = new viewCalculate();
-	d->show();  
-	d->setWindowTitle("输入变量");
+	calculateInterface->show();  
+	calculateInterface->setWindowTitle("输入变量");
+}
+
+void View::onClickDownloadButton()
+{
+    std::string imgDir = QFileDialog::getSaveFileName(
+        NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
+    if (imgDir.empty())
+    {
+        displayErrorMsg("Download aborted!");
+        return;
+    }
+
+    const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
+
+    qDebug() << imgType.c_str();
+
+    QSvgRenderer* svg = new QSvgRenderer;
+    QImage* img = new QImage;
+    int cnt = 0;
+    do {
+        if (cnt++ >= 2)
+        {
+            displayErrorMsg(imageData->constData());
+            return;
+        }
+        renderLatexString(imgType);
+
+        qDebug() << imageData->isEmpty();
+        qDebug() << imageData->constData();
+
+    } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
+
+    if (imgType == "svg")
+    {
+        QFile svgFile(imgDir.c_str());
+        if (!svgFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            displayErrorMsg("Fail to open file: " + imgDir);
+            qDebug() << QString("Fail to open file: " + QString(imgDir.c_str()));
+        }
+        else
+        {
+            QTextStream svgStream(&svgFile);
+            svgStream << *imageData;
+            displayMsg("Save as " + imgDir, 0);
+        }
+        svgFile.close();
+    }
+    else
+    {
+        img->save(imgDir.c_str(), imgType.c_str(), 100);
+        displayMsg("Save as " + imgDir, 0);
+    }
 }

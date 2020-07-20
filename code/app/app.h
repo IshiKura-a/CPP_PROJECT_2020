@@ -23,7 +23,6 @@ public:
 		view->setRenderLatexString(viewModel->getRenderLatexString());
 		view->setDisplayLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
-		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 
 		// view->setImgLabel(std::make_shared<QLabel>());
 		// view->setLatexLabel(std::make_shared<QLabel>());
@@ -31,6 +30,7 @@ public:
 		view->setTimer(std::make_shared<QTimer>());
 		view->setStatusBar(std::make_shared<QStatusBar>());
 		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
+		view->setCalculateInterface(std::make_shared<viewCalculate>(view.get()));
 
 
 		// view update notification动态绑定
@@ -60,7 +60,7 @@ public:
 		model->notifyAll();
 
 		// 试试, 如果显示成功就说明数据传输正常
-		view->setLatexString("quit");
+		view->setLatexString("");
 		model->notifyAll();
 
 		// testestestestestestsetset

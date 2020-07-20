@@ -25,6 +25,7 @@
 #include <QStatusBar>
 #include <QRadioButton>
 #include <QFileDialog>
+#include <QDesktopServices>
 #include "viewCalculate.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class View; }
@@ -58,10 +59,6 @@ public:
 	void setDisplayLatexFormula(const WorkFunctionNoArg& command)
 	{
 		displayLatexFormula = command;
-	}
-	void setDisplayHelpDocument(const WorkFunctionNoArg& command)
-	{
-		displayHelpDocument = command;
 	}
 	void setPrettifyLatexFormula(WorkFunctionNoArg command)
 	{
@@ -106,7 +103,6 @@ public:
 	}
 
 	/******************** data getter and setter ********************/
-	// 有用吗, 没用就删了
 
 	auto getLatexString() const
 	{
@@ -124,6 +120,7 @@ public:
 	void setStatusBar(ptr<QStatusBar> iStatusBar);
 	void setTimer(ptr<QTimer> iTimer);
 	void setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection);
+	void setCalculateInterface(ptr<viewCalculate> iViewCalculate);
 
 	auto getImgLabel();
 	auto getLatexLabel();
@@ -134,6 +131,7 @@ public:
 	auto getTimer();
 	auto getStatusBar();
 	auto getEngineSelectionInterface();
+	auto getCalculateInterface();
 	
 	/******************** callback function ********************/
 
@@ -162,6 +160,7 @@ private slots:
 	void onChangeLatexDisplay();
 	void onClickLoadButton();
 	void onClickCalculateButton();
+	void onClickDownloadButton();
 
 private:
 	Ui::View* ui;
@@ -183,6 +182,7 @@ private:
 	ptr<QPushButton> applyButton;
 	ptr<QPushButton> prettifyButton;
 	ptr<EngineSelection> engineSelectionInterface;
+	ptr<viewCalculate> calculateInterface;
 
 	// view model数据对象指针
 
@@ -203,7 +203,6 @@ private:
 	WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
-	WorkFunctionNoArg displayHelpDocument;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;
 	WorkFunctionNoArg calculateLatexFormula;  

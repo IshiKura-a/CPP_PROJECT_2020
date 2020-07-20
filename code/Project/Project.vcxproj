@@ -131,7 +131,7 @@ copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)"
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>msvc2019_64</QtInstall>
-    <QtModules>core;network;gui;svg;widgets</QtModules>
+    <QtModules>core;gui;network;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
