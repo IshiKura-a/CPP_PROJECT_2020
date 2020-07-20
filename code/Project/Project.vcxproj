@@ -22,8 +22,6 @@
     <QtMoc Include="..\view\viewCalculate.h" />
     <QtMoc Include="..\view\engineselection.h" />
     <ClInclude Include="..\view\stylesheet.h" />
-    <ClInclude Include="..\view\ui_engineselection.h" />
-    <ClInclude Include="..\view\ui_view.h" />
     <QtMoc Include="..\view\view.h" />
   </ItemGroup>
   <ItemGroup>
@@ -60,8 +58,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -80,10 +78,12 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\curl\lib;$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;D:\curl\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\curl\lib;D:\curl\lib$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -101,6 +101,9 @@ copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
 copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)" 
 </Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -117,6 +120,9 @@ copy  "$(SolutionDir)..\bin\tinyxml2.dll" "$(OutDir)"
 copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)" 
 </Command>
     </PreLinkEvent>
+    <PostBuildEvent>
+      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtModules>core;network;gui;svg;widgets</QtModules>

@@ -78,9 +78,6 @@
     <ClInclude Include="..\model\model.h">
       <Filter>Header Files\model</Filter>
     </ClInclude>
-    <ClInclude Include="..\view\ui_view.h">
-      <Filter>Header Files\view</Filter>
-    </ClInclude>
     <ClInclude Include="..\viewmodel\viewmodel.h">
       <Filter>Header Files\viewmodel</Filter>
     </ClInclude>
@@ -98,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="..\module\XMLparser\XMLparser.h">
       <Filter>Header Files\module\XMLParser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\view\ui_engineselection.h">
-      <Filter>Header Files\view</Filter>
     </ClInclude>
     <ClInclude Include="..\view\stylesheet.h">
       <Filter>Header Files\view</Filter>
