@@ -14,7 +14,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
-#include<QScrollArea>
+#include <QScrollArea>
 #include <QLineEdit>
 
 viewCalculate::viewCalculate(QWidget *parent) :

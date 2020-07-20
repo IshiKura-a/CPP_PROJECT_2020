@@ -84,6 +84,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;D:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;D:\curl\lib$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -109,6 +111,7 @@ copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)"
     </ClCompile>
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <QtUic />
     <PreLinkEvent>

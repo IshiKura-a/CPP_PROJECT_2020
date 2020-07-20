@@ -160,6 +160,7 @@ void View::initCmdInterface()
         latexLabel->setText("No formula to render");
         latexEditor->clear();
         setLatexString("");
+        imgInfo->setText("No image loaded");
     });
     connect(editButton.get(), &QPushButton::clicked, [=]() {
         latexLabel->setHidden(true);
@@ -179,8 +180,6 @@ void View::initCmdInterface()
 
         const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
 
-        
-        displayMsg("Save as " + imgDir, 0);
         qDebug() << imgType.c_str();
 
         QSvgRenderer* svg = new QSvgRenderer;
@@ -201,12 +200,24 @@ void View::initCmdInterface()
 
         if (imgType == "svg")
         {
-            //  TO DO
-            // svg->load()
+            QFile svgFile(imgDir.c_str());
+            if (!svgFile.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                displayErrorMsg("Fail to open file: " + imgDir);
+                qDebug() << QString("Fail to open file: " + QString(imgDir.c_str()));
+            }
+            else
+            {
+                QTextStream svgStream(&svgFile);
+                svgStream << *imageData;
+                displayMsg("Save as " + imgDir, 0);
+            }
+            svgFile.close();
         }
         else
         {
             img->save(imgDir.c_str(), imgType.c_str(), 100);
+            displayMsg("Save as " + imgDir, 0);
         }
     });
 	//连接美化按钮
@@ -224,7 +235,19 @@ void View::initCmdInterface()
         }
     });
 	//连接计算按钮
-    connect(calculateButton.get(), &QPushButton::clicked, this,&View::onClickCalculateButton);
+    connect(calculateButton.get(), &QPushButton::clicked, [=]() {
+        if (calculateLatexFormula)
+        {
+            displayMsg("Calculate Latex Formula");
+            qDebug() << "Calculate Latex Formula";
+            onClickCalculateButton();
+        }
+        else
+        {
+            displayErrorMsg("No calculation function found!");
+            qDebug() << "No calculation function found!";
+        }
+        });
 	
     
     // 设置图片信息属性
@@ -256,7 +279,7 @@ void View::onChangeLatexFormula()
 
             int cnt = 0;
             do {
-                if (++cnt >= 2)
+                if (cnt++ >= 2)
                 {
                     displayErrorMsg(imageData->constData());
                     return;
@@ -459,6 +482,7 @@ void View::onClickLoadButton()
 
     if (loadImg4Dir && !imgDir.empty())
     {
+        imgInfo->setText(imgDir.c_str());
         qDebug() << "Load";
         loadImg4Dir(imgDir);
         displayMsg("Load " + imgDir);
