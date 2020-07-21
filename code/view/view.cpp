@@ -185,18 +185,9 @@ void View::initCmdInterface()
     });
 	//连接计算按钮
     connect(calculateButton.get(), &QPushButton::clicked, [=]() {
-        if (calculateLatexFormula)
-        {
-            displayMsg("Calculate Latex Formula");
-            qDebug() << "Calculate Latex Formula";
-            onClickCalculateButton();
-        }
-        else
-        {
-            displayErrorMsg("No calculation function found!");
-            qDebug() << "No calculation function found!";
-            onClickCalculateButton();
-        }
+        displayMsg("Calculate Latex Formula");
+        qDebug() << "Calculate Latex Formula";
+        onClickCalculateButton();
         });
 	
     

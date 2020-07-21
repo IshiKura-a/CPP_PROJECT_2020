@@ -64,10 +64,12 @@ public:
 	{
 		prettifyLatexFormula = command;
 	}
+	/*
 	void setCalculateLatexFormula(WorkFunctionNoArg command)
 	{
 		calculateLatexFormula = command;
 	}
+	*/
 	/******************** function entry ********************/
 
 	void loadImageFromDir(const std::string& file_path)
@@ -89,19 +91,23 @@ public:
 	{
 		imageDataGetter = getter;
 	}
+	
 	void setVarValPairsGetter(const Getter<ptr<const QVector<VarValPair>>>& getter)
 	{
-		varValPairsGetter = getter;
+		calculateInterface->setVarValPairsGetter(getter);
+		// varValPairsGetter = getter;
 	}
 	void setVarValPairsSetter(const Setter<const QVector<VarValPair>>& setter)
 	{
-		varValPairsSetter = setter;
+		calculateInterface->setVarValPairsSetter(setter);
+		// varValPairsSetter = setter;
 	}
 	void setResultGetter(const Getter<ptr<const QString>>& getter)
 	{
-		resultGetter = getter;
+		calculateInterface->setResultGetter(getter);
+		// resultGetter = getter;
 	}
-
+	
 	/******************** data getter and setter ********************/
 
 	auto getLatexString() const
@@ -144,17 +150,19 @@ public:
 	{
 		imageData = imageDataGetter();
 	}
-
+	
 	void varValPairsUpdateNotified()
 	{
-		varValPairs = varValPairsGetter();
+		calculateInterface->varValPairsUpdateNotified();
+		// varValPairs = varValPairsGetter();
 	}
 
 	void resultViewUpdateNotified()
 	{
-		result = resultGetter();
+		calculateInterface->resultViewUpdateNotified();
+		// result = resultGetter();
 	}
-
+	
 private slots:
 	void onChangeLatexFormula();
 	void onChangeLatexDisplay();
@@ -188,15 +196,21 @@ private:
 
 	ptr<const QString> latexString;
 	ptr<const QByteArray> imageData;
+
+	/*
 	ptr<const QVector<VarValPair>> varValPairs;
 	ptr<const QString> result;
+	*/
 
 	Getter<ptr<const QString>> latexStringGetter;
 	Setter<QString> latexStringSetter;
 	Getter<ptr<const QByteArray>> imageDataGetter;
+
+	/*
 	Getter<ptr<const QVector<VarValPair>>> varValPairsGetter;
 	Setter<const QVector<VarValPair>> varValPairsSetter;
 	Getter<ptr<const QString>> resultGetter;
+	*/
 
 	// 用于动态绑定view model
 	//有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg
@@ -205,7 +219,7 @@ private:
 	WorkFunction loadImg4Dir;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;
-	WorkFunctionNoArg calculateLatexFormula;  
+	// WorkFunctionNoArg calculateLatexFormula;  
 
 	// 选择识别引擎
 	bool isMathPix = true;
