@@ -40,12 +40,12 @@ public:
 	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
 	// @param:
 	// file_path: 需要读取的图片路径
-	void getFormulaFromImage(const std::string& file_path);
+	void getLatexStringFromImage(const std::string& file_path);
 
 	// 渲染model中的latexString, 并更新model的imageData
 	// @param:
 	// 设定渲染结果的格式, 支持png,gif,svg
-	void renderLatexFormula(const std::string& image_format);
+	void renderLatexString(const std::string& image_format);
 
 	// 获取帮助信息
 	// @return:
@@ -53,11 +53,14 @@ public:
 	std::string getHelpManual();
 
 	// 使用model中的latexString, 将公式解析成表达式树
-	void parseFormula();
+	//void parseLatexString();
 
 	// 使用model中的variableValuePairs, 计算表达式树结果
 	// 更新model的result
-	void calculateFormula();
+	void calculateLatexString();
+
+	// 将latex string中多余的空格删除
+	void prettifyLatexString();
 
 
 	/******************** data getter and setter ********************/

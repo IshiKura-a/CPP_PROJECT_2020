@@ -2,9 +2,10 @@
 #include "CppCurl.h"
 #include "../module/JsonParser/JsonParser.h"
 #include "../module/XMLparser/XMLparser.h"
+#include "../module/HelpManual.h"
 #include <iostream>
 
-void Model::getFormulaFromImage(const std::string& file_path)
+void Model::getLatexStringFromImage(const std::string& file_path)
 {
 	RequestManager manager;
 	try {
@@ -17,7 +18,7 @@ void Model::getFormulaFromImage(const std::string& file_path)
 	}
 }
 
-void Model::renderLatexFormula(const std::string& image_format)
+void Model::renderLatexString(const std::string& image_format)
 {
 	RequestManager manager;
 	try {
@@ -29,7 +30,7 @@ void Model::renderLatexFormula(const std::string& image_format)
 	}
 }
 
-void Model::calculateFormula()
+void Model::calculateLatexString()
 {
 	RequestManager manager;
 	try
@@ -42,3 +43,22 @@ void Model::calculateFormula()
 	}
 }
 
+std::string Model::getHelpManual()
+{
+	return HelpManual;
+}
+
+void Model::prettifyLatexString()
+{
+	std::string str(100,' ');
+	int count = 0;
+	for (auto& i : *latexString)
+	{
+		if (i != ' ' && i != '\n' && i != '\r')
+			str[count++] = i;
+		if(count==str.size())
+			str.resize(count*2);
+	}
+	str.resize(count);
+	setLatexString(str);
+}

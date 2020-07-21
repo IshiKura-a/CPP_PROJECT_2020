@@ -21,9 +21,10 @@ public:
 		viewModel->bindFunction();
 
 		view->setRenderLatexString(viewModel->getRenderLatexString());
-		view->setDisplayLatexFormula(viewModel->getGetFormulaResult());
+		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
 		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
+		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
 
 		// view->setImgLabel(std::make_shared<QLabel>());
 		// view->setLatexLabel(std::make_shared<QLabel>());
@@ -59,12 +60,6 @@ public:
 		// 同步数据
 		model->notifyAll();
 
-		// 试试, 如果显示成功就说明数据传输正常
-		view->setLatexString("quit");
-		model->notifyAll();
-
-		// testestestestestestsetset
-		// view->loadImageFromDir("C:/Users/15634/Desktop/test.png");
 	};
 	void run()
 	{

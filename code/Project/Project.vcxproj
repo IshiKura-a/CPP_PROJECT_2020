@@ -16,6 +16,7 @@
     <ClInclude Include="..\common\def.h" />
     <ClInclude Include="..\common\notifiable.h" />
     <ClInclude Include="..\model\model.h" />
+    <ClInclude Include="..\module\HelpManual.h" />
     <ClInclude Include="..\module\JsonParser\JsonParser.h" />
     <ClInclude Include="..\module\XMLparser\XMLparser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
@@ -30,6 +31,7 @@
     <ClCompile Include="..\common\notifiable.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\model\model.cpp" />
+    <ClCompile Include="..\module\HelpManual.cpp" />
     <ClCompile Include="..\module\JsonParser\JsonParser.cpp" />
     <ClCompile Include="..\module\XMLparser\XMLparser.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />

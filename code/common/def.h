@@ -14,6 +14,7 @@ using EventFunction = std::function<void()>;
 using CallbackFunction = std::function<void()>;
 using WorkFunction = std::function<void(std::any)>;
 using WorkFunctionNoArg = std::function<void()>;
+using WorkFunctionWithRetVal = std::function<std::any()>;
 template <typename T> using Getter = std::function<T()>;
 template <typename T> using Setter = std::function<void(const T&)>;
 //template <typename T> using SetterR = std::function<void(T&&)>;
