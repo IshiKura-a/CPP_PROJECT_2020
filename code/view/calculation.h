@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QTableWidget>
+#include "stylesheet.h"
 #include "ui_calculation.h"
 #include "../common/def.h"
 
@@ -75,6 +76,7 @@ private:
     ptr<QLabel> precisionLabel;
     ptr<QVBoxLayout> scrollVBoxLayout;
     ptr<QTableWidget> varValSheetTable;
+    ptr<QGridLayout> gridLayout;
     
     int tableRowCount;
 

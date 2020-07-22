@@ -26,6 +26,7 @@
 #include <QRadioButton>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QFontDatabase>
 #include "calculation.h"
 
 QT_BEGIN_NAMESPACE
@@ -46,6 +47,7 @@ public:
 	void initMenu();
 	void initBody();
 	void initCmdInterface();
+	void installFont();
 
 	// 命令
 	void setLoadImg4Dir(const WorkFunction& command)
@@ -178,6 +180,8 @@ private:
 	ptr<QMenuBar> titleMenuBar;
 	ptr<QLabel> imgLabel;
 	ptr<QLabel> latexLabel;
+	ptr<QLabel> globalFunctionalZoneLabel;
+	ptr<QLabel> formulaDealerZoneLabel;
 	ptr<QPlainTextEdit> latexEditor;
 	ptr<QTimer> timer;
 	ptr<QStatusBar> statusBar;
@@ -239,13 +243,16 @@ private:
 	void displayErrorMsg(std::string errorMsg);
 	
 	// Font
+	/*
 	QFont textNormal = QFont("Courier New", 14, QFont::Normal, false);
 	QFont textBold = QFont("Courier New", 14, QFont::Bold, false);
 	QFont titleBold = QFont("Courier New", 22, QFont::Bold, false);
 	QFont menuNormal = QFont("微软雅黑", 10, QFont::Normal, false);
 	QFont msgNormal = QFont("Courier New", 10, QFont::Normal, false);
+	*/
 
 	// StyleSheet
+	/*
 	const QString whiteBackground = "background: white;";
 	const QString lightBlueBackground = "background: #7BD9D2; ";
 	const QString lightDarkBackground = "background: #2E323A;";
@@ -258,5 +265,5 @@ private:
 	const QString noBottomBorder = "border-bottom: 0px;";
 
 	const QString textFontSize = "font-size: 14px";
-
+	*/
 };

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _STYLE_SHEET_H_
+#define _STYLE_SHEET_H_
+
 #include <QWidget>
 #include <Windows.h>
 #include <iostream>
@@ -26,3 +28,33 @@ inline QSize getAdaptedSize(QSize size)
 {
 	return getAdaptedSize(size.width(), size.height());
 }
+
+
+extern const QString whiteBackground;
+extern const QString whiteBackground;
+extern const QString lightBlueBackground;
+extern const QString lightDarkBackground;
+extern const QString silverBackground;
+extern const QString background4Img;
+
+extern const QString whiteWords;
+extern const QString redWords;
+extern const QString blackWords;
+
+extern const QString blackBorder2Px;
+extern const QString noBottomBorder;
+
+// extern QString textFontSize;
+
+extern QString ENGFont;
+extern QString CHNFont;
+
+extern QFont textNormal;
+extern QFont textBold;
+extern QFont titleBold;
+extern QFont titleBoldCHN;
+extern QFont menuNormal;
+extern QFont msgNormal;
+extern QFont labelTextNormal;
+extern QFont labelTextNormalCHN;
+#endif

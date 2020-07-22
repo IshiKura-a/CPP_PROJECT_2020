@@ -12,6 +12,8 @@ View::View(QWidget *parent)
     titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
     imgLabel = ptr<QLabel>(ui->imgLabel);
     latexLabel = ptr<QLabel>(ui->latexLabel);
+    globalFunctionalZoneLabel = ptr<QLabel>(ui->globalFunctionalZoneLabel);
+    formulaDealerZoneLabel = ptr<QLabel>(ui->formulaDealerZoneLabel);
     
     
     
@@ -34,7 +36,7 @@ View::~View()
 
 void View::initQLayout()
 {
-
+    installFont();
     screenSize = getAdaptedSize(960, 600);
     imgSizeLimit = QSize((int)(screenSize.width() * 0.618 * 0.8), (int)(screenSize.height() * 0.4));
     setMinimumSize(screenSize);
@@ -107,6 +109,9 @@ void View::initBody()
     imgLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     gridLayoutBody->addWidget(imgLabel.get(),0,0);
 
+    formulaDealerZoneLabel->setFont(labelTextNormal);
+    globalFunctionalZoneLabel->setFont(labelTextNormal);
+
     if (latexString && !latexString->isEmpty())
     {
         latexEditor->setPlainText(*latexString);
@@ -148,6 +153,7 @@ void View::initCmdInterface()
     connect(loadButton.get(), SIGNAL(clicked()), this, SLOT(onClickLoadButton()));
     // Shortcut: ctrl + o
     loadButton->setShortcut(Qt::CTRL + Qt::Key_O);
+    loadButton->setFont(labelTextNormal);
     
     connect(resetButton.get(), &QPushButton::clicked, [=]() {
         displayMsg("Reset");
@@ -160,15 +166,22 @@ void View::initCmdInterface()
         imgInfo->setText("No image loaded");
         imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     });
+    resetButton->setFont(labelTextNormal);
+
     connect(editButton.get(), &QPushButton::clicked, [=]() {
         latexLabel->setHidden(true);
         latexEditor->setHidden(false); //显示编辑器,隐藏label
     });
+    editButton->setFont(labelTextNormal);
+
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
         onChangeLatexDisplay();
     });
+    applyButton->setFont(labelTextNormal);
+
     connect(downloadButton.get(), SIGNAL(clicked()), this, SLOT(onClickDownloadButton()));
     downloadButton->setShortcut(Qt::CTRL + Qt::Key_S);
+    downloadButton->setFont(labelTextNormal);
 
 	//连接美化按钮
     connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
@@ -184,13 +197,15 @@ void View::initCmdInterface()
             displayErrorMsg("No prettify function!");
         }
     });
+    prettifyButton->setFont(labelTextNormal);
+
 	//连接计算按钮
     connect(calculateButton.get(), &QPushButton::clicked, [=]() {
         displayMsg("Calculate Latex Formula");
         qDebug() << "Calculate Latex Formula";
         onClickCalculateButton();
         });
-	
+    calculateButton->setFont(labelTextNormal);
     
     // 设置图片信息属性
     imgInfo->setReadOnly(true);
@@ -454,6 +469,7 @@ void View::onClickCalculateButton()
 {
 	qDebug() << "打开输入变量窗口";
     calculateInterface->initQLayout(imageData);
+    // calculateInterface->setStyleSheet(background4Img);
 	calculateInterface->show();  
 	calculateInterface->setWindowTitle("输入变量");
 }
@@ -509,4 +525,10 @@ void View::onClickDownloadButton()
         img->save(imgDir.c_str(), imgType.c_str(), 100);
         displayMsg("Save as " + imgDir, 0);
     }
+}
+void View::installFont()
+{
+    // 用什么中文字还没想好
+    // int index = QFontDatabase::addApplicationFont("../view/font/STFANGSO.TTF");
+    // CHNFont = QFontDatabase::applicationFontFamilies(index).at(0);
 }

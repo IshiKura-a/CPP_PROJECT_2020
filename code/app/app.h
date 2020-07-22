@@ -13,6 +13,7 @@ private:
 public:
 	App()
 	{
+
 		view = std::make_shared<View>();
 		viewModel = std::make_shared<ViewModel>();
 		model = std::make_shared<Model>();

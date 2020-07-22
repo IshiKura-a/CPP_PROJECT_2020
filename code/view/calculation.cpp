@@ -23,13 +23,36 @@ Calculation::Calculation(QWidget *parent)
     bitLabel = ptr<QLabel>(ui->bitLabel);
     precisionLabel = ptr<QLabel>(ui->precisionLabel);
     varValSheetTable = ptr<QTableWidget>(ui->varValSheetTable);
+    gridLayout = ptr<QGridLayout>(ui->gridLayout);
 }
 
 void Calculation::initQLayout(ptr<const QByteArray> imageData)
 {
     static int initCount = 0;
+
+    setMinimumSize(getAdaptedSize(960,600));
     imgLabel->setMargin(0);
     setLatexFormulaImage(imageData);
+
+    // style setting
+    imgLabel->setStyleSheet(whiteBackground + blackBorder2Px);
+    titleLabel->setFont(titleBoldCHN);
+    varLabel->setFont(labelTextNormalCHN);
+    valLabel->setFont(labelTextNormalCHN);
+    answerLabel->setFont(labelTextNormalCHN);
+    precisionLabel->setFont(labelTextNormalCHN);
+    bitLabel->setFont(labelTextNormalCHN);
+
+    varLineEdit->setFont(labelTextNormal);
+    valLineEdit->setFont(labelTextNormal);
+    answerLineEdit->setFont(labelTextNormal);
+    precisionSpinBox->setFont(labelTextNormal);
+
+    addButton->setFont(labelTextNormal);
+    deleteLastButton->setFont(labelTextNormal);
+    computionButton->setFont(labelTextNormal);
+
+    varValSheetTable->setFont(labelTextNormal);
 
     tableRowCount = 0;
     varValSheetTable->setRowCount(0);
