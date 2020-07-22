@@ -47,6 +47,7 @@ void View::initQLayout()
     initMenu();
     initBody();
     engineSelectionInterface->initQLayout();
+    calculateInterface->initQLayout(imageData);
 }
 
 void View::initMenu()
@@ -290,9 +291,9 @@ void View::setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection)
 {
     engineSelectionInterface = iEngineSelection;
 }
-void View::setCalculateInterface(ptr<viewCalculate> iViewCalculate)
+void View::setCalculateInterface(ptr<Calculation> iCalculation)
 {
-    calculateInterface = iViewCalculate;
+    calculateInterface = iCalculation;
 }
 auto View::getImgLabel()
 {
@@ -452,6 +453,7 @@ void View::onClickLoadButton()
 void View::onClickCalculateButton()
 {
 	qDebug() << "打开输入变量窗口";
+    calculateInterface->initQLayout(imageData);
 	calculateInterface->show();  
 	calculateInterface->setWindowTitle("输入变量");
 }

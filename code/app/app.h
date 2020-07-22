@@ -30,7 +30,7 @@ public:
 		view->setTimer(std::make_shared<QTimer>());
 		view->setStatusBar(std::make_shared<QStatusBar>());
 		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
-		view->setCalculateInterface(std::make_shared<viewCalculate>(view.get()));
+		view->setCalculateInterface(std::make_shared<Calculation>());
 
 
 		// view update notification动态绑定

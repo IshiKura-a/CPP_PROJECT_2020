@@ -8,6 +8,7 @@
 using Value = std::variant<int32_t, double_t>;
 using Byte = char;
 using VarValPair = std::pair<std::string, Value>;
+using RawVarValPair = std::pair<std::string, std::string>;
 template <typename T> using ptr = std::shared_ptr<T>;
 
 using EventFunction = std::function<void()>;

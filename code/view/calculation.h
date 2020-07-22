@@ -1,25 +1,25 @@
-#ifndef VIEWCALCULATE_H
-#define VIEWCALCULATE_H
+#pragma once
 
-#include <QMainWindow>
+#include <QWidget>
+#include <QTableWidget>
+#include "ui_calculation.h"
 #include "../common/def.h"
 
-namespace Ui {
-class viewCalculate;
-}
-
-class viewCalculate : public QMainWindow
+class Calculation : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit viewCalculate(QWidget *parent = 0);
+	Calculation(QWidget *parent = Q_NULLPTR);
+	~Calculation(){}
+
+    void initQLayout(ptr<const QByteArray> imageData);
+    void setLatexFormulaImage(ptr<const QByteArray> imageData);
     void setCalculateLatexFormula(WorkFunction command)
     {
         calculateLatexFormula = command;
     }
 
-    ~viewCalculate();
 
 
     // Data-getter & setter setter
@@ -35,7 +35,7 @@ public:
     {
         resultGetter = getter;
     }
-    
+
 
     // callback function
     void varValPairsUpdateNotified()
@@ -48,23 +48,42 @@ public:
         result = resultGetter();
     }
 private slots:
-    void on_btn_Cal_clicked();//æ·»åŠ æ§½å‡½æ•°,å¹¶ä¸”æŠŠæ§½å‡½æ•°å’ŒButtonçš„ä¿¡å·å‡½æ•°å…³è”èµ·æ¥
+    // void on_btn_Cal_clicked();//Ìí¼Ó²Ûº¯Êı,²¢ÇÒ°Ñ²Ûº¯ÊıºÍButtonµÄĞÅºÅº¯Êı¹ØÁªÆğÀ´
 
 private:
-    Ui::viewCalculate *ui;
-    void initQVLayout();
-    void on_lineEdit_returnPressed();
+    Ui::Calculation* ui;
+    
 
+    // data
     ptr<const QVector<VarValPair>> varValPairs;
     ptr<const QString> result;
+
+    // ¿Ø¼ş
+    ptr<QLineEdit> varLineEdit;
+    ptr<QLineEdit> valLineEdit;
+    ptr<QLineEdit> answerLineEdit;
+    ptr<QSpinBox> precisionSpinBox;
+    ptr<QPushButton> addButton;
+    ptr<QPushButton> computionButton;
+    ptr<QPushButton> deleteLastButton;
+    ptr<QLabel> titleLabel;
+    ptr<QLabel> varLabel;
+    ptr<QLabel> valLabel;
+    ptr<QLabel> answerLabel;
+    ptr<QLabel> imgLabel;
+    ptr<QLabel> bitLabel;
+    ptr<QLabel> precisionLabel;
+    ptr<QVBoxLayout> scrollVBoxLayout;
+    ptr<QTableWidget> varValSheetTable;
+    
+    int tableRowCount;
+
 
     Getter<ptr<const QVector<VarValPair>>> varValPairsGetter;
     Setter<const QVector<VarValPair>> varValPairsSetter;
     Getter<ptr<const QString>> resultGetter;
 
-    // åŠ¨æ€ç»‘å®šå‡½æ•°
+    // ¶¯Ì¬°ó¶¨º¯Êı
     WorkFunction calculateLatexFormula;
-
+	
 };
-
-#endif // VIEWCALCULATE_H
