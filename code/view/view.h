@@ -60,10 +60,10 @@ public:
 		renderLatexString = command;
 	}
 
-	void setDisplayLatexFormula(const WorkFunctionNoArg& command)
-	{
-		displayLatexFormula = command;
-  }
+	// void setDisplayLatexFormula(const WorkFunctionNoArg& command)
+	// {
+	//	displayLatexFormula = command;
+  	//}
 	// void setDisplayHelpDocument(const WorkFunctionNoArg& command)
 	//{
 	// displayHelpDocument = command;
@@ -72,12 +72,12 @@ public:
 	{
 		prettifyLatexFormula = command;
 	}
-	/*
+	
 	void setCalculateLatexFormula(WorkFunctionNoArg command)
 	{
 		calculateLatexFormula = command;
 	}
-	*/
+	
 	/******************** function entry ********************/
 
 	void loadImageFromDir(const std::string& file_path)
