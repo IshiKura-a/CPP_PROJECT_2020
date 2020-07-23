@@ -20,7 +20,7 @@ public:
 
     void initQLayout(ptr<QPixmap> latexFormulaPixmap);
     void setLatexFormulaImage(ptr<QPixmap> latexFormulaPixmap);
-    void setCalculateLatexFormula(WorkFunction command)
+    void setCalculateLatexFormula(WorkFunctionNoArg command)
     {
         calculateLatexFormula = command;
     }
@@ -90,6 +90,6 @@ private:
     Getter<ptr<const QString>> resultGetter;
 
     // ¶¯Ì¬°ó¶¨º¯Êý
-    WorkFunction calculateLatexFormula;
+    WorkFunctionNoArg calculateLatexFormula;
 	
 };
