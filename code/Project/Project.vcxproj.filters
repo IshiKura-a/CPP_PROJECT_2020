@@ -152,7 +152,7 @@
       <Filter>Header Files\view</Filter>
     </QtMoc>
     <QtMoc Include="..\view\calculation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\view</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
