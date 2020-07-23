@@ -27,6 +27,7 @@
 #include <QFileDialog>
 #include <QDesktopServices>
 #include <QFontDatabase>
+#include <QBitmap>
 #include "calculation.h"
 
 QT_BEGIN_NAMESPACE
@@ -195,6 +196,9 @@ private:
 	ptr<QPushButton> prettifyButton;
 	ptr<EngineSelection> engineSelectionInterface;
 	ptr<Calculation> calculateInterface;
+
+	// View层数据
+	ptr<QPixmap> latexFormulaPixmap;
 
 	// view model数据对象指针
 

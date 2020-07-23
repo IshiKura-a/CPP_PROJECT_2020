@@ -2,6 +2,10 @@
 
 #include <QWidget>
 #include <QTableWidget>
+#include <QSvgRenderer>
+#include <QPainter>
+#include <QDebug>
+#include <QScrollBar>
 #include "stylesheet.h"
 #include "ui_calculation.h"
 #include "../common/def.h"
@@ -14,8 +18,8 @@ public:
 	Calculation(QWidget *parent = Q_NULLPTR);
 	~Calculation(){}
 
-    void initQLayout(ptr<const QByteArray> imageData);
-    void setLatexFormulaImage(ptr<const QByteArray> imageData);
+    void initQLayout(ptr<QPixmap> latexFormulaPixmap);
+    void setLatexFormulaImage(ptr<QPixmap> latexFormulaPixmap);
     void setCalculateLatexFormula(WorkFunction command)
     {
         calculateLatexFormula = command;

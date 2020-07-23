@@ -1,6 +1,3 @@
-#include <QSvgRenderer>
-#include <QPainter>
-#include <QDebug>
 #include "calculation.h"
 
 Calculation::Calculation(QWidget *parent)
@@ -26,16 +23,44 @@ Calculation::Calculation(QWidget *parent)
     gridLayout = ptr<QGridLayout>(ui->gridLayout);
 }
 
-void Calculation::initQLayout(ptr<const QByteArray> imageData)
+void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
 {
     static int initCount = 0;
 
+    setStyleSheet(background4Img);
+    // must include this to make the whole widget
+    // painted by the picture.
+    setAttribute(Qt::WA_StyledBackground, true);
+    // setAttribute(Qt::)
+    
     setMinimumSize(getAdaptedSize(960,600));
     imgLabel->setMargin(0);
-    setLatexFormulaImage(imageData);
+    setLatexFormulaImage(latexFormulaPixmap);
 
     // style setting
-    imgLabel->setStyleSheet(whiteBackground + blackBorder2Px);
+    imgLabel->setStyleSheet(transparentBackground + blackBorder2Px);
+    titleLabel->setStyleSheet(transparentBackground + whiteWords);
+    varLabel->setStyleSheet(transparentBackground + whiteWords);
+    valLabel->setStyleSheet(transparentBackground + whiteWords);
+    answerLabel->setStyleSheet(transparentBackground + whiteWords);
+    precisionLabel->setStyleSheet(transparentBackground + whiteWords);
+    bitLabel->setStyleSheet(transparentBackground + whiteWords);
+
+    varLineEdit->setStyleSheet(whiteBackground);
+    valLineEdit->setStyleSheet(whiteBackground);
+    answerLineEdit->setStyleSheet(whiteBackground);
+    addButton->setStyleSheet(whiteBackground);
+    deleteLastButton->setStyleSheet(whiteBackground);
+    computionButton->setStyleSheet(whiteBackground);
+
+    varValSheetTable->setStyleSheet(whiteWords);
+    // must include this to ensure the table is transparent
+    // rather than load the background of centeral widget only.
+    varValSheetTable->setAttribute(Qt::WA_TranslucentBackground);
+    varValSheetTable->horizontalHeader()->setStyleSheet(blackWords);
+    varValSheetTable->verticalHeader()->setHidden(true);
+    varValSheetTable->verticalScrollBar()->setStyleSheet(lightDarkBackground);
+
     titleLabel->setFont(titleBoldCHN);
     varLabel->setFont(labelTextNormalCHN);
     valLabel->setFont(labelTextNormalCHN);
@@ -53,6 +78,7 @@ void Calculation::initQLayout(ptr<const QByteArray> imageData)
     computionButton->setFont(labelTextNormal);
 
     varValSheetTable->setFont(labelTextNormal);
+    varValSheetTable->horizontalHeader()->setFont(labelTextBold);
 
     tableRowCount = 0;
     varValSheetTable->setRowCount(0);
@@ -61,6 +87,7 @@ void Calculation::initQLayout(ptr<const QByteArray> imageData)
 
     QStringList header;
     header << "Var" << "Val";
+    
     varValSheetTable->setHorizontalHeaderLabels(header);
 
     answerLineEdit->setReadOnly(true);
@@ -122,58 +149,28 @@ void Calculation::initQLayout(ptr<const QByteArray> imageData)
 
 }
 
-void Calculation::setLatexFormulaImage(ptr<const QByteArray> imageData)
+void Calculation::setLatexFormulaImage(ptr<QPixmap> latexFormulaPixmap)
 {
-    QSvgRenderer* svg = new QSvgRenderer;
-    QImage* img = new QImage;
+    
     int width, height;
 
     // Leave some margin for the pic.
     QSize imgSizeLimit = QSize((int)(imgLabel->size().width() * 0.9),
         (int)(imgLabel->size().height() * 0.9));
 
-    // If imageData is svg-format, the first if will success.
-    // If imageData is jpg/png-format, the second if will be true.
-    // If it's empty, paint it white(to relarge the label).
-    if (svg->load(*imageData))
+    if (latexFormulaPixmap)
     {
-        qDebug() << svg->defaultSize();
-
-        width = svg->defaultSize().width();
-        height = svg->defaultSize().height();
-
-        if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
-        {
-            height = (height * imgSizeLimit.width() / width);
-            width = imgSizeLimit.width();
-        }
-        else
-        {
-            width = (width * imgSizeLimit.height()) / height;
-            height = imgSizeLimit.height();
-        }
-
-
-        QPixmap* pixmap = new QPixmap(QSize(width, height));
-        //img->loadFromData(img_bytes);
-        pixmap->fill(Qt::white);
-        QPainter painter(pixmap);
-        svg->render(&painter);
-
-        imgLabel->setPixmap(*pixmap);
-        imgLabel->setAlignment(Qt::AlignCenter);
-    }
-    else if (img->loadFromData(*imageData))
-    {
-        imgLabel->setPixmap(QPixmap::fromImage(*img, Qt::AutoColor).scaled(QSize(imgSizeLimit),
+        imgLabel->setPixmap(latexFormulaPixmap->scaled(QSize(imgSizeLimit),
             Qt::KeepAspectRatio, Qt::SmoothTransformation));
         imgLabel->setAlignment(Qt::AlignCenter);
     }
     else
     {
+        /*
         QPixmap* tmpPixmap = new QPixmap(631,190);
         tmpPixmap->fill(Qt::white);
         imgLabel->setPixmap(*tmpPixmap);
         qDebug() << imgLabel->size();
+        */
     }
 }
