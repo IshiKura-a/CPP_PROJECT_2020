@@ -200,6 +200,8 @@ void View::initCmdInterface()
         {
             qDebug() << "Prettify";
             displayMsg("Prettify");
+            prettifyLatexFormula();
+            latexEditor->setPlainText(*latexString);
         }
         else
         {
