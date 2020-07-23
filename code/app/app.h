@@ -18,15 +18,6 @@ public:
 		viewModel = std::make_shared<ViewModel>();
 		model = std::make_shared<Model>();
 
-		viewModel->bindModel(model);
-		viewModel->bindFunction();
-
-		view->setRenderLatexString(viewModel->getRenderLatexString());
-		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
-		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
-		// view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
-		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
-
 		// view->setImgLabel(std::make_shared<QLabel>());
 		// view->setLatexLabel(std::make_shared<QLabel>());
 		view->setLatexEditor(std::make_shared<QPlainTextEdit>());
@@ -34,6 +25,18 @@ public:
 		view->setStatusBar(std::make_shared<QStatusBar>());
 		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
 		view->setCalculateInterface(std::make_shared<Calculation>());
+
+		viewModel->bindModel(model);
+		viewModel->bindFunction();
+
+
+		view->setRenderLatexString(viewModel->getRenderLatexString());
+		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
+		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
+		// view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
+		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
+
+		
 
 
 		// view update notification动态绑定
