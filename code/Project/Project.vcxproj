@@ -92,7 +92,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -111,7 +110,6 @@ copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
