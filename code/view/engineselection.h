@@ -19,14 +19,6 @@ public:
 		mathPixRadioButton = ptr<QRadioButton>(ui->mathPixRadioButton);
 	}
 	~EngineSelection(){}
-	inline QSize getAdaptedSize(int width, int height)
-	{
-		int sysWidth = ::GetSystemMetrics(SM_CXSCREEN);
-		int sysHeight = ::GetSystemMetrics(SM_CYSCREEN);
-		int adaptedWidth = (width * sysWidth) / 1536;
-		int adaptedHeight = (height * sysHeight) / 864;
-		return QSize(adaptedWidth, adaptedHeight);
-	}
 	void initQLayout()
 	{
 		setWindowTitle("Select Engine");

@@ -20,8 +20,8 @@
     <ClInclude Include="..\module\JsonParser\JsonParser.h" />
     <ClInclude Include="..\module\XMLparser\XMLparser.h" />
     <ClInclude Include="..\viewmodel\viewmodel.h" />
-    <QtMoc Include="..\view\viewCalculate.h" />
     <QtMoc Include="..\view\engineselection.h" />
+    <QtMoc Include="..\view\calculation.h" />
     <ClInclude Include="..\view\stylesheet.h" />
     <QtMoc Include="..\view\view.h" />
   </ItemGroup>
@@ -35,15 +35,15 @@
     <ClCompile Include="..\module\JsonParser\JsonParser.cpp" />
     <ClCompile Include="..\module\XMLparser\XMLparser.cpp" />
     <ClCompile Include="..\viewmodel\viewmodel.cpp" />
+    <ClCompile Include="..\view\calculation.cpp" />
     <ClCompile Include="..\view\engineselection.cpp" />
     <ClCompile Include="..\view\stylesheet.cpp" />
     <ClCompile Include="..\view\view.cpp" />
-    <ClCompile Include="..\view\viewCalculate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="..\view\calculation.ui" />
     <QtUic Include="..\view\engineselection.ui" />
     <QtUic Include="..\view\view.ui" />
-    <QtUic Include="..\view\viewCalculate.ui" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0879F828-F8D9-4698-B411-05FD27AF4C8F}</ProjectGuid>
@@ -86,10 +86,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <IncludePath>$(SolutionDir)..\include;$(SolutionDir)..\include\third-party;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)..\include;C:\rapidjson\include;C:\curl\include;D:\curl\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\curl\lib;D:\curl\lib$(SolutionDir)..\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -108,9 +111,11 @@ copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)"
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\view;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>CppCurl.lib;libcurl.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <QtUic />
     <PreLinkEvent>
@@ -130,7 +135,7 @@ copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)"
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>msvc2019_64</QtInstall>
-    <QtModules>core;network;gui;svg;widgets</QtModules>
+    <QtModules>core;gui;network;svg;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">

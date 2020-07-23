@@ -13,6 +13,7 @@ private:
 public:
 	App()
 	{
+
 		view = std::make_shared<View>();
 		viewModel = std::make_shared<ViewModel>();
 		model = std::make_shared<Model>();
@@ -23,7 +24,7 @@ public:
 		view->setRenderLatexString(viewModel->getRenderLatexString());
 		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getLoadImg4Dir());
-		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
+		// view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
 
 		// view->setImgLabel(std::make_shared<QLabel>());
@@ -32,6 +33,7 @@ public:
 		view->setTimer(std::make_shared<QTimer>());
 		view->setStatusBar(std::make_shared<QStatusBar>());
 		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
+		view->setCalculateInterface(std::make_shared<Calculation>());
 
 
 		// view update notification动态绑定

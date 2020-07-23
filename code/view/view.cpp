@@ -7,11 +7,13 @@ View::View(QWidget *parent)
     , ui(new Ui::View)
 {
     ui->setupUi(this);
-    setWindowTitle("latex recognition and calculation");
+    setWindowTitle("Welcome!");
     gridLayoutBody = ptr<QGridLayout>(ui->gridLayoutBody);
     titleMenuBar = ptr<QMenuBar>(ui->titleMenuBar);
     imgLabel = ptr<QLabel>(ui->imgLabel);
     latexLabel = ptr<QLabel>(ui->latexLabel);
+    globalFunctionalZoneLabel = ptr<QLabel>(ui->globalFunctionalZoneLabel);
+    formulaDealerZoneLabel = ptr<QLabel>(ui->formulaDealerZoneLabel);
     
     
     
@@ -24,6 +26,7 @@ View::View(QWidget *parent)
     prettifyButton = ptr<QPushButton>(ui->prettifyButton);
 
     imgInfo = ptr<QTextEdit>(ui->imgInfo);
+    latexFormulaPixmap = std::make_shared<QPixmap>(getAdaptedSize(580, 286));
 }
 
 View::~View()
@@ -33,7 +36,7 @@ View::~View()
 
 void View::initQLayout()
 {
-
+    installFont();
     screenSize = getAdaptedSize(960, 600);
     imgSizeLimit = QSize((int)(screenSize.width() * 0.618 * 0.8), (int)(screenSize.height() * 0.4));
     setMinimumSize(screenSize);
@@ -46,22 +49,28 @@ void View::initQLayout()
     initMenu();
     initBody();
     engineSelectionInterface->initQLayout();
+    // calculateInterface->initQLayout(latexFormulaPixmap);
 }
 
 void View::initMenu()
 {
     titleMenuBar->setFont(menuNormal);
+    titleMenuBar->setStyleSheet(whiteWords);
 
     QMenu* file;
     file = (titleMenuBar->addMenu("文件"));
 
-    // 设置文件菜单下有导入、关闭功能
-    QAction* actLoad = (file->addAction("导入"));
+    // 设置文件菜单下有导入、下载、关闭功能
+    QAction* actLoad = (file->addAction("导入\tCtrl O"));
     actLoad->setFont(menuNormal);
     connect(actLoad, SIGNAL(triggered()), SLOT(onClickLoadButton()));
 
-    QAction* actExit = (file->addAction("关闭"));
+    QAction* actDownload = (file->addAction("下载\tCtrl S"));
+    connect(actDownload, SIGNAL(triggered()), SLOT(onClickDownloadButton()));
+
+    QAction* actExit = (file->addAction("关闭\tEsc"));
     actExit->setFont(menuNormal);
+    actExit->setShortcut(Qt::Key_Escape);
     connect(actExit, &QAction::triggered, [=]() {
         exit(0);
         qDebug() << "Quit";
@@ -82,34 +91,30 @@ void View::initMenu()
     QAction* actHelp = (titleMenuBar->addAction("帮助"));
     actHelp->setFont(menuNormal);
     connect(actHelp, &QAction::triggered, [=]() {
-
-        if (displayHelpDocument)
-        {
-            qDebug() << "Help";
-            displayMsg("Help");
-            displayHelpDocument();
-        }
-        else
-        {
-            qDebug() << "No help available.";
-            displayErrorMsg("No help available!");
-        }
-
+        displayMsg("Help");
+        QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/IshiKura-a/CPP_PROJECT_2020")));
+        
         });
 
 }
 
 void View::initBody()
 {
+    setStyleSheet(background4Img);
     gridLayoutBody->setContentsMargins(0, 0, 0, 0);
     gridLayoutBody->setVerticalSpacing(0);
-    imgLabel->setStyleSheet(lightBlueBackground + whiteWords + blackBorder2Px + noBottomBorder);
+    imgLabel->setStyleSheet(whiteBackground + blackWords + blackBorder2Px + noBottomBorder);
     imgLabel->setText("No image loaded");
     imgLabel->setAlignment(Qt::AlignCenter);
     imgLabel->setFont(titleBold);
     // imgLabel->setHidden(true);
     imgLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     gridLayoutBody->addWidget(imgLabel.get(),0,0);
+
+    formulaDealerZoneLabel->setFont(labelTextNormal);
+    formulaDealerZoneLabel->setStyleSheet(transparentBackground + whiteWords);
+    globalFunctionalZoneLabel->setFont(labelTextNormal);
+    globalFunctionalZoneLabel->setStyleSheet(transparentBackground + whiteWords);
 
     if (latexString && !latexString->isEmpty())
     {
@@ -122,6 +127,7 @@ void View::initBody()
         qDebug() << "latexEditor is empty.";
     }
     latexEditor->setFont(textNormal);
+    latexEditor->setStyleSheet(transparentBackground + whiteWords);
 
     latexEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     latexEditor->setHidden(true);
@@ -130,7 +136,7 @@ void View::initBody()
     gridLayoutBody->addWidget(latexEditor.get(), 1, 0);
 
 
-    latexLabel->setStyleSheet(whiteBackground + blackBorder2Px);
+    latexLabel->setStyleSheet(transparentBackground + blackBorder2Px + whiteWords);
     latexLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     latexLabel->setText("No formula to render");
     latexLabel->setFont(titleBold);
@@ -150,7 +156,10 @@ void View::initCmdInterface()
 {
     // 绑定按钮事件
     connect(loadButton.get(), SIGNAL(clicked()), this, SLOT(onClickLoadButton()));
-
+    // Shortcut: ctrl + o
+    loadButton->setShortcut(Qt::CTRL + Qt::Key_O);
+    loadButton->setFont(labelTextNormal);
+    loadButton->setStyleSheet(whiteBackground + blackWords);
     
     connect(resetButton.get(), &QPushButton::clicked, [=]() {
         displayMsg("Reset");
@@ -160,55 +169,30 @@ void View::initCmdInterface()
         latexLabel->setText("No formula to render");
         latexEditor->clear();
         setLatexString("");
+        imgInfo->setText("No image loaded");
+        imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
     });
+    resetButton->setFont(labelTextNormal);
+    resetButton->setStyleSheet(whiteBackground + blackWords);
+
     connect(editButton.get(), &QPushButton::clicked, [=]() {
         latexLabel->setHidden(true);
         latexEditor->setHidden(false); //显示编辑器,隐藏label
     });
+    editButton->setFont(labelTextNormal);
+    editButton->setStyleSheet(whiteBackground + blackWords);
+
     connect(applyButton.get(), &QPushButton::clicked, this, [=]() {
         onChangeLatexDisplay();
     });
-    connect(downloadButton.get(), &QPushButton::clicked, [=]() {
-        std::string imgDir = QFileDialog::getSaveFileName(
-            NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
-        if (imgDir.empty())
-        {
-            displayErrorMsg("Save aborted!");
-            return;
-        }
+    applyButton->setFont(labelTextNormal);
+    applyButton->setStyleSheet(whiteBackground + blackWords);
 
-        const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
+    connect(downloadButton.get(), SIGNAL(clicked()), this, SLOT(onClickDownloadButton()));
+    downloadButton->setShortcut(Qt::CTRL + Qt::Key_S);
+    downloadButton->setFont(labelTextNormal);
+    downloadButton->setStyleSheet(whiteBackground + blackWords);
 
-        
-        displayMsg("Save as " + imgDir, 0);
-        qDebug() << imgType.c_str();
-
-        QSvgRenderer* svg = new QSvgRenderer;
-        QImage* img = new QImage;
-        int cnt = 0;
-        do {
-            if (cnt++ >= 2)
-            {
-                displayErrorMsg(imageData->constData());
-                return;
-            }
-            renderLatexString(imgType);
-
-            qDebug() << imageData->isEmpty();
-            qDebug() << imageData->constData();
-            
-        } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
-
-        if (imgType == "svg")
-        {
-            //  TO DO
-            // svg->load()
-        }
-        else
-        {
-            img->save(imgDir.c_str(), imgType.c_str(), 100);
-        }
-    });
 	//连接美化按钮
     connect(prettifyButton.get(), &QPushButton::clicked, [=]() {
         // TO DO
@@ -223,93 +207,113 @@ void View::initCmdInterface()
             displayErrorMsg("No prettify function!");
         }
     });
+    prettifyButton->setFont(labelTextNormal);
+    prettifyButton->setStyleSheet(whiteBackground + blackWords);
+
 	//连接计算按钮
-    connect(calculateButton.get(), &QPushButton::clicked, this,&View::onClickCalculateButton);
-	
+    connect(calculateButton.get(), &QPushButton::clicked, [=]() {
+
+        if (imageData->isEmpty())
+        {
+            displayErrorMsg("No formula to calculate!");
+        }
+        else
+        {
+            displayMsg("Calculate Latex Formula");
+            qDebug() << "Calculate Latex Formula";
+            onClickCalculateButton();
+        }
+        });
+    calculateButton->setFont(labelTextNormal);
+    calculateButton->setStyleSheet(whiteBackground + blackWords);
     
     // 设置图片信息属性
     imgInfo->setReadOnly(true);
     imgInfo->setText("No image loaded");
     imgInfo->setFont(textNormal);
+    imgInfo->setStyleSheet(whiteBackground + blackWords);
     imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 
 }
 
 void View::onChangeLatexFormula()
 {
-    const std::string imgType = "svg";
-    if (true)
+    const std::string imgType = "png";
+    qDebug() << "Text changed." + latexEditor->document()->toPlainText();
+    displayMsg("Text changed");
+    setLatexString(latexEditor->document()->toPlainText());
+
+
+    if (renderLatexString)
     {
-        qDebug() << "Text changed." + latexEditor->document()->toPlainText();
-        displayMsg("Text changed");
-        setLatexString(latexEditor->document()->toPlainText());
+        qDebug() << "Render latex formula";
+        // displayMsg("Rendering",0);
 
-        
-        if (renderLatexString)
-        {
-            qDebug() << "Render latex formula";
-            // displayMsg("Rendering",0);
+        QSvgRenderer* svg = new QSvgRenderer;
+        QImage* img = new QImage;
+        int width, height;
 
-            QSvgRenderer* svg = new QSvgRenderer;
-            QImage* img = new QImage;
-            int width, height;
-
-            int cnt = 0;
-            do {
-                if (++cnt >= 2)
-                {
-                    displayErrorMsg(imageData->constData());
-                    return;
-                }
-                renderLatexString(imgType);
-
-                qDebug() << imageData->isEmpty();
-                qDebug() << imageData->constData();
-
-            } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
-            
-            if (imgType == "svg")
+        int cnt = 0;
+        do {
+            if (cnt++ >= 2)
             {
-                displayMsg("Success!");
-                qDebug() << svg->defaultSize();
+                displayErrorMsg(imageData->constData());
+                return;
+            }
+            renderLatexString(imgType);
 
-                width = svg->defaultSize().width();
-                height = svg->defaultSize().height();
+            qDebug() << imageData->isEmpty();
+            qDebug() << imageData->constData();
 
-                if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
-                {
-                    height = (height * imgSizeLimit.width() / width);
-                    width = imgSizeLimit.width();
-                }
-                else
-                {
-                    width = (width * imgSizeLimit.height()) / height;
-                    height = imgSizeLimit.height();
-                }
+        } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
 
-                QPixmap* pixmap = new QPixmap(QSize(width,height));
-                //img->loadFromData(img_bytes);
-                pixmap->fill(Qt::white);
-                QPainter painter(pixmap);
-                svg->render(&painter);
+        if (imgType == "svg")
+        {
+            displayMsg("Success!");
+            qDebug() << svg->defaultSize();
 
-                latexLabel->setPixmap(*pixmap);
-                latexLabel->setAlignment(Qt::AlignCenter);
+            width = svg->defaultSize().width();
+            height = svg->defaultSize().height();
+
+            if ((height * imgSizeLimit.width() / width) <= imgSizeLimit.height())
+            {
+                height = (height * imgSizeLimit.width() / width);
+                width = imgSizeLimit.width();
             }
             else
-            {   
-                displayMsg("Success!");
-                latexLabel->setPixmap(QPixmap::fromImage(*img, Qt::AutoColor).scaled(QSize(imgSizeLimit),
-                    Qt::KeepAspectRatio, Qt::SmoothTransformation));
-                // img->save("D:/xxx.png ", imgType.c_str(), 100);
+            {
+                width = (width * imgSizeLimit.height()) / height;
+                height = imgSizeLimit.height();
             }
-            
+
+            // Here's a segmental fault remaining to be solved.
+            latexFormulaPixmap->fill(Qt::transparent);
+            QPainter painter(latexFormulaPixmap.get());
+            svg->render(&painter);
+
+            *latexFormulaPixmap = latexFormulaPixmap->scaled(QSize(width, height));
+            qDebug() << latexFormulaPixmap->size();
+            // Current background is dark, inverse svg to white words.
+            inversePixmapFontColor(latexFormulaPixmap);
+            latexLabel->setPixmap(*latexFormulaPixmap);
+            latexLabel->setAlignment(Qt::AlignCenter);
         }
         else
         {
-            displayErrorMsg("No latex formula display function!");
-            qDebug() << "No latex formula display";
+            displayMsg("Success!");
+            *latexFormulaPixmap = QPixmap::fromImage(*img);
+            inversePixmapFontColor(latexFormulaPixmap);
+            qDebug() << img->pixelColor(0, 48);
+            latexLabel->setPixmap(latexFormulaPixmap->scaled(QSize(imgSizeLimit),
+                Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            // img->save("D:/xxx.png ", imgType.c_str(), 100);
         }
+
+    }
+    else
+    {
+        displayErrorMsg("No latex formula display function!");
+        qDebug() << "No latex formula display";
     }
 }
 
@@ -328,6 +332,10 @@ void View::setTimer(ptr<QTimer> iTimer)
 void View::setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection)
 {
     engineSelectionInterface = iEngineSelection;
+}
+void View::setCalculateInterface(ptr<Calculation> iCalculation)
+{
+    calculateInterface = iCalculation;
 }
 auto View::getImgLabel()
 {
@@ -352,6 +360,10 @@ auto View::getTimer()
 auto View::getEngineSelectionInterface()
 {
     return engineSelectionInterface;
+}
+auto View::getCalculateInterface()
+{
+    return calculateInterface;
 }
 
 auto View::getGridLayoutBody()
@@ -452,13 +464,15 @@ void View::displayErrorMsg(std::string errorMsg)
 
 void View::onClickLoadButton()
 {
-    imgLabel->setText("               ");
-    latexLabel->setText("               ");
     std::string imgDir = QFileDialog::getOpenFileName(
         NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
 
     if (loadImg4Dir && !imgDir.empty())
     {
+        imgLabel->setText("               ");
+        latexLabel->setText("               ");
+        imgInfo->setText(imgDir.c_str());
+        imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         qDebug() << "Load";
         loadImg4Dir(imgDir);
         displayMsg("Load " + imgDir);
@@ -481,7 +495,66 @@ void View::onClickLoadButton()
 void View::onClickCalculateButton()
 {
 	qDebug() << "打开输入变量窗口";
-	viewCalculate* d = new viewCalculate();
-	d->show();  
-	d->setWindowTitle("输入变量");
+    calculateInterface->initQLayout(latexFormulaPixmap);
+	calculateInterface->show();  
+	calculateInterface->setWindowTitle("输入变量");
+}
+
+void View::onClickDownloadButton()
+{
+    std::string imgDir = QFileDialog::getSaveFileName(
+        NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
+    if (imgDir.empty())
+    {
+        displayErrorMsg("Download aborted!");
+        return;
+    }
+
+    const std::string imgType = imgDir.substr(imgDir.find_last_of(".") + 1);
+
+    qDebug() << imgType.c_str();
+
+    QSvgRenderer* svg = new QSvgRenderer;
+    QImage* img = new QImage;
+    int cnt = 0;
+    do {
+        if (cnt++ >= 2)
+        {
+            displayErrorMsg(imageData->constData());
+            return;
+        }
+        renderLatexString(imgType);
+
+        qDebug() << imageData->isEmpty();
+        qDebug() << imageData->constData();
+
+    } while (!(imgType == "svg" && svg->load(*imageData)) && !(imgType != "svg" && img->loadFromData(*imageData)));
+
+    if (imgType == "svg")
+    {
+        QFile svgFile(imgDir.c_str());
+        if (!svgFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            displayErrorMsg("Fail to open file: " + imgDir);
+            qDebug() << QString("Fail to open file: " + QString(imgDir.c_str()));
+        }
+        else
+        {
+            QTextStream svgStream(&svgFile);
+            svgStream << *imageData;
+            displayMsg("Save as " + imgDir, 0);
+        }
+        svgFile.close();
+    }
+    else
+    {
+        img->save(imgDir.c_str(), imgType.c_str(), 100);
+        displayMsg("Save as " + imgDir, 0);
+    }
+}
+void View::installFont()
+{
+    // 用什么中文字还没想好
+    int index = QFontDatabase::addApplicationFont("../../dependency/font/NotoSerifSC-Regular.otf");
+    CHNFont = QFontDatabase::applicationFontFamilies(index).at(0);
 }
