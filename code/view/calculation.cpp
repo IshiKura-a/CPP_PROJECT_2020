@@ -136,7 +136,7 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
             if (calculateLatexFormula)
             {
                 qDebug() << "Calculate Latex Formula";
-                calculateLatexFormula(varValData);
+                // calculateLatexFormula(varValData);
             }
             else
             {
