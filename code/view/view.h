@@ -75,7 +75,7 @@ public:
 	
 	void setCalculateLatexFormula(WorkFunctionNoArg command)
 	{
-		calculateLatexFormula = command;
+		calculateInterface->setCalculateLatexFormula(command);
 	}
 	
 	/******************** function entry ********************/
