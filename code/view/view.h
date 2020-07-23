@@ -59,10 +59,15 @@ public:
 	{
 		renderLatexString = command;
 	}
+
 	void setDisplayLatexFormula(const WorkFunctionNoArg& command)
 	{
 		displayLatexFormula = command;
-	}
+  }
+	// void setDisplayHelpDocument(const WorkFunctionNoArg& command)
+	//{
+	// displayHelpDocument = command;
+	// }
 	void setPrettifyLatexFormula(WorkFunctionNoArg command)
 	{
 		prettifyLatexFormula = command;
@@ -222,7 +227,7 @@ private:
 
 	// 用于动态绑定view model
 	//有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg
-	WorkFunctionNoArg displayLatexFormula;
+	//WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
 	// WorkFunctionNoArg applyLatexFormulaChanges;

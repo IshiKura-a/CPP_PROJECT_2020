@@ -99,6 +99,9 @@
     <ClInclude Include="..\view\stylesheet.h">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\module\HelpManual.h">
+      <Filter>Header Files\module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\app\app.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="..\view\calculation.cpp">
       <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\module\HelpManual.cpp">
+      <Filter>Source Files\module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

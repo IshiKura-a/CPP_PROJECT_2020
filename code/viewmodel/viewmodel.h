@@ -34,14 +34,16 @@ private:
 	// 用于view的动态绑定
 	// WorkFunction: 参数为std::any
 	// WorkFunctionNoArg: 参数为void
+	// WorkFunctionWithRetVal: 参数为void, 返回std::any
 	// TODO
 
 	WorkFunctionNoArg getFormulaResult;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
-	WorkFunctionNoArg changeLatexFormula;
-	WorkFunctionNoArg displayHelpDocument;
-	WorkFunctionNoArg changeLatexDisplay;
+	//WorkFunctionNoArg changeLatexFormula;
+	WorkFunctionWithRetVal displayHelpDocument;
+	//WorkFunctionNoArg changeLatexDisplay;
+	WorkFunctionNoArg prettifyFormula;
 
 public:
 
@@ -59,13 +61,17 @@ public:
 	{
 		return loadImg4Dir;
 	}
-	auto getChangeLatexFormula() const
-	{
-		return changeLatexFormula;
-	}
+	//auto getChangeLatexFormula() const
+	//{
+		//return changeLatexFormula;
+	//}
 	auto getDisplayHelpDocument() const
 	{
 		return displayHelpDocument;
+	}
+	auto getPrettifyFormula() const
+	{
+		return prettifyFormula;
 	}
 
 	/******************** data getter and setter ********************/
