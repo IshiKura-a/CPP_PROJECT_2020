@@ -26,7 +26,7 @@ View::View(QWidget *parent)
     prettifyButton = ptr<QPushButton>(ui->prettifyButton);
 
     imgInfo = ptr<QTextEdit>(ui->imgInfo);
-    latexFormulaPixmap = std::make_shared<QPixmap>(getAdaptedSize(960, 600));
+    latexFormulaPixmap = std::make_shared<QPixmap>(getAdaptedSize(580, 286));
 }
 
 View::~View()
@@ -291,7 +291,7 @@ void View::onChangeLatexFormula()
             QPainter painter(latexFormulaPixmap.get());
             svg->render(&painter);
 
-            latexFormulaPixmap->scaled(QSize(width, height));
+            *latexFormulaPixmap = latexFormulaPixmap->scaled(QSize(width, height));
             qDebug() << latexFormulaPixmap->size();
             // Current background is dark, inverse svg to white words.
             inversePixmapFontColor(latexFormulaPixmap);
