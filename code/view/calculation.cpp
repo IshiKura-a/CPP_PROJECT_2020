@@ -119,13 +119,13 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
 
         // To compute, generate a QVector temporarily.
         connect(computionButton.get(), &QPushButton::clicked, [=]() {
-            QVector<RawVarValPair>* varValData = new QVector<RawVarValPair>;
+            QVector<VarValPair>* varValData = new QVector<VarValPair>;
 
             int i;
             
             for (i = 0; i < tableRowCount; i++)
             {
-                RawVarValPair varValItem = std::make_pair(
+                VarValPair varValItem = std::make_pair(
                     varValSheetTable->item(i, 0)->text().toStdString(),
                     varValSheetTable->item(i, 1)->text().toStdString());
 

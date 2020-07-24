@@ -36,10 +36,19 @@ private:
 	// WorkFunctionNoArg: 参数为void
 	// WorkFunctionWithRetVal: 参数为void, 返回std::any
 
+	// 使用model中的variableValuePairs, 计算表达式树结果
+	// 更新model的result
 	WorkFunctionNoArg getFormulaResult;
+	
+	// 渲染model中的latexString, 并更新model的imageData
+	// @param: std::string
+	// 设定渲染结果的格式, 支持png,gif,svg
 	WorkFunction renderLatexString;
+	
 	WorkFunction getLatexStringFromImageFile;
+	
 	WorkFunctionWithRetVal displayHelpDocument;
+	
 	WorkFunctionNoArg prettifyFormula;
 
 public:
