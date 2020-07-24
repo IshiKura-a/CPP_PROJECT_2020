@@ -26,6 +26,10 @@ void ViewModel::bindFunction()
 	{
 		model->getLatexStringFromImage(std::any_cast<std::string>(file_path));
 	};
+	getLatexStringFromImageFileB = [this](std::any file_path)
+	{
+		model->getLatexStringFromImage(std::any_cast<std::string>(file_path), false);
+	};
 	renderLatexString = [this](std::any image_format)
 	{
 		model->renderLatexString(std::any_cast<std::string>(image_format));

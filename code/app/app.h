@@ -33,6 +33,7 @@ public:
 		view->setRenderLatexString(viewModel->getRenderLatexString());
 		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getGetLatexStringFromImageFile());
+		view->setLoadImg4DirB(viewModel->getGetLatexStringFromImageFileB());
 		// view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
 

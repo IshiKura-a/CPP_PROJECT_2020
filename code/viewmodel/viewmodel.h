@@ -45,10 +45,23 @@ private:
 	// 设定渲染结果的格式, 支持png,gif,svg
 	WorkFunction renderLatexString;
 	
+	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
+	// @param: std::string file_path
+	// 需要读取的图片路径
 	WorkFunction getLatexStringFromImageFile;
+
+	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
+	// @param: std::string file_path
+	// 需要读取的图片路径
+	// 使用baidu的API
+	WorkFunction getLatexStringFromImageFileB;
 	
+	// 获取帮助信息
+	// @return:
+	// 帮助信息的string
 	WorkFunctionWithRetVal displayHelpDocument;
-	
+
+	// 将latex string中多余的空格删除
 	WorkFunctionNoArg prettifyFormula;
 
 public:
@@ -66,6 +79,10 @@ public:
 	auto getGetLatexStringFromImageFile() const
 	{
 		return getLatexStringFromImageFile;
+	}
+	auto getGetLatexStringFromImageFileB() const
+	{
+		return getLatexStringFromImageFileB;
 	}
 	auto getDisplayHelpDocument() const
 	{
