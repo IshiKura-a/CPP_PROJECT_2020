@@ -9,6 +9,7 @@
 #include "stylesheet.h"
 #include "ui_calculation.h"
 #include "../common/def.h"
+#include <sstream>
 
 class Calculation : public QWidget
 {

@@ -68,10 +68,10 @@ public:
 	// {
 	//	displayLatexFormula = command;
   	//}
-	// void setDisplayHelpDocument(const WorkFunctionNoArg& command)
-	//{
-	// displayHelpDocument = command;
-	// }
+	void setDisplayHelpDocument(const WorkFunctionWithRetVal& command)
+	{
+		displayHelpDocument = command;
+	}
 	void setPrettifyLatexFormula(WorkFunctionNoArg command)
 	{
 		prettifyLatexFormula = command;
@@ -139,6 +139,7 @@ public:
 	void setTimer(ptr<QTimer> iTimer);
 	void setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection);
 	void setCalculateInterface(ptr<Calculation> iViewCalculate);
+	void setHelpMsgBox(ptr<QMessageBox> iMessageBox);
 
 	auto getImgLabel();
 	auto getLatexLabel();
@@ -150,6 +151,7 @@ public:
 	auto getStatusBar();
 	auto getEngineSelectionInterface();
 	auto getCalculateInterface();
+	auto getHelpMsgBox();
 	
 	/******************** callback function ********************/
 
@@ -205,6 +207,7 @@ private:
 	ptr<QPushButton> prettifyButton;
 	ptr<EngineSelection> engineSelectionInterface;
 	ptr<Calculation> calculateInterface;
+	ptr<QMessageBox> helpMsgBox;
 
 	// View层数据
 	ptr<QPixmap> latexFormulaPixmap;
@@ -230,11 +233,12 @@ private:
 	*/
 
 	// 用于动态绑定view model
-	//有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg
-	//WorkFunctionNoArg displayLatexFormula;
+	// 有参数的函数定义为WorkFunction，无参数的函数定义为WorkFunctionNoArg
+	// WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
 	WorkFunction loadImg4DirB;
+	WorkFunctionWithRetVal displayHelpDocument;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;
 	// WorkFunctionNoArg calculateLatexFormula;  
@@ -256,28 +260,4 @@ private:
 	// msg: 提示错误消息，消息常驻
 	void displayErrorMsg(std::string errorMsg);
 	
-	// Font
-	/*
-	QFont textNormal = QFont("Courier New", 14, QFont::Normal, false);
-	QFont textBold = QFont("Courier New", 14, QFont::Bold, false);
-	QFont titleBold = QFont("Courier New", 22, QFont::Bold, false);
-	QFont menuNormal = QFont("微软雅黑", 10, QFont::Normal, false);
-	QFont msgNormal = QFont("Courier New", 10, QFont::Normal, false);
-	*/
-
-	// StyleSheet
-	/*
-	const QString whiteBackground = "background: white;";
-	const QString lightBlueBackground = "background: #7BD9D2; ";
-	const QString lightDarkBackground = "background: #2E323A;";
-
-	const QString whiteWords = "color: white;";
-	const QString redWords = "color: #FF5555;";
-	const QString blackWords = "color: black;";
-
-	const QString blackBorder2Px = "border: 2px solid black;";
-	const QString noBottomBorder = "border-bottom: 0px;";
-
-	const QString textFontSize = "font-size: 14px";
-	*/
 };

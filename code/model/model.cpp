@@ -62,7 +62,7 @@ void Model::calculateLatexString()
 	RequestManager manager;
 	try
 	{
-		setResult(XMLParser::parseCurlResult(manager->getFormulaResult(applyVarValPairs())));
+		setResult(XMLParser::parseCurlResult(manager->getFormulaResult("0+" + applyVarValPairs())));
 	}
 	catch (std::runtime_error& e)
 	{

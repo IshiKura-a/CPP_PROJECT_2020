@@ -5,12 +5,13 @@ const QString whiteBackgroundSemiTransparent = "background: rgba(255,255,255,0.7
 const QString lightBlueBackground = "background: #7BD9D2;";
 const QString lightDarkBackground = "background: #2E323A;";
 const QString silverBackground = "background: #D4D4D4;";
-const QString background4Img = "QWidget{background-image: url(../../dependency/img/background-1.jpg);}";
+const QString background4Img = "background-image: url(../../dependency/img/background-1.jpg);";
 const QString transparentBackground = "background: transparent;";
 
 const QString whiteWords = "color: white;";
 const QString redWords = "color: #FF5555;";
 const QString blackWords = "color: black;";
+const QString hoverBlackWords = ":selected{color: black;}";
 
 const QString blackBorder2Px = "border: 2px solid black;";
 const QString noBottomBorder = "border-bottom: 0px;";

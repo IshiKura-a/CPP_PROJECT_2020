@@ -25,6 +25,7 @@ public:
 		view->setStatusBar(std::make_shared<QStatusBar>());
 		view->setEngineSelectionInterface(std::make_shared<EngineSelection>(view.get()));
 		view->setCalculateInterface(std::make_shared<Calculation>());
+		view->setHelpMsgBox(std::make_shared<QMessageBox>());
 
 		viewModel->bindModel(model);
 		viewModel->bindFunction();
@@ -34,7 +35,7 @@ public:
 		view->setCalculateLatexFormula(viewModel->getGetFormulaResult());
 		view->setLoadImg4Dir(viewModel->getGetLatexStringFromImageFile());
 		view->setLoadImg4DirB(viewModel->getGetLatexStringFromImageFileB());
-		// view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
+		view->setDisplayHelpDocument(viewModel->getDisplayHelpDocument());
 		view->setPrettifyLatexFormula(viewModel->getPrettifyFormula());
 
 		

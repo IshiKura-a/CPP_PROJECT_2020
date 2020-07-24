@@ -23,6 +23,12 @@ public:
 	{
 		setWindowTitle("Select Engine");
 		setFixedSize(getAdaptedSize(250, 80));
+
+		setStyleSheet(background4Img);
+		setAttribute(Qt::WA_StyledBackground, true);
+
+		baiduRadioButton->setStyleSheet(whiteWords);
+		mathPixRadioButton->setStyleSheet(whiteWords);
 	}
 	bool isMathPix()
 	{

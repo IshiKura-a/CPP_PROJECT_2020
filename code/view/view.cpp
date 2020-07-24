@@ -55,7 +55,8 @@ void View::initQLayout()
 void View::initMenu()
 {
     titleMenuBar->setFont(menuNormal);
-    titleMenuBar->setStyleSheet(whiteWords);
+    titleMenuBar->setStyleSheet(":item" + hoverBlackWords + "QMenu,QMenuBar{" + whiteWords + "}");
+    
 
     QMenu* file;
     file = (titleMenuBar->addMenu("文件"));
@@ -66,6 +67,7 @@ void View::initMenu()
     connect(actLoad, SIGNAL(triggered()), SLOT(onClickLoadButton()));
 
     QAction* actDownload = (file->addAction("下载\tCtrl S"));
+    actDownload->setFont(menuNormal);
     connect(actDownload, SIGNAL(triggered()), SLOT(onClickDownloadButton()));
 
     QAction* actExit = (file->addAction("关闭\tEsc"));
@@ -92,10 +94,26 @@ void View::initMenu()
     actHelp->setFont(menuNormal);
     connect(actHelp, &QAction::triggered, [=]() {
         displayMsg("Help");
-        QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/IshiKura-a/CPP_PROJECT_2020")));
-        
+        helpMsgBox->show();        
         });
 
+    std::string helpText = std::any_cast<std::string>(displayHelpDocument());
+
+    helpMsgBox->setText(helpText.c_str());
+    helpMsgBox->setWindowTitle("Help");
+    helpMsgBox->setStyleSheet(background4Img + whiteWords + "qproperty-alignment: AlignCenter;");
+    helpMsgBox->setFont(textNormal);
+    helpMsgBox->setButtonText(QMessageBox::Ok, "Visit Website");
+    // helpMsgBox->setTextFormat(QTextFormat(QTextFormat::TextVerticalAlignment));
+    helpMsgBox->button(QMessageBox::Ok)->setFont(msgNormal);
+
+    QMargins margin = QMargins();
+    margin.setTop(20);
+    helpMsgBox->setContentsMargins(margin);
+    connect(helpMsgBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]()
+        {
+            QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/IshiKura-a/CPP_PROJECT_2020")));
+        });
 }
 
 void View::initBody()
@@ -339,6 +357,10 @@ void View::setCalculateInterface(ptr<Calculation> iCalculation)
 {
     calculateInterface = iCalculation;
 }
+void View::setHelpMsgBox(ptr<QMessageBox> iMessageBox)
+{
+    helpMsgBox = iMessageBox;
+}
 auto View::getImgLabel()
 {
     return imgLabel;
@@ -366,6 +388,10 @@ auto View::getEngineSelectionInterface()
 auto View::getCalculateInterface()
 {
     return calculateInterface;
+}
+auto View::getHelpMsgBox()
+{
+    return helpMsgBox;
 }
 
 auto View::getGridLayoutBody()
@@ -469,14 +495,17 @@ void View::onClickLoadButton()
     std::string imgDir = QFileDialog::getOpenFileName(
         NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
 
-    if (loadImg4Dir && !imgDir.empty())
+    if (loadImg4Dir && loadImg4DirB && !imgDir.empty())
     {
         imgLabel->setText("               ");
         latexLabel->setText("               ");
         imgInfo->setText(imgDir.c_str());
         imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         qDebug() << "Load";
-        loadImg4Dir(imgDir);
+        if (isMathPix)
+            loadImg4Dir(imgDir);
+        else
+            loadImg4DirB(imgDir);
         displayMsg("Load " + imgDir);
         latexEditor->setPlainText(*latexString);
         

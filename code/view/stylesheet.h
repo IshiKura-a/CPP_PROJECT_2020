@@ -59,6 +59,8 @@ extern const QString background4Img;
 extern const QString whiteWords;
 extern const QString redWords;
 extern const QString blackWords;
+// mouse event: hover, to menu 'selected' is used instead
+extern const QString hoverBlackWords;
 
 extern const QString blackBorder2Px;
 extern const QString noBottomBorder;

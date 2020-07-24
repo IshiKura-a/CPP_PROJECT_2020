@@ -219,9 +219,6 @@ void HTTPRequestManager::downloadRenderedFormula(const std::string& latex_string
 	std::string url_encoded_latex_string = urlEncode(latex_string);
 	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
 
-	WCHAR wurl[1500];
-	swprintf_s(wurl, L"%S", url.c_str());
-	OutputDebugString(wurl);
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -266,10 +263,6 @@ std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string&
 	std::string url_encoded_latex_string = urlEncode(latex_string);
 	std::string url = latex_rendering_request_url + format + ".download?\\dpi{600}" + url_encoded_latex_string;
 
-	WCHAR wurl[1500];
-	swprintf_s(wurl, L"%S", url.c_str());
-	OutputDebugString(wurl);
-
 	CURL* curl = NULL;
 	CURLcode result_code;
 
@@ -303,7 +296,8 @@ std::vector<Byte> HTTPRequestManager::downloadRenderedFormula(const std::string&
 
 std::string HTTPRequestManager::getFormulaResult(const std::string& latex_string)
 {
-	std::string url = formula_calculate_request_url + "?appid=3YG4PV-RWY3K2Y7P8&format=plaintext&includepodid=result&input=" + latex_string;
+	std::string url_encoded_latex_string = urlEncode(latex_string);
+	std::string url = formula_calculate_request_url + "?appid=3YG4PV-RWY3K2Y7P8&format=plaintext&includepodid=result&input=" + url_encoded_latex_string;
 	CURL* curl = NULL;
 	CURLcode result_code;
 

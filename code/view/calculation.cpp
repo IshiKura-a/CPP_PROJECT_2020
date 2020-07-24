@@ -31,7 +31,6 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
     // must include this to make the whole widget
     // painted by the picture.
     setAttribute(Qt::WA_StyledBackground, true);
-    // setAttribute(Qt::)
     
     setMinimumSize(getAdaptedSize(960,600));
     imgLabel->setMargin(0);
@@ -136,6 +135,67 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
             if (calculateLatexFormula)
             {
                 qDebug() << "Calculate Latex Formula";
+                
+                
+                varValPairsSetter(*varValData);
+                calculateLatexFormula();
+                result = resultGetter();
+                // answerLineEdit->setText(*result);
+                
+                // const QString textString = "123";
+                int precision = precisionSpinBox->value();
+               
+                // QString utf8String = QString::fromUtf8(result->toStdString().c_str());
+
+                int i;
+                int indexOfApproxEq = -1;
+                for (i = 0; i < result->size(); i++)
+                {
+                    if ((unsigned short)(result->at(i).unicode()) == 8776)
+                    {
+                        indexOfApproxEq = i;
+                        break;
+                    }
+                }
+                // std::string displayedAnsString = textString.toStdString();
+
+                std::string approxAnsString;
+                std::string analyticAnsString;
+                if (indexOfApproxEq == -1)
+                {
+                    analyticAnsString = "";
+                    approxAnsString = result->toStdString();
+                }
+                else
+                {
+                    analyticAnsString = result->toStdString().substr(0, indexOfApproxEq + 3);
+                    approxAnsString = result->toStdString().substr(indexOfApproxEq + 3);
+                }
+                
+                
+                // test if ans is valid
+                if (true)
+                {
+                    if (precision >= 0)
+                    {
+                        // use stringstream to control precision.
+                        std::stringstream ss;
+                        double ans;
+                        ss << approxAnsString;
+                        ss >> ans;
+
+                        ss.clear();
+                        ss.setf(std::ios::showpoint);
+                        ss.precision(precision);
+                        ss.setf(std::ios::fixed);
+                        ss << ans;
+                        ss >> approxAnsString;
+                        if (approxAnsString.back() == '.')
+                            approxAnsString.pop_back();
+                    }
+                }
+                
+                answerLineEdit->setText(QString(analyticAnsString.c_str()) + QString(approxAnsString.c_str()));
                 // calculateLatexFormula(varValData);
             }
             else
@@ -163,14 +223,5 @@ void Calculation::setLatexFormulaImage(ptr<QPixmap> latexFormulaPixmap)
         imgLabel->setPixmap(latexFormulaPixmap->scaled(QSize(imgSizeLimit),
             Qt::KeepAspectRatio, Qt::SmoothTransformation));
         imgLabel->setAlignment(Qt::AlignCenter);
-    }
-    else
-    {
-        /*
-        QPixmap* tmpPixmap = new QPixmap(631,190);
-        tmpPixmap->fill(Qt::white);
-        imgLabel->setPixmap(*tmpPixmap);
-        qDebug() << imgLabel->size();
-        */
     }
 }
