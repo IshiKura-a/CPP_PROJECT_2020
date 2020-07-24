@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>272</width>
-    <height>219</height>
+    <width>300</width>
+    <height>150</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -20,6 +20,12 @@
    <string>EngineSelection</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
+   <property name="labelAlignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="formAlignment">
+    <set>Qt::AlignCenter</set>
+   </property>
    <property name="horizontalSpacing">
     <number>0</number>
    </property>
@@ -39,7 +45,7 @@
     <number>0</number>
    </property>
    <item row="0" column="1">
-    <layout class="QGridLayout" name="engineSelectionGridLayout" rowstretch="1" columnstretch="5,1,5">
+    <layout class="QGridLayout" name="engineSelectionGridLayout" rowstretch="0" columnstretch="2,1,2">
      <property name="leftMargin">
       <number>50</number>
      </property>
@@ -52,23 +58,10 @@
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QRadioButton" name="baiduRadioButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Baidu</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="2">
       <widget class="QRadioButton" name="mathPixRadioButton">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -81,12 +74,31 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_5">
+     <item row="0" column="0">
+      <widget class="QRadioButton" name="baiduRadioButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
-        <string/>
+        <string>Baidu</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

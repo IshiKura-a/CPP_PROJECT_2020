@@ -31,7 +31,6 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
     // must include this to make the whole widget
     // painted by the picture.
     setAttribute(Qt::WA_StyledBackground, true);
-    // setAttribute(Qt::)
     
     setMinimumSize(getAdaptedSize(960,600));
     imgLabel->setMargin(0);
@@ -136,6 +135,39 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
             if (calculateLatexFormula)
             {
                 qDebug() << "Calculate Latex Formula";
+                
+                /*
+                varValPairsSetter(varValData);
+                calculateLatexFormula();
+                resultGetter();
+                answerLineEdit->setText(*result);
+                */
+                const QString textString = "123";
+                int precision = precisionSpinBox->value();
+                std::string displayedAnsString = textString.toStdString();
+                
+                // test if ans is valid
+                if (true)
+                {
+                    if (precision >= 0)
+                    {
+                        std::stringstream ss;
+                        double ans;
+                        ss << displayedAnsString;
+                        ss >> ans;
+
+                        ss.clear();
+                        ss.setf(std::ios::showpoint);
+                        ss.precision(precision);
+                        ss.setf(std::ios::fixed);
+                        ss << ans;
+                        ss >> displayedAnsString;
+                        if (displayedAnsString.back() == '.')
+                            displayedAnsString.pop_back();
+                    }
+                }
+                
+                answerLineEdit->setText(displayedAnsString.c_str());
                 // calculateLatexFormula(varValData);
             }
             else
