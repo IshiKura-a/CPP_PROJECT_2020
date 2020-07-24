@@ -5,6 +5,11 @@
 #include "../module/HelpManual.h"
 #include <iostream>
 
+bool isOperator(char ch)
+{
+	return !isalnum(ch);
+}
+
 std::string Model::applyVarValPairs()
 {
 	if (varValPairs->empty())
@@ -13,10 +18,22 @@ std::string Model::applyVarValPairs()
 	for (auto& i : *varValPairs)
 	{
 		auto it = str.find_first_of(i.first);
+
 		while (it != str.npos) {
-			str.erase(it, i.first.length());
-			str.insert(it, i.second);
-			it = str.find_first_of(i.first);
+			int prev = it - 1;
+			bool isSubStr = false;
+			if (prev >= 0 && !isOperator(str[prev]))
+				isSubStr = true;
+			else {
+				int aft = it + i.first.size();
+				if (aft < str.size() && !isOperator(str[aft]))
+					isSubStr = true;
+			}
+			if (!isSubStr) {
+				str.erase(it, i.first.length());
+				str.insert(it, i.second);
+			}
+			it = str.find_first_of(i.first, it + 1);
 		}
 	}
 	return str;
@@ -79,9 +96,12 @@ void Model::prettifyLatexString()
 {
 	std::string str(100, ' ');
 	int count = 0;
+	bool isStr = false;
 	for (auto& i : *latexString)
 	{
-		if (i != ' ' && i != '\n' && i != '\r')
+		if (i == '\'' || i == '\"')
+			isStr = !isStr;
+		if (!isStr && i != ' ' && i != '\n' && i != '\r')
 			str[count++] = i;
 		if (count == str.size())
 			str.resize(count * 2);
