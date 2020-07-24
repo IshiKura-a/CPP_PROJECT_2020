@@ -28,7 +28,9 @@ public:
 		setAttribute(Qt::WA_StyledBackground, true);
 
 		baiduRadioButton->setStyleSheet(whiteWords);
+		baiduRadioButton->setFont(msgNormal);
 		mathPixRadioButton->setStyleSheet(whiteWords);
+		mathPixRadioButton->setFont(msgNormal);
 	}
 	bool isMathPix()
 	{

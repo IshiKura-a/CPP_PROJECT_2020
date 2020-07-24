@@ -34,6 +34,7 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
     
     setMinimumSize(getAdaptedSize(960,600));
     imgLabel->setMargin(0);
+    answerLineEdit->setText("");
     setLatexFormulaImage(latexFormulaPixmap);
 
     // style setting

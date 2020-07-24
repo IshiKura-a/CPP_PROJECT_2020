@@ -493,7 +493,7 @@ void View::displayErrorMsg(std::string errorMsg)
 void View::onClickLoadButton()
 {
     std::string imgDir = QFileDialog::getOpenFileName(
-        NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
+        NULL, "打开文件", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
 
     if (loadImg4Dir && loadImg4DirB && !imgDir.empty())
     {
