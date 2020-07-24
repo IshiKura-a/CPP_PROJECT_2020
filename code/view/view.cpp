@@ -495,14 +495,17 @@ void View::onClickLoadButton()
     std::string imgDir = QFileDialog::getOpenFileName(
         NULL, "打开文件( 推荐jpg文件 )", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
 
-    if (loadImg4Dir && !imgDir.empty())
+    if (loadImg4Dir && loadImg4DirB && !imgDir.empty())
     {
         imgLabel->setText("               ");
         latexLabel->setText("               ");
         imgInfo->setText(imgDir.c_str());
         imgInfo->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
         qDebug() << "Load";
-        loadImg4Dir(imgDir);
+        if (isMathPix)
+            loadImg4Dir(imgDir);
+        else
+            loadImg4DirB(imgDir);
         displayMsg("Load " + imgDir);
         latexEditor->setPlainText(*latexString);
         
