@@ -35,14 +35,11 @@ private:
 	// WorkFunction: 参数为std::any
 	// WorkFunctionNoArg: 参数为void
 	// WorkFunctionWithRetVal: 参数为void, 返回std::any
-	// TODO
 
 	WorkFunctionNoArg getFormulaResult;
 	WorkFunction renderLatexString;
-	WorkFunction loadImg4Dir;
-	//WorkFunctionNoArg changeLatexFormula;
+	WorkFunction getLatexStringFromImageFile;
 	WorkFunctionWithRetVal displayHelpDocument;
-	//WorkFunctionNoArg changeLatexDisplay;
 	WorkFunctionNoArg prettifyFormula;
 
 public:
@@ -57,14 +54,10 @@ public:
 	{
 		return getFormulaResult;
 	}
-	auto getLoadImg4Dir() const
+	auto getGetLatexStringFromImageFile() const
 	{
-		return loadImg4Dir;
+		return getLatexStringFromImageFile;
 	}
-	//auto getChangeLatexFormula() const
-	//{
-		//return changeLatexFormula;
-	//}
 	auto getDisplayHelpDocument() const
 	{
 		return displayHelpDocument;
@@ -157,7 +150,7 @@ public:
 	void varValPairsChangedNotified()
 	{
 		const auto variable_value_pairs = model->getVarValPairs();
-		varValPairs = std::make_shared<QVector<VarValPair>>(variable_value_pairs->begin(),variable_value_pairs->end());
+		varValPairs = std::make_shared<QVector<VarValPair>>(variable_value_pairs->begin(), variable_value_pairs->end());
 
 		// 触发view的更新事件
 		varValPairsUpdateViewNotify();
@@ -182,7 +175,7 @@ public:
 
 	void varValPairsChangeApplyToModel() const
 	{
-		model->setVarValPairsWithoutNotify(std::vector<VarValPair>(varValPairs->begin(),varValPairs->end()));
+		model->setVarValPairsWithoutNotify(std::vector<VarValPair>(varValPairs->begin(), varValPairs->end()));
 	}
 
 	/******************** event trigger ********************/

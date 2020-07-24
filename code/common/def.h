@@ -5,10 +5,9 @@
 #include <variant>
 #include <stdexcept>
 
-using Value = std::variant<int32_t, double_t>;
+using Value = std::variant<int32_t, double_t, std::string>;
 using Byte = char;
 using VarValPair = std::pair<std::string, Value>;
-using RawVarValPair = std::pair<std::string, std::string>;
 template <typename T> using ptr = std::shared_ptr<T>;
 
 using EventFunction = std::function<void()>;
@@ -34,4 +33,12 @@ inline double_t valueToDouble(Value v) noexcept(false)
 		return std::get<1>(v);
 	else
 		throw std::logic_error("Value is not double");
+}
+
+inline std::string valueToString(Value v) noexcept(false)
+{
+	if(v.index() == 2)
+		return std::get<2>(v);
+	else
+		throw std::logic_error("Value is not string");
 }

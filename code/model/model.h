@@ -36,11 +36,12 @@ public:
 
 	/******************** function ********************/
 	// 如果修改了model中的数据, 需要调用对应的notify函数或使用setter
-	
+
 	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
 	// @param:
 	// file_path: 需要读取的图片路径
-	void getLatexStringFromImage(const std::string& file_path);
+	// isMathpixAPI: 为true时使用mathpix的API, 为false时使用baidu的API
+	void getLatexStringFromImage(const std::string& file_path, bool isMathpixAPI = true);
 
 	// 渲染model中的latexString, 并更新model的imageData
 	// @param:
