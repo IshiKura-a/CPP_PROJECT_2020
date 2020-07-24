@@ -55,6 +55,10 @@ public:
 	{
 		loadImg4Dir = command;
 	}
+	void setLoadImg4DirB(const WorkFunction& command)
+	{
+		loadImg4DirB = command;
+	}
 	void setRenderLatexString(const WorkFunction& command)
 	{
 		renderLatexString = command;
@@ -233,6 +237,7 @@ private:
 	//WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
+	WorkFunction loadImg4DirB;
 	WorkFunctionWithRetVal displayHelpDocument;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;

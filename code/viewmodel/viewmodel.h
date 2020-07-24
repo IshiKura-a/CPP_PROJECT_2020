@@ -35,14 +35,33 @@ private:
 	// WorkFunction: 参数为std::any
 	// WorkFunctionNoArg: 参数为void
 	// WorkFunctionWithRetVal: 参数为void, 返回std::any
-	// TODO
 
+	// 使用model中的variableValuePairs, 计算表达式树结果
+	// 更新model的result
 	WorkFunctionNoArg getFormulaResult;
+	
+	// 渲染model中的latexString, 并更新model的imageData
+	// @param: std::string
+	// 设定渲染结果的格式, 支持png,gif,svg
 	WorkFunction renderLatexString;
-	WorkFunction loadImg4Dir;
-	//WorkFunctionNoArg changeLatexFormula;
+	
+	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
+	// @param: std::string file_path
+	// 需要读取的图片路径
+	WorkFunction getLatexStringFromImageFile;
+
+	// 识别路径为file_path的图片. 识别结果将覆盖latex string.
+	// @param: std::string file_path
+	// 需要读取的图片路径
+	// 使用baidu的API
+	WorkFunction getLatexStringFromImageFileB;
+	
+	// 获取帮助信息
+	// @return:
+	// 帮助信息的string
 	WorkFunctionWithRetVal displayHelpDocument;
-	//WorkFunctionNoArg changeLatexDisplay;
+
+	// 将latex string中多余的空格删除
 	WorkFunctionNoArg prettifyFormula;
 
 public:
@@ -57,14 +76,14 @@ public:
 	{
 		return getFormulaResult;
 	}
-	auto getLoadImg4Dir() const
+	auto getGetLatexStringFromImageFile() const
 	{
-		return loadImg4Dir;
+		return getLatexStringFromImageFile;
 	}
-	//auto getChangeLatexFormula() const
-	//{
-		//return changeLatexFormula;
-	//}
+	auto getGetLatexStringFromImageFileB() const
+	{
+		return getLatexStringFromImageFileB;
+	}
 	auto getDisplayHelpDocument() const
 	{
 		return displayHelpDocument;
@@ -157,7 +176,7 @@ public:
 	void varValPairsChangedNotified()
 	{
 		const auto variable_value_pairs = model->getVarValPairs();
-		varValPairs = std::make_shared<QVector<VarValPair>>(variable_value_pairs->begin(),variable_value_pairs->end());
+		varValPairs = std::make_shared<QVector<VarValPair>>(variable_value_pairs->begin(), variable_value_pairs->end());
 
 		// 触发view的更新事件
 		varValPairsUpdateViewNotify();
@@ -182,7 +201,7 @@ public:
 
 	void varValPairsChangeApplyToModel() const
 	{
-		model->setVarValPairsWithoutNotify(std::vector<VarValPair>(varValPairs->begin(),varValPairs->end()));
+		model->setVarValPairsWithoutNotify(std::vector<VarValPair>(varValPairs->begin(), varValPairs->end()));
 	}
 
 	/******************** event trigger ********************/

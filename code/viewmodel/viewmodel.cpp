@@ -22,9 +22,13 @@ void ViewModel::bindModel(ptr<Model> model)
 
 void ViewModel::bindFunction()
 {
-	loadImg4Dir = [this](std::any file_path)
+	getLatexStringFromImageFile = [this](std::any file_path)
 	{
 		model->getLatexStringFromImage(std::any_cast<std::string>(file_path));
+	};
+	getLatexStringFromImageFileB = [this](std::any file_path)
+	{
+		model->getLatexStringFromImage(std::any_cast<std::string>(file_path), false);
 	};
 	renderLatexString = [this](std::any image_format)
 	{
