@@ -136,21 +136,23 @@ void Calculation::initQLayout(ptr<QPixmap> latexFormulaPixmap)
             {
                 qDebug() << "Calculate Latex Formula";
                 
-                /*
-                varValPairsSetter(varValData);
+                
+                varValPairsSetter(*varValData);
                 calculateLatexFormula();
                 resultGetter();
                 answerLineEdit->setText(*result);
-                */
-                const QString textString = "123";
+                
+                // const QString textString = "123";
                 int precision = precisionSpinBox->value();
-                std::string displayedAnsString = textString.toStdString();
+                // std::string displayedAnsString = textString.toStdString();
+                std::string displayedAnsString = result->toStdString();
                 
                 // test if ans is valid
                 if (true)
                 {
                     if (precision >= 0)
                     {
+                        // use stringstream to control precision.
                         std::stringstream ss;
                         double ans;
                         ss << displayedAnsString;
@@ -195,14 +197,5 @@ void Calculation::setLatexFormulaImage(ptr<QPixmap> latexFormulaPixmap)
         imgLabel->setPixmap(latexFormulaPixmap->scaled(QSize(imgSizeLimit),
             Qt::KeepAspectRatio, Qt::SmoothTransformation));
         imgLabel->setAlignment(Qt::AlignCenter);
-    }
-    else
-    {
-        /*
-        QPixmap* tmpPixmap = new QPixmap(631,190);
-        tmpPixmap->fill(Qt::white);
-        imgLabel->setPixmap(*tmpPixmap);
-        qDebug() << imgLabel->size();
-        */
     }
 }
