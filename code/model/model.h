@@ -23,6 +23,8 @@ private:
 	EventId varValuePairsChanged = EventUnregistered;
 	EventId resultChanged = EventUnregistered;
 
+	std::string applyVarValPairs();
+
 public:
 
 	Model()

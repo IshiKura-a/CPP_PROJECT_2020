@@ -5,6 +5,24 @@
 #include "../module/HelpManual.h"
 #include <iostream>
 
+std::string Model::applyVarValPairs()
+{
+	if (varValPairs->empty())
+		return *latexString;
+	auto str = *latexString;
+	for (auto& i : *varValPairs)
+	{
+		auto it = str.find_first_of(i.first);
+		while (it != str.npos) {
+			str.erase(it, i.first.length());
+			str.insert(it, i.second);
+			it = str.find_first_of(i.first);
+		}
+	}
+	return str;
+}
+
+
 void Model::getLatexStringFromImage(const std::string& file_path, bool isMathpixAPI)
 {
 	RequestManager manager;
@@ -44,7 +62,7 @@ void Model::calculateLatexString()
 	RequestManager manager;
 	try
 	{
-		setResult(XMLParser::parseCurlResult(manager->getFormulaResult(*latexString)));
+		setResult(XMLParser::parseCurlResult(manager->getFormulaResult(applyVarValPairs())));
 	}
 	catch (std::runtime_error& e)
 	{
