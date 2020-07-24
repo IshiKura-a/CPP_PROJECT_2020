@@ -64,10 +64,10 @@ public:
 	// {
 	//	displayLatexFormula = command;
   	//}
-	// void setDisplayHelpDocument(const WorkFunctionNoArg& command)
-	//{
-	// displayHelpDocument = command;
-	// }
+	void setDisplayHelpDocument(const WorkFunctionWithRetVal& command)
+	{
+		displayHelpDocument = command;
+	}
 	void setPrettifyLatexFormula(WorkFunctionNoArg command)
 	{
 		prettifyLatexFormula = command;
@@ -135,6 +135,7 @@ public:
 	void setTimer(ptr<QTimer> iTimer);
 	void setEngineSelectionInterface(ptr<EngineSelection> iEngineSelection);
 	void setCalculateInterface(ptr<Calculation> iViewCalculate);
+	void setHelpMsgBox(ptr<QMessageBox> iMessageBox);
 
 	auto getImgLabel();
 	auto getLatexLabel();
@@ -146,6 +147,7 @@ public:
 	auto getStatusBar();
 	auto getEngineSelectionInterface();
 	auto getCalculateInterface();
+	auto getHelpMsgBox();
 	
 	/******************** callback function ********************/
 
@@ -201,6 +203,7 @@ private:
 	ptr<QPushButton> prettifyButton;
 	ptr<EngineSelection> engineSelectionInterface;
 	ptr<Calculation> calculateInterface;
+	ptr<QMessageBox> helpMsgBox;
 
 	// View层数据
 	ptr<QPixmap> latexFormulaPixmap;
@@ -230,6 +233,7 @@ private:
 	//WorkFunctionNoArg displayLatexFormula;
 	WorkFunction renderLatexString;
 	WorkFunction loadImg4Dir;
+	WorkFunctionWithRetVal displayHelpDocument;
 	// WorkFunctionNoArg applyLatexFormulaChanges;
 	WorkFunctionNoArg prettifyLatexFormula;
 	// WorkFunctionNoArg calculateLatexFormula;  
