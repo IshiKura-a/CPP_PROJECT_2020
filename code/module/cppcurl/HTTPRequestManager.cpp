@@ -54,7 +54,12 @@ size_t callbackWriteRenderResult(void* ptr, size_t size, size_t nmemb, void* str
 
 size_t callbackWriteCalculateResult(void* ptr, size_t size, size_t nmemb, void* stream)
 {
-	HTTPRequestManager::calculate_result = std::string(static_cast<char*>(ptr), size * nmemb);
+	std::string str(static_cast<char*>(ptr), size * nmemb);
+	if (HTTPRequestManager::calculate_result.substr(0, 5) == "<?xml")
+		HTTPRequestManager::calculate_result += str;
+	else
+		HTTPRequestManager::calculate_result = str;
+
 	return size * nmemb;
 }
 
@@ -479,7 +484,7 @@ std::string urlEncode(const std::string& bytes_to_encode)
 		{
 			// strTemp += "+";
 			strTemp += "%20";
-		}	
+		}
 		else
 		{
 			strTemp += '%';
