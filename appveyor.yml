@@ -15,7 +15,7 @@ build:
   project: /code/Project/Project.sln
   verbosity: minimal
 after_build:
-- cmd: if "%APPVEYOR_REPO_TAG%"=="true" C:\Qt\5.15.0\msvc2019_64\bin\windeployqt C:\projects\cpp-project-2020\code\bin\Project.exe
+- cmd: C:\Qt\5.15.0\msvc2019_64\bin\windeployqt C:\projects\cpp-project-2020\code\bin\Project.exe
 artifacts:
 - path: code/bin
   name: Project$(appveyor_build_version)
