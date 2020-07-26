@@ -493,7 +493,7 @@ void View::displayErrorMsg(std::string errorMsg)
 void View::onClickLoadButton()
 {
     std::string imgDir = QFileDialog::getOpenFileName(
-        NULL, "打开文件", "C:\\", "图像文件(*.jpg *.jpeg *.png *.bmp)").toStdString();
+        NULL, "打开文件", "C:\\", "图像文件(*.jpg *.png)").toStdString();
 
     if (loadImg4Dir && loadImg4DirB && !imgDir.empty())
     {
@@ -534,7 +534,7 @@ void View::onClickCalculateButton()
 void View::onClickDownloadButton()
 {
     std::string imgDir = QFileDialog::getSaveFileName(
-        NULL, "保存", "C:\\", "图像文件(*.jpg *.svg *.png )").toStdString();
+        NULL, "保存", "C:\\", "图像文件(*.svg *.png)").toStdString();
     if (imgDir.empty())
     {
         displayErrorMsg("Download aborted!");
