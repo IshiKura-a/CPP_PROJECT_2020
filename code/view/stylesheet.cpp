@@ -5,7 +5,7 @@ const QString whiteBackgroundSemiTransparent = "background: rgba(255,255,255,0.7
 const QString lightBlueBackground = "background: #7BD9D2;";
 const QString lightDarkBackground = "background: #2E323A;";
 const QString silverBackground = "background: #D4D4D4;";
-const QString background4Img = "background-image: url(../../dependency/img/background-1.jpg);";
+const QString background4Img = "background-image: url(resource/img/background-1.jpg);";
 const QString transparentBackground = "background: transparent;";
 
 const QString whiteWords = "color: white;";

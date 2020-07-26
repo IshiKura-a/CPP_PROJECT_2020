@@ -586,6 +586,6 @@ void View::onClickDownloadButton()
 void View::installFont()
 {
     // 用什么中文字还没想好
-    int index = QFontDatabase::addApplicationFont("../../dependency/font/NotoSerifSC-Regular.otf");
+    int index = QFontDatabase::addApplicationFont("resource/font/NotoSerifSC-Regular.otf");
     CHNFont = QFontDatabase::applicationFontFamilies(index).at(0);
 }

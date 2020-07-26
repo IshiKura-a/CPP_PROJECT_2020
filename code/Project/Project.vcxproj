@@ -104,7 +104,9 @@ copy "$(SolutionDir)..\bin\TokenDecoded.dll" "$(OutDir)"
 </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"</Command>
+      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"
+if not exist "$(SolutionDir)..\bin\resource" mkdir "$(SolutionDir)..\bin\resource"
+xcopy "$(SolutionDir)resource" "$(SolutionDir)..\bin\resource" /E /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,7 +125,9 @@ copy "$(SolutionDir)..\bin\TokenDecode.dll" "$(OutDir)"
 </Command>
     </PreLinkEvent>
     <PostBuildEvent>
-      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"</Command>
+      <Command>copy  "$(OutDir)Project.exe" "$(SolutionDir)..\bin\"
+if not exist "$(SolutionDir)..\bin\resource" mkdir "$(SolutionDir)..\bin\resource"
+xcopy "$(SolutionDir)resource" "$(SolutionDir)..\bin\resource" /E /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
